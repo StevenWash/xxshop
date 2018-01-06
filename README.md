@@ -38,4 +38,5 @@ git clone https://github.com/StevenWash/xxshop.git
 ## Thanks
 
 [CSDN博客](http://blog.csdn.net/hx0624_csdn)
+QQ : 862863758
 
