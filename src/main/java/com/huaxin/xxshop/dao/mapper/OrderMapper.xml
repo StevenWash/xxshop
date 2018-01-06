@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huaxin.xxshop.dao.OrderDao">
+	<resultMap type="Order" id="OrderResultMap">
+		<id property="id" column="id" />
+		<result property="orderTime" column="orderTime" />
+		<result property="payType" column="payType" />
+		<result property="payTime" column="payTime" />
+		<result property="sendTime" column="sendTime" />
+		<result property="completionTime" column="completionTime" />
+		<result property="totalMoney" column="totalMoney" />
+		<result property="deliveryType" column="deliveryType" />
+		<result property="deliveryTime" column="deliveryTime" />
+		<result property="status" column="status" />
+
+		<association property="user" javaType="User">
+			<id property="id" column="id" />
+			<result property="name" column="uname" />
+		</association>
+		<association property="address" javaType="Address">
+			<id property="id" column="id" />
+			<result property="accept" column="accept" />
+		</association>
+		<association property="orderDetail" javaType="OrderDetail">
+			<id property="id" column="id" />
+			<result property="payStatus" column="payStatus" />
+			<result property="sendStatus" column="sendStatus" />
+			<result property="orderStatus" column="orderStatus" />
+		</association>
+	</resultMap>
+	<insert id="addOrder" parameterType="Order">
+		insert into
+		shop_order(id,userId,orderTime,payType,addressId,totalMoney,deliveryType,deliveryTime,status)
+		values(#{id},#{userId},#{orderTime},#{payType},#{addressId},#{totalMoney},#{deliveryType},#{deliveryTime},#{status})
+	</insert>
+
+	<select id="getOrderByPage" resultMap="OrderResultMap"
+		parameterType="hashmap">
+		SELECT
+		ord.*,u.name uname,ad.accept accept,od.paystatus
+		paystatus,od.sendstatus sendStatus
+		FROM
+		shop_order
+		ord,
+		shop_orderdetail
+		od,
+		shop_address ad,
+		shop_user u
+		WHERE
+		ord.userid =
+		u.ID
+		AND
+		ord.addressid=ad.id
+		AND od.orderid=ord.id
+		<if test="order!=null">
+			<if test="order.orderDetail.payStatus!=-1">
+				AND od.paystatus=#{order.orderDetail.payStatus}
+			</if>
+			<if test="order.orderDetail.sendStatus!=-1">
+				AND od.sendstatus=#{order.orderDetail.sendStatus}
+			</if>
+			<if test="order.status!=-1">
+				AND ord.status=#{order.status}
+			</if>
+			limit #{indexPage} ,#{pageSize}
+		</if>
+
+	</select>
+
+	<select id="getOrderNum" resultType="int" parameterType="Order">
+		SELECT
+		count(*)
+		FROM
+		shop_order
+		ord,
+		shop_orderdetail od,
+		shop_address ad,
+		shop_user u
+		WHERE
+		ord.userid =
+		u.ID
+		AND ord.addressid=ad.id
+		AND
+		od.orderid=ord.id
+
+	</select>
+
+	<select id="getOrder" resultType="Order" parameterType="String">
+		SELECT
+		ord.*,u.name
+		uname,ad.accept accept,od.paystatus
+		paystatus,od.sendstatus sendStatus,
+		od.orderStatus orderStatus
+		FROM
+		shop_order
+		ord,
+		shop_orderdetail
+		od,
+		shop_address ad,
+		shop_user u
+		WHERE
+		ord.userid =
+		u.ID
+		AND
+		ord.addressid=ad.id
+		AND od.orderid=ord.id
+		AND
+		ord.id=#{0}
+
+	</select>
+
+	<select id="getOrderByUserId" resultMap="OrderResultMap"
+		parameterType="String">
+		SELECT
+		ord.*,u.name
+		uname,ad.accept accept,od.paystatus
+		paystatus,od.sendstatus sendStatus,
+		od.orderStatus orderStatus
+		FROM
+		shop_order
+		ord,
+		shop_orderdetail
+		od,
+		shop_address ad,
+		shop_user u
+		WHERE
+		ord.userid =
+		u.ID
+		AND
+		ord.addressid=ad.id
+		AND od.orderid=ord.id
+		AND
+		ord.userid=#{0}
+	</select>
+
+	<update id="updateOrder" parameterType="Order">
+		update shop_order set
+		paytime=#{payTime} where id=#{id}
+	</update>
+
+	
+
+
+</mapper>

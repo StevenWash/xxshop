@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huaxin.xxshop.dao.UserDao">
+	<resultMap type="User" id="UserResultMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="password" column="password" />
+		<result property="phoneNum" column="phoneNum" />
+		<result property="money" column="money" />
+		<result property="avatar" column="avatar" />
+		<result property="regTime" column="regTime" />
+		<result property="role" column="role" />
+		<result property="status" column="status" />
+		
+	</resultMap>
+
+	<insert id="addUser" parameterType="User">
+		insert into shop_user
+		values(#{id},#{name},#{password},#{phoneNum},#{money},
+		#{avatar,jdbcType=VARCHAR},#{regTime,jdbcType=CHAR},#{role},#{status})
+	</insert>
+
+	<select id="getNumByName" parameterType="String" resultType="int">
+		select count(*) from shop_user where name=#{name}
+	</select>
+
+	<select id="getUserByNameAndPwd" resultType="User">
+		select * from
+		shop_user where name=#{0} and password=#{1}
+	</select>
+
+	<update id="updateAvatar">
+		update shop_user set avatar=#{1} where id=#{0}
+	</update>
+
+	<update id="updateMoney">
+		update shop_user set money=#{1} where id=#{0}
+	</update>
+
+	<select id="getAllUser" resultMap="UserResultMap">
+		select * from shop_user
+	</select>
+	
+	<update id="updateStatus" >
+		update shop_user set
+		status=#{1} where id=#{0}
+	</update>
+	
+	<update id="deleteUser" parameterType="String">
+		update shop_user set
+		status=2 where id=#{0}
+	</update>
+
+	<select id="getUser" parameterType="String" resultType="User">
+		select *
+		from shop_user where
+		id=#{0}
+	</select>
+
+</mapper>

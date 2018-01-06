@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huaxin.xxshop.dao.GoodsDao">
+
+	<resultMap type="Goods" id="GoodsResultMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="goodsNo" column="goodsNo" />
+		<result property="price1" column="price1" />
+		<result property="price2" column="price2" />
+		<result property="stock" column="stock" />
+		<result property="thumbnail" column="thumbnail" />
+		<result property="description" column="description" />
+		<result property="role" column="role" />
+		<result property="sellTime" column="sellTime" />
+		<result property="sellNum" column="sellNum" />
+		<result property="score" column="score" />
+		<association property="category" javaType="Category">
+			<id property="id" column="id" />
+			<result property="name" column="cname" />
+		</association>
+	</resultMap>
+	<insert id="addGoods" parameterType="Goods">
+		insert into shop_goods
+		values(#{id},#{goodsNo},#{name},#{categoryId},#{price1},#{price2},#{stock},#{thumbnail},#{description},#{role},#{sellTime},#{sellNum},#{score})
+	</insert>
+
+	<select id="getGoods" resultMap="GoodsResultMap" parameterType="Goods">
+		select g.*,c.name cname from shop_goods g,shop_category c where
+		g.categoryid=c.id
+		<if test="categoryId!=null and categoryId!=''">
+			and g.categoryId=#{categoryId}
+		</if>
+		<if test="name!=null and name!=''">
+			and g.name like "%"#{name}"%"
+		</if>
+	</select>
+
+	<select id="getGoodsByPage" resultMap="GoodsResultMap"
+		parameterType="hashmap">
+		select g.*,c.name cname from shop_goods g,shop_category c where
+		g.categoryid=c.id
+		<if test="goods!=null">
+			<if test="goods.categoryId!=null and goods.categoryId!=''">
+				and g.categoryId=#{goods.categoryId}
+			</if>
+			<if test="goods.name!=null and goods.name!=''">
+				and g.name like "%"#{goods.name}"%"
+			</if>
+			limit #{indexPage} ,#{pageSize}
+		</if>
+	</select>
+
+	<select id="getGoodsNum" resultType="int" parameterType="Goods">
+		select
+		count(*) from shop_goods g,shop_category c where
+		g.categoryId=c.id
+		<if test="categoryId!=null and categoryId!=''">
+			and g.categoryId=#{categoryId}
+		</if>
+		<if test="name!=null and name!=''">
+			and g.name like "%"#{name}"%"
+		</if>
+	</select>
+
+	<select id="getGoodsById" resultType="Goods">
+		select * from shop_goods
+		where id=#{0}
+	</select>
+
+	<update id="updateGoods" parameterType="Goods">
+		update shop_goods set
+		name=#{name},goodsNo=#{goodsNo},categoryId=#{categoryId},stock=#{stock},price1=#{price1},price2=#{price2},thumbnail=#{thumbnail},description=#{description},role=#{role},sellTime=#{sellTime},sellNum=#{sellNum},score=#{score}
+		where id=#{id}
+	</update>
+
+	<delete id="deleteGoods">
+		delete from shop_goods where id=#{0}
+	</delete>
+
+	<select id="getGoodsByCateId" resultType="Goods">
+		select * from
+		shop_goods where categoryId=#{0} ORDER BY role desc limit #{1}
+	</select>
+
+	<select id="getGoodsByRole" resultType="Goods">
+		select * from
+		shop_goods
+		ORDER BY role desc limit #{0}
+	</select>
+
+	<select id="getGoodsBySellTime" resultType="Goods">
+		select * from
+		shop_goods
+		ORDER BY sellTime desc limit #{0}
+	</select>
+
+	<select id="getGoodsBySellNum" resultType="Goods">
+		select * from
+		shop_goods
+		ORDER BY sellNum desc limit #{0}
+	</select>
+
+	<select id="getGoodsByIds" resultType="Goods">
+		select
+		id,name,price2,thumbnail from shop_goods where id in
+		<foreach collection="array" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+
+	<select id="getGoodsByOrder" resultType="Goods" parameterType="hashmap">
+		select g.*,c.name cname from
+		shop_goods g,shop_category c
+		where g.categoryid=c.id AND g.categoryid=#{cateId}
+		ORDER BY ${order} desc
+		limit #{num}
+	</select>
+</mapper>

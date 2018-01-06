@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huaxin.xxshop.dao.OrderDetailDao">
+
+	<resultMap type="OrderDetail" id="OrderDetailResultMap">
+		<id property="id" column="id" />
+		<result property="orderId" column="orderId" />
+		<result property="nums" column="nums" />
+		<result property="payStatus" column="payStatus" />
+		<result property="sendStatus" column="sendStatus" />
+		<result property="orderStatus" column="orderStatus" />
+
+		<association property="goods" javaType="Goods">
+			<id property="id" column="id" />
+			<result property="name" column="gname" />
+		</association>
+	</resultMap>
+
+	<insert id="addOrderDetail" parameterType="OrderDetail">
+		insert into
+		shop_orderdetail
+		values(#{id},#{orderId},#{goodsId},#{nums},#{payStatus},#{sendStatus},#{orderStatus})
+	</insert>
+
+	<update id="updataOrderDetail" parameterType="OrderDetail">
+		update
+		shop_orderdetail set
+		paystatus=#{payStatus},orderstatus=#{orderStatus}
+		where id=#{id}
+	</update>
+
+	<select id="getOrderDetailByOrderId" resultType="OrderDetail"
+		parameterType="String">
+		select o.*,g.name gname from
+		shop_orderdetail
+		o,shop_goods g where orderid=#{0}
+	</select>
+</mapper>

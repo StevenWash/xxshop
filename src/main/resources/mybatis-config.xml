@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC 
+	"-//mybatis.org//DTD Config 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+		<package name="com.huaxin.xxshop.entity" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="com/huaxin/xxshop/dao/mapper/UserMapper.xml" />
+		<mapper resource="com/huaxin/xxshop/dao/mapper/AddressMapper.xml" />
+		<mapper resource="com/huaxin/xxshop/dao/mapper/CategoryMapper.xml" />
+		<mapper resource="com/huaxin/xxshop/dao/mapper/GoodsMapper.xml" />
+		<mapper resource="com/huaxin/xxshop/dao/mapper/OrderMapper.xml" />
+		<mapper resource="com/huaxin/xxshop/dao/mapper/OrderDetailMapper.xml" />
+	</mappers>
+
+</configuration>
