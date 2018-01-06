@@ -9,6 +9,7 @@
   <url>http://maven.apache.org</url>
 
   <properties>
+    <!-- test 20170106 -->
     <!-- spring版本号 -->
     <spring.version>4.1.6.RELEASE</spring.version>
     <!-- log4j日志文件管理包版本 -->
