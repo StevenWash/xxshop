@@ -1,12 +1,10 @@
 package com.huaxin.xxshop.dao;
 
 import java.util.List;
-
 import com.huaxin.xxshop.entity.User;
 
 /**
  * 用户实体类 User 访问接口
- * 
  * @author 没有蜡笔的小新 2015-12-21 参数一般是基本数据类型或者实体类
  */
 public interface UserDao {

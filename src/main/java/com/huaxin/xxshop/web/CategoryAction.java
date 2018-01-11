@@ -12,7 +12,6 @@ import com.huaxin.xxshop.service.CategoryService;
 public class CategoryAction {
 	private Category category;
 	private CategoryService categoryService;
-
 	private List<Category> categories;
 
 	/*

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+    	http://www.springframework.org/schema/beans
+    	http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- 使用扫描机制，扫描控制器类，控制器类都在controller包(此处修订为controllerAnnotation)及其子包下 -->
+    <context:component-scan base-package="com.huaxin.xxshop.controller" />
+    <!-- 使用扫描机制，扫描service包 -->
+    <context:component-scan base-package="com.huaxin.xxshop.service"/>
+    <mvc:annotation-driven />
+    <!-- annotation-driven用于简化开发的配置，
+    注解DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter -->
+
+    <!-- 使用resources过滤掉不需要dispatcher servlet的资源。
+    使用resources时，必须使用annotation-driven，不然resources元素会阻止任意控制器被调用。
+    如果不使用resources，则annotation-driven可以没有 -->
+    <!-- 允许css目录下所有文件可见 -->
+    <mvc:resources location="/css/" mapping="/css/**"></mvc:resources>
+    <!-- 允许html目录下所有文件可见 -->
+    <mvc:resources location="/html/" mapping="/html/**"></mvc:resources>
+    <!--允许images目录下所有文件可见 -->
+    <mvc:resources location="/images/" mapping="/images/**"></mvc:resources>
+    <!--允许goodsimage目录下所有文件可见 -->
+    <mvc:resources location="/goodsimage/" mapping="/goodsimage/**"></mvc:resources>
+    <!--允许js目录下所有文件可见 -->
+    <mvc:resources location="/js/" mapping="/js/**"></mvc:resources>
+    <!--允许useravatars目录下所有文件可见 -->
+    <mvc:resources location="/useravatars/" mapping="/useravatars/**"></mvc:resources>
+
+
+    <!-- 配置视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          id="internalResourceViewResolver">
+        <!-- 前缀 -->
+        <!--<property name="prefix" value="/WEB-INF/views/jsp/" />-->
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <!-- 后缀 -->
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+</beans>

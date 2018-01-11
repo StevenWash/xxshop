@@ -140,7 +140,4 @@
 		paytime=#{payTime} where id=#{id}
 	</update>
 
-	
-
-
 </mapper>

@@ -1,25 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-  <servlet>
-    <servlet-name>init</servlet-name>
-    <servlet-class>com.huaxin.xxshop.web.InitServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <display-name>XXShop</display-name>
-  <welcome-file-list>
-    <welcome-file>index</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
-  <filter>
-    <filter-name>struts2</filter-name>
-    <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>struts2</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
+    <servlet>
+        <!--<servlet-name>init</servlet-name>-->
+        <!--<servlet-class>com.huaxin.xxshop.web.InitServlet</servlet-class>-->
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!-- contextConfigLocation配置SpringMVC加载的配置文件(配置处理器、映射器、适配器等)
+             如果不配置contextConfigLocation，默认加载的是/WEB-INF/servlet名称-servlet.xml(此处即springmvc-servlet.xml)
+        -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/springmvc-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+    <servlet-name>springmvc</servlet-name>
+    <!-- 处理所有URL -->
+    <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <listener>
+        <description>springListener</description>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <display-name>XXShop</display-name>
+    <welcome-file-list>
+        <!-- jsp文件放在WEB-INF路径下-->
+        <welcome-file>/WEB-INF/views/jsp/index.jsp</welcome-file>
+        <!--<welcome-file>index</welcome-file>-->
+        <!--<welcome-file>index.jsp</welcome-file>-->
+    </welcome-file-list>
+
+    <!--<filter>-->
+        <!--<filter-name>struts2</filter-name>-->
+        <!--<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>struts2</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
+    <!--</filter-mapping>-->
+    <!--<listener>-->
+        <!--<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>-->
+    <!--</listener>-->
 </web-app>

@@ -14,7 +14,6 @@
 		<result property="regTime" column="regTime" />
 		<result property="role" column="role" />
 		<result property="status" column="status" />
-		
 	</resultMap>
 
 	<insert id="addUser" parameterType="User">

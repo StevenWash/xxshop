@@ -2,7 +2,6 @@ package com.huaxin.xxshop.entity;
 
 /**
  * 一个地址实体类
- * 
  * @author 没有蜡笔的小新 2015-12-23
  */
 public class Address {

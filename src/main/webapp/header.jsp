@@ -8,7 +8,8 @@
 		<li class="first"><a href="order_uindex">我的账户</a></li>
 		<li><a href="order_listByUser">我的订单</a></li>
 		<c:if test="${sessionScope.user.role eq 'a'}">
-			<li><a href="admin">后台管理</a></li>
+			<li><a href="admin/login.jsp">后台管理</a></li>
+			<%--<li><a href="admin">后台管理</a></li>--%>
 		</c:if>
 		<li class='last'><a href="">使用帮助</a></li>
 	</ul>

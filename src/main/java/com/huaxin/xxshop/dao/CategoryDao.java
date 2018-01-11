@@ -1,7 +1,6 @@
 package com.huaxin.xxshop.dao;
 
 import java.util.List;
-
 import com.huaxin.xxshop.entity.Category;
 
 /**
@@ -10,7 +9,6 @@ import com.huaxin.xxshop.entity.Category;
  * @author 没有蜡笔的小新 2015-12-24
  */
 public interface CategoryDao {
-
 	/**
 	 * 添一个Category实体类的对象
 	 * 

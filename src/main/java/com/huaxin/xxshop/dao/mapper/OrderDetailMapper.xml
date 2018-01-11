@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC 
 	"-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.huaxin.xxshop.dao.OrderDetailDao">
 
 	<resultMap type="OrderDetail" id="OrderDetailResultMap">
@@ -24,7 +25,7 @@
 		values(#{id},#{orderId},#{goodsId},#{nums},#{payStatus},#{sendStatus},#{orderStatus})
 	</insert>
 
-	<update id="updataOrderDetail" parameterType="OrderDetail">
+	<update id="updateOrderDetail" parameterType="OrderDetail">
 		update
 		shop_orderdetail set
 		paystatus=#{payStatus},orderstatus=#{orderStatus}

@@ -88,7 +88,6 @@ public class UserAction implements SessionAware {
 
 	/**
 	 * 用于进行用户登出
-	 * 
 	 * @return 返回struts的对应result
 	 */
 	public String logout() {

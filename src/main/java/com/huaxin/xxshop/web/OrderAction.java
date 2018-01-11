@@ -21,7 +21,6 @@ import com.huaxin.xxshop.service.UserService;
 
 /**
  * 用来处理订单的Action
- * 
  * @author 没有蜡笔的小新 2015-12-29
  */
 public class OrderAction implements SessionAware {
