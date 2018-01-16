@@ -10,15 +10,20 @@ import com.huaxin.xxshop.entity.Goods;
 import com.huaxin.xxshop.entity.PageBean;
 import com.huaxin.xxshop.service.GoodsService;
 import com.huaxin.xxshop.util.XXShopUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 商品实体类对应的服务层实现
  * 
  * @author 没有蜡笔的小新 2015-12-26
  */
+@Service("goodsService")
 public class GoodsServiceImpl implements GoodsService {
-	private GoodsDao goodsDao;
-	private CategoryDao categoryDao;
+	@Autowired
+	private GoodsDao goodsDao = null;
+	@Autowired
+	private CategoryDao categoryDao = null;
 
 	@Override
 	public void addGoods(Goods goods) {

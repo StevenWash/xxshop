@@ -23,7 +23,7 @@
 				<div class="box clearfix">
 					<h3>用户信息</h3>
 					<dl class="userinfo_box">
-						<form action="user_uploadAvatar" method="post" enctype="multipart/form-data">
+						<form action="./user/uploadAvatar" method="post" enctype="multipart/form-data">
 							<input type="file" name="avatar">
 							<input type="submit" value="上传"> 
 						</form>

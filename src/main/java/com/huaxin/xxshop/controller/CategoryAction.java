@@ -3,40 +3,53 @@ package com.huaxin.xxshop.controller;
 import com.huaxin.xxshop.entity.Category;
 import com.huaxin.xxshop.service.CategoryService;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-
+@Controller
+@RequestMapping("/category")
 public class CategoryAction {
-	private Category category;
+	@Autowired
 	private CategoryService categoryService;
+
+	private Category category;
 	private List<Category> categories;
 
 	/*
 	 * 添加商品分类
 	 */
-	public String add() {
+	@RequestMapping("/add")
+	public String add(Category category) {
 		categoryService.addCategory(category);
-		return "opersuc";
+		return "redirect:/category/list";
+//		return "opersuc";
 	}
 
 	/*
 	 * 显示所有的商品分类
 	 */
-	public String list() {
-		categories = categoryService.getCategories();
-		return "list";
+	@RequestMapping("/list")
+	public String list(Model model) {
+		List<Category> categories = categoryService.getCategories();
+		model.addAttribute("categories", categories);
+		return "/admin/category_list";
+//		return "list";
 	}
 
 	/*
 	 * 用来判断当前的这个上商品的类别名称是否已经存在
 	 */
+	@RequestMapping("/isexist")
 	public void isexist() {
-		System.out.println(category.getName());
+//		System.out.println(category.getName());
 		boolean isexist = categoryService.getCategoryByName(category.getName());
-		System.out.println(isexist);
+//		System.out.println(isexist);
 		PrintWriter write = null;
 		try {
 			write = ServletActionContext.getResponse().getWriter();
@@ -44,7 +57,7 @@ public class CategoryAction {
 			write.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
 		} finally {
 			write.close();
 		}
@@ -53,17 +66,20 @@ public class CategoryAction {
 	/*
 	 * 删除当前用户的点击的商品分类
 	 */
-	public String delete() {
+	@RequestMapping("/delete")
+	public String delete(Category category) {
 		categoryService.deleteCategory(category.getId());
-		return "opersuc";
+		return "redirect:/category/list";
+//		return "opersuc";
 	}
 
 	/*
 	 * 修改商品信息
 	 */
-	public void update() {
-		System.out.println(category.getId() + "----"
-				+ category.getName().trim());
+	@RequestMapping("/update")
+	public void update(Category category) {
+//		System.out.println(category.getId() + "----"
+//				+ category.getName().trim());
 		boolean isexist = categoryService.getCategoryByName(category.getName()
 				.trim());
 		PrintWriter write = null;
@@ -78,9 +94,7 @@ public class CategoryAction {
 				write.print(!isexist);
 				write.flush();
 			}
-
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			write.close();
@@ -90,8 +104,10 @@ public class CategoryAction {
 	/*
 	 * 接受表单的数据，将页面刷新一下
 	 */
+	@RequestMapping("/refresh")
 	public String refresh() {
-		return "opersuc";
+		return "redirect:/category/list";
+//		return "opersuc";
 	}
 
 	// getter 和setter

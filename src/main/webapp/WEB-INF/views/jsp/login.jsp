@@ -18,19 +18,22 @@
 				<h3 class="notice">已注册用户，请登录</h3>
 				<p class="tips">欢迎来到我们的网站，如果您已是本站会员请登录</p>
 				<div class="box login_box clearfix">
-					<form action='user_login' method="post">
+					<%--<form action='user_login' method="post">--%>
+					<form action='./user/login' method="post">
 						<table width="515" class="form_table f_l">
 							<col width="120px" />
 							<col />
 							<tr>
 								<th>用户名：</th>
-								<td><input class="gray" type="text" name="user.name"
+								<%--<td><input class="gray" type="text" name="user.name"--%>
+								<td><input class="gray" type="text" name="name"
 									id="login_info" placeholder="请输入用户名" /><span id="namemsg"></span></td>
 							</tr>
 							<tr>
 								<th>密码：</th>
 								<td><input class="gray" type="password" id="password"
-									name="user.password" placeholder="请输入6-20位长度的密码" /><span
+									<%--name="user.password" placeholder="请输入6-20位长度的密码" /><span--%>
+									name="password" placeholder="请输入密码" /><span
 									id="pwdmsg"></span></td>
 							</tr>
 							<tr>

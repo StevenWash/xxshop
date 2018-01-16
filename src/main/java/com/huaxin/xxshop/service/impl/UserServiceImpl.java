@@ -6,24 +6,30 @@ import com.huaxin.xxshop.dao.UserDao;
 import com.huaxin.xxshop.entity.User;
 import com.huaxin.xxshop.service.UserService;
 import com.huaxin.xxshop.util.XXShopUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 
 /**
  * UserService 接口ude实现类
- * 
  * @author 没有蜡笔的小新 2015/12/21
  */
+
+@Service("userService")
 public class UserServiceImpl implements UserService {
+	//@Resource("userDao")
+	@Autowired
+    private UserDao userDao = null;
 
-	private UserDao userDao;
-
-	// getter 和 setter
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
+//	// getter和setter
+//	public UserDao getUserDao() {
+//		return userDao;
+//	}
+//
+//	public void setUserDao(UserDao userDao) {
+//		this.userDao = userDao;
+//	}
 
 	@Override
 	public void register(User user) {
@@ -33,10 +39,17 @@ public class UserServiceImpl implements UserService {
 		userDao.addUser(user);
 	}
 
+//	@Override
+//	public User login(String name, String password) {
+//		return userDao.getUserByNameAndPwd(name, password);
+//	}
+	// 通过账号和密码查询用户
 	@Override
-	public User login(String name, String password) {
-		return userDao.getUserByNameAndPwd(name, password);
+	public User findUser(String name, String password) {
+		User user = this.userDao.getUserByNameAndPwd(name, password);
+		return user;
 	}
+
 
 	@Override
 	public boolean isexist(String name) {

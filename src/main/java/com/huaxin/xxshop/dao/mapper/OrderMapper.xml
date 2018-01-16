@@ -107,9 +107,9 @@
 		ord.addressid=ad.id
 		AND od.orderid=ord.id
 		AND
-		ord.id=#{0}
-
+		ord.id=#{id}
 	</select>
+	<!--ord.id=#{0}-->
 
 	<select id="getOrderByUserId" resultMap="OrderResultMap"
 		parameterType="String">
@@ -132,8 +132,10 @@
 		ord.addressid=ad.id
 		AND od.orderid=ord.id
 		AND
-		ord.userid=#{0}
+		ord.userid=#{userId}
 	</select>
+	<!--ord.userid=#{0}-->
+
 
 	<update id="updateOrder" parameterType="Order">
 		update shop_order set

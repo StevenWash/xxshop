@@ -10,7 +10,7 @@
 			<c:forEach items="${categories}" var="category">
 				<li>
 					<h2>
-						<a href="goods_listByCate?goods.categoryId=${category.id }">${category.name}</a>
+						<a href="./goods/listByCate?goods.categoryId=${category.id }">${category.name}</a>
 					</h2>
 				</li>
 			</c:forEach>

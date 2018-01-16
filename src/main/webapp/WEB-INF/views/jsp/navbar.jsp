@@ -19,7 +19,7 @@
 		params += "\"}";
 		
 		if(params.length>14){
-			$.getJSON("goods_getGoodsesByIds", JSON.parse(params), function(r) {
+			$.getJSON("./goods/getGoodsesByIds", JSON.parse(params), function(r) {
 			
 				var json = JSON.parse(r);
 				var totalMoney = 0;
@@ -67,7 +67,7 @@
 		<li><a href="">首页</a></li>
 		<c:forEach items="${categories}" var="category">
 			<li><a
-				href="goods_listByCate?goods.categoryId=${category.id }&order=sellnum">${category.name}</a></li>
+				href="./goods/listByCate?goods.categoryId=${category.id}&order=sellnum">${category.name}</a></li>
 		</c:forEach>
 	</ul>
 
@@ -78,7 +78,7 @@
 				</a>
 			</dt>
 			<dd>
-				<a href="cart.jsp">去结算</a>
+				<a href="./user/toCart">去结算</a>
 			</dd>
 		</dl>
 
@@ -91,7 +91,7 @@
 				</dd>
 				<dd class="static">
 					<label class="btn_orange"><input type="button"
-						value="去购物车结算" onclick="location.href='cart.jsp'"></label>
+						value="去购物车结算" onclick="location.href='user/toCart'"></label>
 				</dd>
 			</dl>
 		</div>

@@ -42,7 +42,7 @@
 		<div id="admin_right">
 			<div class="headbar">
 				<div class="searchbar">
-					<form action="order_listByPage" method="get" id="form1">
+					<form action="./order/listByPage" method="get" id="form1">
 						<input type="hidden" name="page" id="page" value="" /> <select
 							name="order.orderDetail.payStatus" class="auto" id="payStatus">
 							<option value="-1">选择支付状态</option>

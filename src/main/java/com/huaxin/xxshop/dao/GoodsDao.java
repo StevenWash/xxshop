@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.huaxin.xxshop.entity.Goods;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * 商品实体类的数据访问接口
  * @author 没有蜡笔的小新 2015-12-26
  */
+@Repository
 public interface GoodsDao {
 
 	/**
@@ -39,8 +42,7 @@ public interface GoodsDao {
 
 	/**
 	 * 通过商品的id得到商品的信息
-	 * @param id
-	 *            商品的id
+	 * @param id 商品的id
 	 * @return 返回整个商品的信息
 	 */
 	public Goods getGoodsById(String id);
@@ -63,7 +65,8 @@ public interface GoodsDao {
 	 * @param num 需要得到的商品的条数
 	 * @return 返回一个带有Goods的集合
 	 */
-	public List<Goods> getGoodsByCateId(String cateId, int num);
+	public List<Goods> getGoodsByCateId(@Param("cateId") String cateId,
+										@Param("num") int num);
 
 	/**
 	 * 通过对商品的热度进行排序，得到前若干条
@@ -95,10 +98,8 @@ public interface GoodsDao {
 
 	/**
 	 * 通过order的排序条件进行排序
-	 * @param order
-	 *            排序的条件
-	 * @param num
-	 *            取得条数
+	 * @param order 排序的条件
+	 * @param num 取得条数
 	 * @return 一个带有Goods的集合
 	 */
 	public List<Goods> getGoodsByOrder(Map<String, Object> params);

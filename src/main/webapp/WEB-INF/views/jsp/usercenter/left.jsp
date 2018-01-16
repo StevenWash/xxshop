@@ -7,7 +7,8 @@
 		</div>
 		<div class="cont">
 			<ul class="list">
-				<li><a href="order_listByUser">我的订单</a></li>
+				<li><a href="./order/listByUser">我的订单</a></li>
+				<%--<li><a href="order_listByUser">我的订单</a></li>--%>
 			</ul>
 		</div>
 	</div>
@@ -17,8 +18,10 @@
 		</div>
 		<div class="cont">
 			<ul class="list">
-				<li><a href="usercenter/account_log.jsp">帐户余额</a></li>
-				<li><a href="usercenter/online_recharge.jsp">在线充值</a></li>
+				<li><a href="./user/usercenter/toAccountLog">帐户余额</a></li>
+				<%--<li><a href="usercenter/account_log.jsp">帐户余额</a></li>--%>
+				<li><a href="./user/usercenter/toOnlineRecharge">在线充值</a></li>
+				<%--<li><a href="usercenter/online_recharge.jsp">在线充值</a></li>--%>
 			</ul>
 		</div>
 	</div>
@@ -28,7 +31,8 @@
 		</div>
 		<div class="cont">
 			<ul class="list">
-				<li><a href="usercenter/address_list">地址管理</a></li>
+				<li><a href="./usercenter/address/list">地址管理</a></li>
+				<%--<li><a href="usercenter/address_list">地址管理</a></li>--%>
 			</ul>
 		</div>
 	</div>

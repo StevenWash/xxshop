@@ -1,6 +1,8 @@
 package com.huaxin.xxshop.entity;
 
-public class Goods {
+import java.io.Serializable;
+
+public class Goods implements Serializable {
 	private String id;
 	private String name;
 	private String goodsNo;
@@ -16,6 +18,10 @@ public class Goods {
 	private float score;
 
 	private Category category;
+
+	public Goods() {
+		super();
+	}
 
 	public String getId() {
 		return id;

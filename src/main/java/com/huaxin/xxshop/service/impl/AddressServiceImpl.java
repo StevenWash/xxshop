@@ -6,10 +6,13 @@ import com.huaxin.xxshop.dao.AddressDao;
 import com.huaxin.xxshop.entity.Address;
 import com.huaxin.xxshop.service.AddressService;
 import com.huaxin.xxshop.util.XXShopUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("addressService")
 public class AddressServiceImpl implements AddressService {
-
-	private AddressDao addressDao;
+	@Autowired
+	private AddressDao addressDao = null;
 
 	// getter 和setter
 	public AddressDao getAddressDao() {

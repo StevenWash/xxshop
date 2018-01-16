@@ -4,58 +4,70 @@ import com.huaxin.xxshop.entity.Address;
 import com.huaxin.xxshop.entity.User;
 import com.huaxin.xxshop.service.AddressService;
 import org.apache.struts2.interceptor.SessionAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
+@Controller
+@RequestMapping("/usercenter/address")
+public class AddressAction {
+    @Autowired
+    private AddressService addressService;
 
-public class AddressAction implements SessionAware {
-	// 定义一个session
+    // 定义一个session
 	Map<String, Object> session;
-
 	List<Address> addressList;
-
 	private Address address;
-	private AddressService addressService;
 
 	/*
 	 * 增加地址信息
 	 */
-	public String add() {
-		String userId = ((User) session.get("user")).getId();
+	@RequestMapping("/add")
+	public String add(HttpSession session, Address address) {
+		String userId = ((User) session.getAttribute("user")).getId();
 		address.setUserId(userId);
 		addressService.addAddress(address);
-		return "opersuc";
+		return "/usercenter/address_list";
 	}
 
 	/*
 	 * 显示所有已经保存的地址信息
 	 */
-	public String list() {
-		String userId = ((User) session.get("user")).getId();
-		addressList = addressService.getAddress(userId);
-
-		return "list";
+	@RequestMapping("/list")
+	public String list(HttpSession session, Model model) {
+		String userId = ((User) session.getAttribute("user")).getId();
+		List<Address> addressList = addressService.getAddress(userId);
+		model.addAttribute("addressList", addressList);
+		return "/usercenter/address_list";
+//		return "list";
 	}
 
 	/*
 	 * 响应设置默认地址的方法
 	 */
-	public String setDefault() {
-		String userId = ((User) session.get("user")).getId();
+    @RequestMapping("/setDefault")
+	public String setDefault(HttpSession session, Address address) {
+		String userId = ((User) session.getAttribute("user")).getId();
 		address.setUserId(userId);
 		addressService.setDefault(address);
-		return "opersuc";
-	}
+        return "/usercenter/address_list";
+    }
 
 	/*
 	 * 响应删除地址的方法
 	 */
-	public String delete() {
-		String userId = ((User) session.get("user")).getId();
+	@RequestMapping("/delete")
+	public String delete(HttpSession session, Address address) {
+		String userId = ((User) session.getAttribute("user")).getId();
 		address.setUserId(userId);
 		addressService.deleteAddress(address);
-		return "opersuc";
+		return "/usercenter/address_list";
 	}
 
 	public Address getAddress() {
@@ -82,10 +94,9 @@ public class AddressAction implements SessionAware {
 		return addressList;
 	}
 
-	@Override
-	public void setSession(Map<String, Object> arg0) {
-		// TODO Auto-generated method stub
-		this.session = arg0;
-	}
-
+//	@Override
+//	public void setSession(Map<String, Object> arg0) {
+//		// TODO Auto-generated method stub
+//		this.session = arg0;
+//	}
 }

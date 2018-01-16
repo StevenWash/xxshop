@@ -36,6 +36,7 @@
 		parameterType="String">
 		select o.*,g.name gname from
 		shop_orderdetail
-		o,shop_goods g where orderid=#{0}
+		o,shop_goods g where orderid=#{orderId}
 	</select>
+	<!--o,shop_goods g where orderid=#{0}-->
 </mapper>

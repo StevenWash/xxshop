@@ -94,7 +94,7 @@
 						</div>
 
 						<!--不是货到付款并且支付方式为线上支付-->
-						<form action='order_pay' method='post' target='_blank' id="form1">
+						<form action='./order;/pay' method='post' target='_blank' id="form1">
 							<input type="hidden" name="order.id" value="${order.id }" /> <input
 								class="submit_pay" onclick="javascript:finish();" value="立即支付" />
 						</form>

@@ -12,7 +12,7 @@
 	function delMember(id) {
 		alert(id);
 		if (confirm("您确认要删除该用户吗？")) {
-			location.href = "user_delete?user.id=" + id;
+			location.href = "./user/delete?user.id=" + id;
 		}
 	}
 </script>

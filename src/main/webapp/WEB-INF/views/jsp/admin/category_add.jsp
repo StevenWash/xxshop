@@ -24,7 +24,7 @@
 		<div id="admin_right">
 			<div class="content_box">
 				<div class="content form_content">
-					<form id="categoryForm" action="category_add" method="post">
+					<form id="categoryForm" action="./category/add" method="post">
 						<table class="form_table" cellpadding="0" cellspacing="0">
 							<col width="150px" />
 							<col />

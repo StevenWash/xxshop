@@ -3,7 +3,12 @@ package com.huaxin.xxshop.controller;
 import com.huaxin.xxshop.entity.*;
 import com.huaxin.xxshop.service.*;
 import org.apache.struts2.interceptor.SessionAware;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,15 +17,22 @@ import java.util.Map;
  * 用来处理订单的Action
  * @author 没有蜡笔的小新 2015-12-29
  */
-public class OrderAction implements SessionAware {
 
+@Controller
+@RequestMapping("/order")
+public class OrderAction {
 	Map<String, Object> session;
 
+	@Autowired
 	private AddressService addressService;
+    @Autowired
 	private GoodsService goodsService;
+    @Autowired
 	private OrderService orderService;
-	private CategoryService categoryService;
-	private UserService userService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private UserService userService;
 
 	// 用来进行接收和传送数据
 	private Order order;
@@ -42,9 +54,10 @@ public class OrderAction implements SessionAware {
 	/*
 	 * 添加一条订单信息
 	 */
-	public String add() {
-		userId = ((User) session.get("user")).getId();
-		addresses = addressService.getAddress(userId);
+	@RequestMapping("/add")
+	public String add(HttpSession session, List<OrderDetail> orderDetails, Model model) {
+		String userId = ((User) session.getAttribute("user")).getId();
+		List<Address> addresses = addressService.getAddress(userId);
 		// System.out.println("hash:"+this.hashCode());
 		for (OrderDetail orderDetail : orderDetails) {
 
@@ -52,18 +65,21 @@ public class OrderAction implements SessionAware {
 			orderDetail.setGoods(goodsService.getGoodsById(orderDetail
 					.getGoodsId()));
 		}
-
-		return "add";
+		model.addAttribute("addresses", addresses);
+		return "order_add";
+//		return "add";
 	}
 
 	/*
 	 * 处理提交订单的页面
 	 */
-	public String submit() {
-		userId = ((User) session.get("user")).getId();
+    @RequestMapping("/submit")
+	public String submit(Order order, List<OrderDetail> orderDetails, HttpSession session) {
+		String userId = ((User) session.getAttribute("user")).getId();
 		order.setUserId(userId);
 		orderService.addOrder(order, orderDetails);
-		return "submit";
+//		return "submit";
+        return "order_submit";
 	}
 
 	/*
@@ -77,50 +93,64 @@ public class OrderAction implements SessionAware {
 	/*
 	 * 列出来所有的订单信息
 	 */
-	public String listByUser() {
-		userId = ((User) session.get("user")).getId();
-		orders = orderService.getOrderByUserId(userId);
-		return "listUser";
+	@RequestMapping("/listByUser")
+	public String listByUser(HttpSession session, Model model) {
+		String userId = ((User) session.getAttribute("user")).getId();
+        List<Order> orders = orderService.getOrderByUserId(userId);
+		model.addAttribute("userId", userId);
+		model.addAttribute("orders", orders);
+		return "/usercenter/order_list";
+//		return "listUser";
 	}
 
 	/*
 	 * 带有所有商品分类的分页 进行分页查询
 	 */
-	public String listByPage() {
-		userId = ((User) session.get("user")).getId();
+	@RequestMapping("/lisrByPage")
+	public String listByPage(int page, Model model) {
+		String userId = ((User) session.get("user")).getId();
 		if (page == 0) {
 			page = 1;
 		}
-		pageBean = orderService.getOrderByPage(page, order);
-		return "listAdmin";
+        PageBean<Order> pageBean = orderService.getOrderByPage(page, order);
+		model.addAttribute("pageBean", pageBean);
+		return "admin/order_list";
+//		return "listAdmin";
 	}
 
 	/*
 	 * 用户中心的首页
 	 */
-	public String uindex() {
-		categories = categoryService.getCategories();
-		userId = ((User) session.get("user")).getId();
-		orders = orderService.getOrderByUserId(userId);
-		params = orderService.getOrderInfoByUserId(userId);
-		return "uindex";
+	@RequestMapping("/uindex")
+	public String uindex(HttpSession session, Model model) {
+		String userId = ((User) session.getAttribute("user")).getId();
+		List<Order> orders = orderService.getOrderByUserId(userId);
+        Map<String, Object> params = orderService.getOrderInfoByUserId(userId);
+        List<Category> categories = categoryService.getCategories();
+
+        model.addAttribute("categories", categories);
+		model.addAttribute("orders", orders);
+		model.addAttribute("params", params);
+		return "/usercenter/index";
 	}
 
 	/*
 	 * 进行支付
 	 */
-	public String pay() {
+	@RequestMapping("/pay")
+	public String pay(HttpSession session, Order order) {
 		order = orderService.getOrder(order.getId());
 		// 更新用户的余额信息
-		user = (User) session.get("user");
-		float money = (user.getMoney() - order.getTotalMoney()) <= 0 ? 0 : user
-				.getMoney() - order.getTotalMoney();
-		((User) session.get("user")).setMoney(money);
+		User user = (User) session.getAttribute("user");
+		float money = (user.getMoney() - order.getTotalMoney()) <= 0 ?
+                0 : user.getMoney() - order.getTotalMoney();
+		((User) session.getAttribute("user")).setMoney(money);
 		userService.updateMoney(user.getId(), money);
 
 		// 更新订单和订单详细信息，还有商品的相关信息
 		order.setPayTime(new Date());
-		orderDetails = orderService.getOrderDetailByOrderId(order.getId());
+		List<OrderDetail> orderDetails = orderService.getOrderDetailByOrderId(order.getId());
+		Goods goods = null;
 		for (OrderDetail orderDetail : orderDetails) {// 支付完成后将支付状态设置为1，订单状态设置为2
 			System.out.println(orderDetail);
 			orderDetail.setPayStatus(1);
@@ -134,14 +164,14 @@ public class OrderAction implements SessionAware {
 
 		}
 		orderService.updateOrder(order, orderDetails);
-
-		return "paysuc";
+        return "pay_suc";
+//		return "paysuc";
 	}
 
-	@Override
-	public void setSession(Map<String, Object> arg0) {
-		this.session = arg0;
-	}
+//	@Override
+//	public void setSession(Map<String, Object> arg0) {
+//		this.session = arg0;
+//	}
 
 	// getter和setter
 	public AddressService getAddressService() {

@@ -24,7 +24,7 @@
 		<jsp:include page="../navbar.jsp" />
 		<jsp:include page="../search.jsp" />
 		<div class="position">
-			您当前的位置： <a href="">首页</a> » <a href="order_uindex">我的账户</a>
+			您当前的位置： <a href="">首页</a> » <a href="./order/uindex">我的账户</a>
 		</div>
 		<div class="wrapper clearfix">
 			<jsp:include page="left.jsp" />
@@ -39,14 +39,16 @@
 						<dt>
 							<a class="ico"><img id="user_ico_img"
 								src="${sessionScope.user.avatar}" width="100" height="100"
-								alt="加载失败" /></a> <a class="blue" href="usercenter/user_avatar.jsp">修改头像</a>
+								alt="加载失败" /></a>
+							<a class="blue" href="./user/usercenter/toAvatarChange">修改头像</a>
+							<%--<a class="blue" href="usercenter/user_avatar.jsp">修改头像</a>--%>
 						</dt>
 						<dd>
 							<table width="100%" cellpadding="0" cellspacing="0">
 								<col width="350px" />
 								<tr>
 									<td>你的订单交易总数量：<b class="red2">${params.orderTotalNum }</b>&nbsp;&nbsp;&nbsp;<a
-										class="blue" href="order_listByUser">进入订单列表</a></td>
+										class="blue" href="./order/listByUser">进入订单列表</a></td>
 								</tr>
 								<tr>
 									<td>总消费额：<b class="red2">${params.totalUsed }</b></td>
@@ -83,7 +85,7 @@
 
 						<c:forEach items="${orders}" var="order">
 							<tr>
-								<td><a href="order_resubmit?order.id=${order.id}"
+								<td><a href="./order/resubmit?order.id=${order.id}"
 									class="orange">${order.id }</a></td>
 								<td>${order.orderTime }</td>
 								<td>${order.address.accept}</td>
@@ -100,7 +102,7 @@
 						<tfoot>
 							<tr>
 								<td colspan="6" class="t_r"><a class="blue"
-									href="order_listByUser">更多订单&gt;&gt;</a></td>
+									href="./order/listByUser">更多订单&gt;&gt;</a></td>
 							</tr>
 						</tfoot>
 					</table>

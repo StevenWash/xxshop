@@ -10,22 +10,33 @@ import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
+import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-
+@Controller
+@RequestMapping("/goods")
 public class GoodsAction {
-	private CategoryService categoryService;
+	@Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private GoodsService goodsService;
+
 	private List<Category> categories;
 	private Category category;
 
 	// 商品的货号
 	private String goodsNo;
-
 	// 接受前端传递过来的goods参数
 	private Goods goods;
-	private GoodsService goodsService;
+
 
 	// 定义文件变量和文件名，用来接收来自前台页面的数据
 	private File thumbnail;
@@ -44,39 +55,49 @@ public class GoodsAction {
 	/*
 	 * 将商品的信息全部显示出来
 	 */
-	public String list() {
-		goodses = goodsService.getGoods(goods);
-		categories = categoryService.getCategories();
-		return "list";
+	@RequestMapping("/list")
+	public String list(Goods goods, Model model) {
+		List<Goods> goodses = goodsService.getGoods(goods);
+		List<Category> categories = categoryService.getCategories();
+		model.addAttribute("goodses", goodses);
+		model.addAttribute("categories", categories);
+		return "/admin/goods_list";
+//		return "list";
 	}
 
 	/*
 	 * 带有所有商品分类的分页 进行分页查询
 	 */
-	public String listByPage() {
-		categories = categoryService.getCategories();
+	@RequestMapping("/listByPage")
+	public String listByPage(int page, Goods goods, Model model) {
+		List<Category> categories = categoryService.getCategories();
 		if (page == 0) {
 			page = 1;
 		}
-		pageBean = goodsService.getGoodsByPage(page, goods);
-		return "list";
-
+		PageBean<Goods> pageBean = goodsService.getGoodsByPage(page, goods);
+		model.addAttribute("pageBean", pageBean);
+		model.addAttribute("categories", categories);
+		return "goods_list";
 	}
 
 	/*
 	 * 得到添加商品页面的商品号和分类
 	 */
-	public String add() {
-		goodsNo = "XX" + XXShopUtil.getGoodsNo();
-		categories = categoryService.getCategories();
-		return "add";
+	@RequestMapping("/add")
+	public String add(Model model) {
+		String goodsNo = "XX" + XXShopUtil.getGoodsNo();
+		List<Category> categories = categoryService.getCategories();
+		model.addAttribute("goodsNo", goodsNo);
+		model.addAttribute("categories", categories);
+		return "/admin/goods_add";
 	}
 
 	/*
 	 * 进行商品添加的操作
 	 */
-	public String addoper() {
-		System.out.println(goods);
+	@RequestMapping("/addoper")
+	public String addoper(Goods goods, File thumbnail, String thumbnailFileName, Model model) {
+//		System.out.println(goods);
 		/*
 		 * dir 获取当前文件存放的目录地址 suffix 用来获取当前上传的文件的扩展名
 		 */
@@ -93,29 +114,35 @@ public class GoodsAction {
 				// 上传文件 org.apache.commons.io.FileUtils 既可以实现将文件上传到服务器上对应的文件夹下面
 				FileUtils.copyFile(thumbnail, saveFile);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 			// 将文件的地址信息添加到数据库中
 			goods.setThumbnail("goodsimage/" + fileName + suffix);
 		}
 		goodsService.addGoods(goods);
-		return "opersuc";
+
+		return "redirect:/goods/listByPage";
+//		return "opersuc";
 	}
 
 	/*
 	 * 跳转到更新的页面，将分类信息和商品信息带过去
 	 */
-	public String update() {
-		categories = categoryService.getCategories();
+	@RequestMapping("update")
+	public String update(Goods goods, Model model) {
+		List<Category> categories = categoryService.getCategories();
 		goods = goodsService.getGoodsById(goods.getId());
-		return "update";
+		model.addAttribute("goods", goods);
+		model.addAttribute("categories", categories);
+		return "/admin/goods_update";
+//		return "update";
 	}
 
 	/*
 	 * 实际上的更新操作
 	 */
-	public String updateoper() {
+	@RequestMapping("/updateoper")
+	public String updateoper(Goods goods) {
 		/*
 		 * dir 获取当前文件存放的目录地址 suffix 用来获取当前上传的文件的扩展名
 		 */
@@ -133,7 +160,7 @@ public class GoodsAction {
 				FileUtils.copyFile(thumbnail, saveFile);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 			// 删除原先的缩略图
 			new File(dir + "/" + goods.getThumbnail()).delete();
@@ -142,48 +169,71 @@ public class GoodsAction {
 		}
 
 		goodsService.updateGoods(goods);
-		return "updatesuc";
+		return "redirect:/goods/listByPage";
+//		return "goods_listByPage";
+//		return "updatesuc";
 	}
 
 	/*
 	 * 删除商品
 	 */
-	public String delete() {
+	@RequestMapping("/delete")
+	public String delete(Goods goods) {
 		goodsService.deleteGoods(goods);
-		return "delsuc";
+		return "redirect:/goods/listByPage";
+//		return "delsuc";
 	}
 
+
 	/*
+	 * 商品分类展示
 	 * 通过categoryId来显示所有的商品
 	 */
-	public String listByCate() {
-		category = categoryService.getCategoryById(goods.getCategoryId());
-		categories = categoryService.getCategories();
-		goodses = goodsService.getGoodsByOrder(order, 6, goods.getCategoryId());
-		goodsesWithOrder = goodsService.getGoodsBySellNum(10);
-
-		return "bycate";
+	@RequestMapping("/listByCate")
+	public String listByCate(Goods goods, String order, Model model) {
+		Category category = categoryService.getCategoryById(goods.getCategoryId());
+		List<Category> categories = categoryService.getCategories();
+		// 姑且只show6个商品
+		int MAX = 6;
+		List<Goods> goodses = goodsService.getGoodsByOrder(order, MAX, goods.getCategoryId());
+		List<Goods> goodsesWithOrder = goodsService.getGoodsBySellNum(10);
+        model.addAttribute("category", category);
+		model.addAttribute("categories", categories);
+		model.addAttribute("goodses", goodses);
+		model.addAttribute("goodsesWithOrder", goodsesWithOrder);
+		return "/goods_list";
+//		return "bycate";
 	}
 
 	/*
 	 * 显示商品的信息
 	 */
-	public String view() {
+	@RequestMapping("/view")
+	public String view(Goods goods, Model model) {
 		goods = goodsService.getGoodsById(goods.getId());
-		categories = categoryService.getCategories();
-		return "view";
+		List<Category> categories = categoryService.getCategories();
+		model.addAttribute("goods", goods);
+		model.addAttribute("categories", categories);
+//		session.setAttribute("goods", goods);
+		return "goods_view";
+//		return "view";
 	}
 
 	/*
 	 * 带有某一个商品类别的分页
 	 */
-	public String listByPageCate() {
-		category = categoryService.getCategoryById(goods.getCategoryId());
+	@RequestMapping("/listByPageCate")
+	public String listByPageCate(Goods goods, int page, Model model) {
+		Category category = categoryService.getCategoryById(goods.getCategoryId());
 		if (page == 0) {
 			page = 1;
 		}
-		pageBean = goodsService.getGoodsByPage(page, goods);
-		return "listCate";
+		PageBean<Goods> pageBean = goodsService.getGoodsByPage(page, goods);
+		model.addAttribute("category", category);
+		model.addAttribute("pageBean", pageBean);
+		return "goods_list";
+		// 跳转到何处？
+//		return "listCate";
 	}
 
 	/*
@@ -196,21 +246,22 @@ public class GoodsAction {
 	 * goodsIds用来接收来自前台的数据：包含了categoryId和num的json字符串 result
 	 * 则返回查询到的信息，也是封装成了一个json字符串
 	 */
-	public String getGoodsesByIds() {
-		System.out.println("goodsIds:" + goodsIds);
+	@RequestMapping("getGoodsByIds")
+	public String getGoodsesByIds(String goodsIds) {
+//		System.out.println("goodsIds:" + goodsIds);
 		String[] ids = goodsIds.split(",");
-		for (String s : ids) {
-			System.out.println("test:" + s);
-		}
-		System.out.println("test:" + ids.toString());
-		goodses = goodsService.getGoodsByIds(ids);
+//		for (String s : ids) {
+//			System.out.println("test:" + s);
+//		}
+//		System.out.println("test:" + ids.toString());
+		List<Goods> goodses = goodsService.getGoodsByIds(ids);
 		JsonConfig c = new JsonConfig();
 		c.setExcludes(new String[] { "category", "goodsNo", "categoryId",
 				"price1", "stock", "description", "role", "sellTime",
 				"sellNum", "score" });
 		JSONArray a = JSONArray.fromObject(goodses, c);
-		result = a.toString();
-		System.out.println("result:" + result);
+		String result = a.toString();
+//		System.out.println("result:" + result);
 		return "getgoodsesbyids";
 
 	}

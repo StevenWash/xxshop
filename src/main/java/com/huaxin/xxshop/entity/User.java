@@ -1,11 +1,13 @@
 package com.huaxin.xxshop.entity;
 
+import java.io.Serializable;
+
 /**
  * 用户实体类
  * @author 没有蜡笔的小新
  * 2015-12-21
  */
-public class User {
+public class User implements Serializable {
 
 	private String id;
 	private String name;
@@ -17,7 +19,28 @@ public class User {
 	private String role;
 	private int status;
 
-	public String getId() {
+	public User() {
+	    super();
+    }
+
+    // 必要吗？
+    public User(String id, String name, String password, String phoneNum,
+                float money, String avatar, String regTime, String role, int status) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+        this.phoneNum = phoneNum;
+        this.money = money;
+        this.avatar = avatar;
+        this.regTime = regTime;
+        this.role = role;
+        this.status = status;
+    }
+
+
+
+
+    public String getId() {
 		return id;
 	}
 
@@ -88,6 +111,6 @@ public class User {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
+
 
 }

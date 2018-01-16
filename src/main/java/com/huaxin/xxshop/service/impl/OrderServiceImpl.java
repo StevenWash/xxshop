@@ -12,10 +12,15 @@ import com.huaxin.xxshop.entity.OrderDetail;
 import com.huaxin.xxshop.entity.PageBean;
 import com.huaxin.xxshop.service.OrderService;
 import com.huaxin.xxshop.util.XXShopUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("orderService")
 public class OrderServiceImpl implements OrderService {
-	private OrderDao orderDao;
-	private OrderDetailDao orderDetailDao;
+	@Autowired
+	private OrderDao orderDao = null;
+	@Autowired
+	private OrderDetailDao orderDetailDao = null;
 
 	@Override
 	public void addOrder(Order order, List<OrderDetail> orderDetails) {

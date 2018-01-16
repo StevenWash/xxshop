@@ -5,7 +5,7 @@
 <html>
 
 <head>
-<meta charset="UTF-8"></meta>
+<meta charset="UTF-8" />
 <base href="${base}/" />
 <title>首页_${site}</title>
 <jsp:include page="base.jsp" />
@@ -26,14 +26,20 @@
 					</div>
 					<div class="cont clearfix">
 						<ul class="prolist">
-
-							<c:forEach items="${goodses}" var="goods">
-								<li><a href="goods_view?goods.id=${goods.id}"
+                            <form action="./goods/getHotGoods" />
+                            <c:if test="${hotGoodses==null}">
+                                <h2>hotGoodses = null</h2>
+                            </c:if>
+                            <%--<a href="./goods/getHotGoods">1</a>--%>
+                            <!--此处热门商品为空-->
+                            <c:forEach items="${hotGoodses}" var="goods">
+                            <%--<c:forEach items="${goodses}" var="goods">--%>
+								<li><a href="./goods/view?goods.id=${goods.id}"
 									target="_blank"> <img src="${goods.thumbnail}" width="85"
 										height="85" alt="" />
 								</a>
 									<p class="pro_title">
-										<a title="${goods.name}" href="goods_view?goods.id=${goods.id }" 
+										<a title="${goods.name}" href="./goods/view?goods.id=${goods.id}"
 										target="_blank">${goods.name}</a>
 									</p>
 									<p class="brown">
@@ -46,28 +52,12 @@
 				<!--热卖商品-->
 			</div>
 
+
+			<h2></h2>
 			<div class="main f_l">
-				<!--商品分类展示-->
-				<div class="category box">
-					<div class="title2">
-						<h2>
-							<img src="images/front/category.gif" alt="商品分类" width="155"
-								height="36" />
-						</h2>
-					</div>
-				</div>
 
-				<table id="index_category" class="sort_table m_10" width="100%">
-					<tr>
-						<td><c:forEach items="${categories}" var="category">
-								<a href="goods_listByCate?goods.categoryId=${category.id}&order=sellnum">
-								${category.name}（${category.goodsNum }）</a>|
-							</c:forEach></td>
-					</tr>
-				</table>
-				<!--商品分类展示-->
 
-				<!--最新商品-->
+				<!--最新商品 start-->
 				<div class="box yellow m_10">
 					<div class="title title3">
 						<h2>
@@ -77,12 +67,17 @@
 					</div>
 					<div class="cont clearfix">
 						<ul class="prolist">
+
+							<c:if test="${goodsesLasted==null}">
+                                <h2>goodsesLasted = null</h2>
+                            </c:if>
+
 							<c:forEach items="${goodsesLasted}" var="goods">
 								<li style="overflow: hidden"><a
-									href="goods_view?goods.id=${goods.id}" target="_blank"><img
+									href="./goods/view?goods.id=${goods.id}" target="_blank"><img
 										src="${goods.thumbnail}" width="175" height="175" alt="" /></a>
 									<p class="pro_title">
-										<a title="" href="goods_view?goods.id=${goods.id }">${goods.name}</a>
+										<a title="" href="./goods/view?goods.id=${goods.id}">${goods.name}</a>
 									</p>
 									<p class="brown">
 										惊喜价：<b>￥${goods.price2}</b>
@@ -94,24 +89,47 @@
 						</ul>
 					</div>
 				</div>
-				<!--最新商品-->
-				<c:forEach items="${categories}" var="category">
+				<!--最新商品 end-->
+
+                <!--商品分类展示 start-->
+                <!--商品分类统计-->
+                <div class="category box">
+                    <div class="title2">
+                        <h2>
+                            <img src="images/front/category.gif" alt="商品分类" width="155" height="36" />
+                        </h2>
+                    </div>
+                </div>
+
+                <table id="index_category" class="sort_table m_10" width="100%">
+                    <tr>
+                        <td><c:forEach items="${categories}" var="category">
+                            <a href="./goods/listByCate?goods.categoryId=${category.id}&order=sellnum">
+                                    ${category.name}（${category.goodsNum}）</a>|
+                        </c:forEach></td>
+                    </tr>
+                </table>
+
+
+                <!--分类显示商品-->
+                <!-- null 显示否?
+                     现在此类为空，仍显示种类跳转-->
+                <c:forEach items="${categories}" var="category">
 					<div class="box m_10 green" name="showGoods">
 						<div class="title title3">
 							<h2>
 								<a href=""><strong>${category.name}</strong></a>
 							</h2>
-							<a class="more" href="goods_listByCate?goods.categoryId=${category.id }&order=sellnum">更多商品...</a>
+							<a class="more" href="./goods/listByCate?goods.categoryId=${category.id}&order=sellnum">更多商品...</a>
 						</div>
 
 						<div class="cont clearfix">
 							<ul class="prolist">
-								<c:forEach items="${category.goodses}" var="goods">
-									<li style="overflow: hidden"><a href="goods_view?goods.id=${goods.id }" target="_blank"><img
-											src="${goods.thumbnail}" width="175" height="175" alt=""
-											title=""></a>
+                                <c:forEach items="${category.goodses}" var="goods">
+									<li><a href="./goods/view?goods.id=${goods.id}">
+                                        <img src="${goods.thumbnail}" width="175" height="175" alt="" title=""></a>
 										<p class="pro_title">
-											<a title="${goods.name}" href="goods_view?goods.id=${goods.id }">${goods.name}</a>
+											<a title="${goods.name}" href="./goods/view?goods.id=${goods.id}">${goods.name}</a>
 										</p>
 										<p class="brown">
 											惊喜价：<b>￥${goods.price2}</b>
@@ -124,7 +142,10 @@
 						</div>
 					</div>
 				</c:forEach>
-				<!--最新评论-->
+                <!-- 分类显示商品 end-->
+
+
+                <!--最新评论 start-->
 				<div class="comment box m_10">
 					<div class="title title3">
 						<h2>
@@ -150,11 +171,13 @@
 						</c:forEach>
 					</div>
 				</div>
-				<!--最新评论-->
+				<!--最新评论 end-->
 			</div>
 		</div> 
 		<jsp:include page="help.jsp"></jsp:include>
 		<jsp:include page="footer.jsp"></jsp:include>
 	</div>
+
+
 </body>
 </html>

@@ -22,6 +22,7 @@
 			<result property="name" column="cname" />
 		</association>
 	</resultMap>
+
 	<insert id="addGoods" parameterType="Goods">
 		insert into shop_goods
 		values(#{id},#{goodsNo},#{name},#{categoryId},#{price1},#{price2},#{stock},#{thumbnail},#{description},#{role},#{sellTime},#{sellNum},#{score})
@@ -82,10 +83,12 @@
 
 	<select id="getGoodsByCateId" resultType="Goods">
 		select * from
-		shop_goods where categoryId=#{0} ORDER BY role desc limit #{1}
+		shop_goods where categoryId=#{cateId} ORDER BY role desc limit #{num}
 	</select>
+    <!--shop_goods where categoryId=#{0} ORDER BY role desc limit #{1}-->
 
-	<select id="getGoodsByRole" resultType="Goods">
+
+    <select id="getGoodsByRole" resultType="Goods">
 		select * from
 		shop_goods
 		ORDER BY role desc limit #{0}
@@ -100,7 +103,7 @@
 	<select id="getGoodsBySellNum" resultType="Goods">
 		select * from
 		shop_goods
-		ORDER BY sellNum desc limit #{0}
+		ORDER BY sellNum desc limit #{num}
 	</select>
 
 	<select id="getGoodsByIds" resultType="Goods">

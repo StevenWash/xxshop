@@ -27,22 +27,24 @@
 			<div class="login_box">
 				<div class="login_title">后台管理登录</div>
 				<div class="login_cont">
-					<form action='user_adminLogin' method='post'>
+					<form action='./user/adminLogin' method='post'>
 						<table class="form_table">
 							<col width="90px" />
 							<col />
 							<tr>
-								<th valign="middle">用户名：</th><td><input class="normal" type="text" name="user.name" alt="请填写用户名" /></td>
+								<th valign="middle">用户名：</th><td><input class="normal" type="text" name="name" alt="请填写用户名" /></td>
 							</tr>
 							<tr>
-								<th valign="middle">密码：</th><td><input class="normal" type="password" name="user.password" alt="请填写密码" /></td>
+								<th valign="middle">密码：</th><td><input class="normal" type="password" name="password" alt="请填写密码" /></td>
 							</tr>
+							<!-- 随机产生二维码 前端？！？！后台？！？！ -->
 							<tr>
 								<th valign="middle">验证码：</th><td><input style="width:85px" type='text' class='normal' name='captcha' /><label>填写下图所示字符</label></td>
 						  	</tr>
 							<tr class="low">
 								<th></th>
-								<td><img src='verifycode' id='captchaImg' /></td>
+								<td><img src='images/verifyCodeImg/verifyCodeImg_001.png' width="80" id='captchaImg' /></td>
+								<%--<td><img src='verifycode' id='captchaImg' /></td>--%>
 							</tr>
 							<tr>
 								<th valign="middle"></th><td><input class="submit" type="submit" value="登录" /><input class="submit" type="reset" value="取消" /></td>

@@ -12,10 +12,20 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <!-- 使用扫描机制，扫描控制器类，控制器类都在controller包(此处修订为controllerAnnotation)及其子包下 -->
-    <context:component-scan base-package="com.huaxin.xxshop.controller" />
-    <!-- 使用扫描机制，扫描service包 -->
+
+    <!--&lt;!&ndash; 使用扫描机制，扫描控制器类，控制器类都在controller包(此处修订为controllerAnnotation)及其子包下 &ndash;&gt;-->
+    <!--<context:component-scan base-package="com.huaxin.xxshop.controller" />-->
+    <!--&lt;!&ndash; 使用扫描机制，扫描service包 &ndash;&gt;-->
+    <!--<context:component-scan base-package="com.huaxin.xxshop.service"/>-->
+
+    <!-- 开启spring的扫描注入，使用如下注解 -->
+    <!-- @Component,@Repository,@Service,@Controller-->
+    <context:component-scan base-package="com.huaxin.xxshop.controller"/>
     <context:component-scan base-package="com.huaxin.xxshop.service"/>
+    <context:component-scan base-package="com.huaxin.xxshop.dao"/>
+    <!--<context:component-scan base-package="com.huaxin.xxshop.*"/>-->
+
+    <!-- 开启springMVC的注解驱动，使得url可以映射到对应的controller -->
     <mvc:annotation-driven />
     <!-- annotation-driven用于简化开发的配置，
     注解DefaultAnnotationHandlerMapping和AnnotationMethodHandlerAdapter -->
@@ -37,12 +47,13 @@
     <mvc:resources location="/useravatars/" mapping="/useravatars/**"></mvc:resources>
 
 
+
     <!-- 配置视图解析器 -->
+    <!-- 找到Web工程/WEB-INF/views/jsp文件夹，且文件结尾为jsp的文件作为映射 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
           id="internalResourceViewResolver">
         <!-- 前缀 -->
-        <!--<property name="prefix" value="/WEB-INF/views/jsp/" />-->
-        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="prefix" value="/WEB-INF/views/jsp/" />
         <!-- 后缀 -->
         <property name="suffix" value=".jsp" />
     </bean>

@@ -1,5 +1,6 @@
 package com.huaxin.xxshop.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,13 +8,18 @@ import java.util.List;
  * 
  * @author 没有蜡笔的小新 2015-12-26
  */
-public class PageBean<T> {
+public class PageBean<T> implements Serializable {
 	public List<T> data;// 数据
 	private int pageSize;// 每一页的数据
 	private int actualPageSize;// 实际每页多少条记录
 	private int page;// 当前第几页
 	private int totalPage;// 总共多少页
 	private int totalNum;// 总记录数
+
+
+	public PageBean() {
+		super();
+	}
 
 	public List<T> getData() {
 		return data;

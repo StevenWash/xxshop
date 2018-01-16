@@ -2,11 +2,13 @@ package com.huaxin.xxshop.dao;
 
 import java.util.List;
 import com.huaxin.xxshop.entity.Address;
+import org.springframework.stereotype.Repository;
 
 /**
  * 地址实体类的数据访问接口
  * @author 没有蜡笔的小新 2015-12-23
  */
+@Repository
 public interface AddressDao {
 
 	/**

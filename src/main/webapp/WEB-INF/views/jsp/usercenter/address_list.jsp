@@ -97,7 +97,7 @@
 											<td>${address.zip}</td>
 											<td><a class="blue" href='javascript:void(0)' onclick=''>修改</a>|
 												<a id="delete" class="blue"
-												href="address_delete?address.id=${address.id}">删除</a>| <c:if
+												href="./address/delete?address.id=${address.id}">删除</a>| <c:if
 													test="${address.isDefault eq 1}">
 													<a class="red2"
 														href="address_setDefault?address.id=${address.id}&address.isDefault=2">取消默认</a>
@@ -115,7 +115,7 @@
 
 				<!--表单修改-->
 				<div class="orange_box" id='address_form'>
-					<form action='address_add' method='post' name='form'>
+					<form action='./address/add' method='post' name='form'>
 						<table class="form_table" width="100%" cellpadding="0"
 							cellspacing="0">
 							<col width="120px" />
@@ -123,7 +123,7 @@
 							<caption>收货地址</caption>
 							<tr>
 								<th><span class="red">*</span> 收货人姓名：</th>
-								<td><input name='address.accept' class="normal" type="text" /><label>收货人真实姓名，方便快递公司联系。</label></td>
+								<td><input name='address.accept' class="normal" type="text" /><label>收货人真实姓名，方便快递公司联系</label></td>
 							</tr>
 							<tr>
 								<th><span class="red">*</span> 所在地区：</th>
@@ -134,16 +134,16 @@
 							<tr>
 								<th><span class="red">*</span> 街道地区：</th>
 								<td><input name='address.address' class="normal"
-									type="text" /><label>真实详细收货地址，方便快递公司联系。</label></td>
+									type="text" /><label>真实详细收货地址，方便快递公司联系</label></td>
 							</tr>
 							<tr>
 								<th>邮政编码：</th>
-								<td><input name='address.zip' class="normal" type="text" /><label>邮政编码,如250000。</label></td>
+								<td><input name='address.zip' class="normal" type="text" /><label>邮政编码,如250000</label></td>
 							</tr>
 							<tr>
 								<th>电话号码：</th>
 								<td><input name='address.phoneNum' class="normal"
-									type="text" /><label>电话号码,如010-12345688。</label></td>
+									type="text" /><label>电话号码,如010-12345688</label></td>
 							</tr>
 							<tr>
 								<th>手机号码：</th>

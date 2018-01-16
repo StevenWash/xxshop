@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.huaxin.xxshop.entity.Order;
+import org.springframework.stereotype.Repository;
 
 /**
  * Order实体类对应的数据访问接口
  * @author 没有蜡笔的小新 2015-12-29
  */
+@Repository
 public interface OrderDao {
 
 	/**

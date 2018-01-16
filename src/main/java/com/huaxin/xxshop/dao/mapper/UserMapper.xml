@@ -26,37 +26,44 @@
 		select count(*) from shop_user where name=#{name}
 	</select>
 
-	<select id="getUserByNameAndPwd" resultType="User">
+	<select id="getUserByNameAndPwd" parameterType="String" resultType="User">
 		select * from
-		shop_user where name=#{0} and password=#{1}
+		shop_user where name=#{name} and password=#{password}
 	</select>
+	<!--select * from shop_user where name=#{0} and password=#{1}-->
 
 	<update id="updateAvatar">
-		update shop_user set avatar=#{1} where id=#{0}
+		update shop_user set avatar=#{avar} where id=#{id}
 	</update>
+	<!--update shop_user set avatar=#{1} where id=#{0}-->
+
 
 	<update id="updateMoney">
-		update shop_user set money=#{1} where id=#{0}
+		update shop_user set money=#{money} where id=#id0}
 	</update>
+	<!--update shop_user set money=#{1} where id=#{0}-->
+
 
 	<select id="getAllUser" resultMap="UserResultMap">
 		select * from shop_user
 	</select>
-	
+
 	<update id="updateStatus" >
 		update shop_user set
-		status=#{1} where id=#{0}
+		status=#{status} where id=#{id}
 	</update>
-	
+    <!--update shop_user set-->
+    <!--status=#{1} where id=#{0}-->
+
 	<update id="deleteUser" parameterType="String">
 		update shop_user set
-		status=2 where id=#{0}
-	</update>
+		status=2 where id=#{id}
+	</update><!--id=#{0}-->
 
 	<select id="getUser" parameterType="String" resultType="User">
 		select *
 		from shop_user where
-		id=#{0}
-	</select>
+		id=#{id}
+	</select><!--id=#{0}-->
 
 </mapper>
