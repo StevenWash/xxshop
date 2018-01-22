@@ -19,6 +19,11 @@ public class Address implements Serializable {
 	private String address;
 	private String isDefault;
 
+	@Override
+	public String toString() {
+		return id + " " + zip + " " + isDefault + " " + address + " " + userId;
+	}
+
 	public Address() {
 		super();
 	}

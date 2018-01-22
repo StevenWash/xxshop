@@ -29,7 +29,7 @@
 		<div id="admin_right">
 			<div class="content_box">
 				<div class="content form_content">
-					<form action="goods_updateoper" method="post"
+					<form action="./goods/updateoper" method="post"
 						enctype="multipart/form-data">
 						<input type="hidden" name="id" value="${goods.id}">
 						<div id="table_box_1">

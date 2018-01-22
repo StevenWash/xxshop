@@ -119,7 +119,6 @@
 		select g.*,c.name cname from
 		shop_goods g,shop_category c
 		where g.categoryid=c.id AND g.categoryid=#{cateId}
-		ORDER BY ${order} desc
-		limit #{num}
+		ORDER BY ${order} desc limit #{num}
 	</select>
 </mapper>

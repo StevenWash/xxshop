@@ -24,6 +24,13 @@ public interface AddressService {
 	public List<Address> getAddress(String userId);
 
 	/**
+	 * 得到当前id的地址信息
+	 * @param addressId 地址记录的id
+	 * @return 当前id的地址信息
+	 */
+	public Address getAddressById(String addressId);
+
+	/**
 	 * 设置当前的地址是否为默认地址
 	 * @param address
 	 */
@@ -34,5 +41,5 @@ public interface AddressService {
 	 * @param address 需要删除的地址实体类对象
 	 */
 	public void deleteAddress(Address address);
-
+	public void deleteAddress(String addressId);
 }

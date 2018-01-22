@@ -17,7 +17,7 @@
 	<div class="ucenter container">
 		<jsp:include page="../header.jsp"></jsp:include>
 		<jsp:include page="../navbar.jsp"></jsp:include>
-		<jsp:include page="../search.jsp"></jsp:include>
+		<jsp:include page="../search_backup.jsp"></jsp:include>
 		<div class="wrapper clearfix">
 			<jsp:include page="left.jsp" />
 			<div class="main f_r">
@@ -38,7 +38,8 @@
 						</tr>
 						<c:forEach items="${ orders}" var="order">
 							<tr>
-								<td><a href="order_resubmit?order.id=${order.id}"
+								<!--此处显示orderId，好吗？-->
+								<td><a href="./order/resubmit?orderId=${order.id}"
 									class="orange">${order.id }</a></td>
 								<td>${order.orderTime }</td>
 								<td>${order.address.accept}</td>

@@ -13,7 +13,7 @@
 	<div class="container">
 		<jsp:include page="header.jsp"></jsp:include>
 		<jsp:include page="navbar.jsp"></jsp:include>
-		<jsp:include page="search.jsp"></jsp:include>
+		<jsp:include page="search_backup.jsp"></jsp:include>
 
 		<div class="wrapper clearfix">
 			<div class="wrap_box">
@@ -34,7 +34,7 @@
 							<tr>
 								<th></th>
 								<td>您现在可以去： <a class="blue" href="">继续操作 >></a> <a
-									class="blue" href="usercenter">个人中心 >></a> <a class="blue" href="">网站首页
+									class="blue" href="./order/uindex">个人中心 >></a> <a class="blue" href="">网站首页
 										>></a>
 								</td>
 							</tr>

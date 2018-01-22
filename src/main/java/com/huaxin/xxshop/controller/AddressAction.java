@@ -33,7 +33,8 @@ public class AddressAction {
 		String userId = ((User) session.getAttribute("user")).getId();
 		address.setUserId(userId);
 		addressService.addAddress(address);
-		return "/usercenter/address_list";
+//		return "/usercenter/address_list";
+        return "redirect:/usercenter/address/list";
 	}
 
 	/*
@@ -50,24 +51,40 @@ public class AddressAction {
 
 	/*
 	 * 响应设置默认地址的方法
+     * 默认地址值："1"
 	 */
     @RequestMapping("/setDefault")
-	public String setDefault(HttpSession session, Address address) {
-		String userId = ((User) session.getAttribute("user")).getId();
-		address.setUserId(userId);
-		addressService.setDefault(address);
-        return "/usercenter/address_list";
+	public String setDefault(String addressId,String addressIsDefault) {
+        System.out.println(addressIsDefault.getClass());
+        Address address = addressService.getAddressById(addressId);
+        address.setIsDefault(addressIsDefault);
+        addressService.setDefault(address);
+//        return "/usercenter/address_list";
+        return "redirect:/usercenter/address/list";
     }
+//	public String setDefault(HttpSession session, String addressId) {
+//		String userId = ((User) session.getAttribute("user")).getId();
+//		Address address = new Address();
+//		address.setId(addressId);
+//		address.setUserId(userId);
+//		addressService.setDefault(address);
+//        return "/usercenter/address_list";
+//    }
 
 	/*
 	 * 响应删除地址的方法
 	 */
 	@RequestMapping("/delete")
-	public String delete(HttpSession session, Address address) {
-		String userId = ((User) session.getAttribute("user")).getId();
-		address.setUserId(userId);
-		addressService.deleteAddress(address);
-		return "/usercenter/address_list";
+
+	public String delete(String addressId) {
+        //	public String delete(HttpSession session, Address address) {
+//		String userId = ((User) session.getAttribute("user")).getId();
+//		address.setUserId(userId);
+//		addressService.deleteAddress(address);
+        // 此处考虑检验session的userId吗
+//		return "/usercenter/address_list";
+        addressService.deleteAddress(addressId);
+        return "redirect:/usercenter/address/list";
 	}
 
 	public Address getAddress() {

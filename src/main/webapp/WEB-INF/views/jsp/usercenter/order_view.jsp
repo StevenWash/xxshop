@@ -12,7 +12,7 @@
 	<div class="ucenter container">
 		<jsp:include page="../header.jsp"></jsp:include>
 		<jsp:include page="../navbar.jsp"></jsp:include>
-		<jsp:include page="../search.jsp"></jsp:include>
+		<jsp:include page="../search_backup.jsp"></jsp:include>
 		<div class="wrapper clearfix">
 			<jsp:include page="left.jsp" />
 			<div class="main f_r">

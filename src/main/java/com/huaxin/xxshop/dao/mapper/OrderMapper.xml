@@ -89,9 +89,8 @@
 
 	<select id="getOrder" resultType="Order" parameterType="String">
 		SELECT
-		ord.*,u.name
-		uname,ad.accept accept,od.paystatus
-		paystatus,od.sendstatus sendStatus,
+		ord.*,u.name uname,ad.accept accept,
+		od.paystatus paystatus,od.sendstatus sendStatus,
 		od.orderStatus orderStatus
 		FROM
 		shop_order

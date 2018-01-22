@@ -71,4 +71,14 @@ public interface UserService {
 	 */
 	public void updateStatus(String id, int status);
 
+	/**
+	 * 更新会员信息
+	 * 可能包括：1.身份role；2.状态status；3.密码password
+	 * @param memberId
+	 * @param status
+	 * @param memberId1
+	 * @param password
+	 * @param role
+	 */
+	public void updateMember(String memberId, Integer status, String memberId1, String password, String role);
 }

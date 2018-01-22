@@ -111,7 +111,6 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void updateOrder(Order order, List<OrderDetail> orderDetails) {
 		orderDao.updateOrder(order);
-
 		for (OrderDetail orderDetail : orderDetails) {
 			orderDetailDao.updateOrderDetail(orderDetail);
 		}
@@ -121,6 +120,8 @@ public class OrderServiceImpl implements OrderService {
 	public List<OrderDetail> getOrderDetailByOrderId(String orderId) {
 		return orderDetailDao.getOrderDetailByOrderId(orderId);
 	}
+
+
 
 	// getter 和getter
 	public OrderDao getOrderDao() {

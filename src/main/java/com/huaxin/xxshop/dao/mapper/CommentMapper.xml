@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huaxin.xxshop.dao.CommentDao">
+	<resultMap type="Comment" id="CommentResultMap">
+		<!-- 配置映射的订单信息 -->
+		<!-- id：指定查询列中的唯一标识，订单信息的中的唯一标识，如果有多个列组成唯一标识，配置多个id
+            column：订单信息的唯一标识列
+            property：订单信息的唯一标识列所映射到Orders中哪个属性
+          -->
+		<id property="id" column="id" />
+		<result property="ownerid" column="ownerid" />
+		<result property="targetid" column="targetid" />
+		<result property="statusnum" column="statusnum" />
+		<result property="remark" column="remark" />
+		<result property="createtime" column="createtime" />
+		<result property="score" column="score" />
+
+		<association property="user" javaType="User">
+			<id property="id" column="id" />
+			<result property="name" column="uname" />
+			<result property="avatar" column="avatar" />
+		</association>
+
+		<association property="goods" javaType="Goods">
+			<id property="id" column="gid" />
+			<result property="name" column="gname" />
+		</association>
+
+	</resultMap>
+
+	<select id="getCommentById" parameterType="String" resultMap="CommentResultMap">
+		select c.*, u.name as uname, g.name as gname, g.id as gid
+		from shop_comment c, shop_user u, shop_goods g
+		where c.id=#{commentId} and c.targetid=g.id and c.ownerid=u.id
+	</select>
+
+	<select id="getCommentsByTargetId" parameterType="String" resultMap="CommentResultMap">
+		select c.*,u.name as uname from shop_comment c,shop_user u
+		where targetid=#{targetId}
+		and u.id=c.ownerid
+		order by createtime DESC
+	</select>
+
+
+	<select id="getCommentsByOwnerId" parameterType="String" resultMap="CommentResultMap">
+		select c.*,g.name as gname from shop_comment c,shop_goods g
+		where ownerId=#{ownerId}
+		and g.id=c.targetid
+	</select>
+
+	<insert id="addComment" parameterType="Comment">
+		insert into shop_comment
+		values(#{id},#{ownerid},#{targetid},#{statusnum},#{remark},#{createtime},#{score})
+	</insert>
+
+
+	<select id="getCommentsInOrder" resultMap="CommentResultMap">
+		select c.*, u.name as uname, g.name as gname, g.id as gid
+		from shop_comment c, shop_user u, shop_goods g
+		where c.targetid=g.id and c.ownerid=u.id
+		order by createtime DESC
+	</select>
+
+</mapper>

@@ -35,7 +35,7 @@
 	<div class="container">
 		<jsp:include page="header.jsp"></jsp:include>
 		<jsp:include page="navbar.jsp"></jsp:include>
-		<jsp:include page="search.jsp"></jsp:include>
+		<jsp:include page="search_backup.jsp"></jsp:include>
 		<div class="position">
 			<span>您当前的位置：</span> <a href="">首页</a> » <a href="">${category.name }</a>
 		</div>
@@ -48,7 +48,7 @@
 						<ul class="ranklist" id='ranklist'>
 							<c:forEach items="${goodsesWithOrder }" var="goods" varStatus="s">
 								<li><span>${s.index+1 }</span> <a title="${goods.name }"
-									class="p_name" href="./goods/view?goods.id=${goods.id }">${goods.name }
+									class="p_name" href="./goods/view?goodsId=${goods.id }">${goods.name }
 								</a> <b>${goods.price2 }</b></li>
 							</c:forEach>
 						</ul>
@@ -66,20 +66,20 @@
 
 						<li id="sellnum" class="current"><span class="l"></span><span
 							class="r"></span> <a
-							href="./goods/listByCate?goods.categoryId=${category.id}&order=sellnum&index=1">销量<span
+							href="./goods/listByCate?goodsCategoryId=${category.id}&order=sellnum&index=1">销量<span
 								class="">&nbsp;</span></a> <input id="index" name="index"
 							type="hidden" value="${index }" /></li>
 						<li id="role" class="" onclick=""><span class="l"></span><span
 							class="r"></span> <a
-							href="./goods/listByCate?goods.categoryId=${category.id}&order=role&index=2">热度<span
+							href="./goods/listByCate?goodsCategoryId=${category.id}&order=role&index=2">热度<span
 								class="">&nbsp;</span></a></li>
 						<li id="price2" class=""><span class="l"></span><span
 							class="r"></span> <a
-							href="./goods/listByCate?goods.categoryId=${category.id}&order=price2&index=3">价格<span
+							href="./goods/listByCate?goodsCategoryId=${category.id}&order=price2&index=3">价格<span
 								class="">&nbsp;</span></a></li>
 						<li id="selltime" class=""><span class="l"></span><span
 							class="r"></span> <a
-							href="./goods/listByCate?goods.categoryId=${category.id}&order=selltime&index=4">最新上架<span
+							href="./goods/listByCate?goodsCategoryId=${category.id}&order=selltime&index=4">最新上架<span
 								class="">&nbsp;</span></a></li>
 					</ul>
 				</div>
@@ -91,12 +91,12 @@
 							id="page" value="" />
 							<div class="pic">
 								<a title="${goods.name }"
-									href="./goods/view?goods.id=${goods.id }"><img
+									href="./goods/view?goodsId=${goods.id }"><img
 									src="${goods.thumbnail }" width="200" height="200"
 									alt="${goods.name }" title="${goods.name }" /></a>
 							</div>
 							<h3 class="title">
-								<a title="${goods.name }" class="p_name" href="./goods/view?goods.id=${goods.id}">${goods.name }</a><span>总销量：${goods.sellNum }<a
+								<a title="${goods.name }" class="p_name" href="./goods/view?goodsId=${goods.id}">${goods.name }</a><span>总销量：${goods.sellNum }<a
 									class="blue" href="">( 0人评论 )</a></span><span class='grade'><i
 									style='width: 0px'></i></span>
 							</h3>

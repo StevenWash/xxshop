@@ -26,21 +26,15 @@
 					</div>
 					<div class="cont clearfix">
 						<ul class="prolist">
-                            <form action="./goods/getHotGoods" />
-                            <c:if test="${hotGoodses==null}">
-                                <h2>hotGoodses = null</h2>
-                            </c:if>
-                            <%--<a href="./goods/getHotGoods">1</a>--%>
                             <!--此处热门商品为空-->
                             <c:forEach items="${hotGoodses}" var="goods">
-                            <%--<c:forEach items="${goodses}" var="goods">--%>
-								<li><a href="./goods/view?goods.id=${goods.id}"
-									target="_blank"> <img src="${goods.thumbnail}" width="85"
+								<li><!--target="blank"-->
+                                    <a href="./goods/view?goodsId=${goods.id}" target="_blank">
+                                        <img src="${goods.thumbnail}" width="85"
 										height="85" alt="" />
 								</a>
 									<p class="pro_title">
-										<a title="${goods.name}" href="./goods/view?goods.id=${goods.id}"
-										target="_blank">${goods.name}</a>
+										<a title="${goods.name}" href="./goods/view?goodsId=${goods.id}" target="_blank">${goods.name}</a>
 									</p>
 									<p class="brown">
 										<b>￥${goods.price2}</b>
@@ -55,8 +49,6 @@
 
 			<h2></h2>
 			<div class="main f_l">
-
-
 				<!--最新商品 start-->
 				<div class="box yellow m_10">
 					<div class="title title3">
@@ -68,16 +60,20 @@
 					<div class="cont clearfix">
 						<ul class="prolist">
 
-							<c:if test="${goodsesLasted==null}">
-                                <h2>goodsesLasted = null</h2>
-                            </c:if>
+							<%--<c:if test="${goodsesLasted==null}">--%>
+                                <%--<h2>goodsesLasted = null</h2>--%>
+                            <%--</c:if>--%>
 
 							<c:forEach items="${goodsesLasted}" var="goods">
-								<li style="overflow: hidden"><a
-									href="./goods/view?goods.id=${goods.id}" target="_blank"><img
+								<li style="overflow: hidden">
+									<!--图片
+										加上" target="_blank" "则跳转到新页面-->
+									<a href="./goods/view?goodsId=${goods.id}" target="_blank"><img
+									<%--<a href="./goods/view?goods.id=${goods.id}" target="_blank"><img--%>
 										src="${goods.thumbnail}" width="175" height="175" alt="" /></a>
 									<p class="pro_title">
-										<a title="" href="./goods/view?goods.id=${goods.id}">${goods.name}</a>
+										<!--标题-->
+										<a title="" href="./goods/view?goodsId=${goods.id}" target="_blank">${goods.name}</a>
 									</p>
 									<p class="brown">
 										惊喜价：<b>￥${goods.price2}</b>
@@ -104,7 +100,7 @@
                 <table id="index_category" class="sort_table m_10" width="100%">
                     <tr>
                         <td><c:forEach items="${categories}" var="category">
-                            <a href="./goods/listByCate?goods.categoryId=${category.id}&order=sellnum">
+                            <a href="./goods/listByCate?goodsCategoryId=${category.id}&order=sellnum" target="_blank">
                                     ${category.name}（${category.goodsNum}）</a>|
                         </c:forEach></td>
                     </tr>
@@ -112,24 +108,24 @@
 
 
                 <!--分类显示商品-->
-                <!-- null 显示否?
-                     现在此类为空，仍显示种类跳转-->
                 <c:forEach items="${categories}" var="category">
 					<div class="box m_10 green" name="showGoods">
 						<div class="title title3">
 							<h2>
 								<a href=""><strong>${category.name}</strong></a>
 							</h2>
-							<a class="more" href="./goods/listByCate?goods.categoryId=${category.id}&order=sellnum">更多商品...</a>
+							<%--<a class="more" href="./goods/listByCate?goods.categoryId=${category.id}&order=sellnum">更多商品...</a>--%>
+							<a class="more" href="./goods/listByCate?goodsCategoryId=${category.id}&order=sellnum" target="_blank">更多商品...</a>
 						</div>
 
 						<div class="cont clearfix">
 							<ul class="prolist">
                                 <c:forEach items="${category.goodses}" var="goods">
-									<li><a href="./goods/view?goods.id=${goods.id}">
+									<li><a href="./goods/view?goodsId=${goods.id}" target="_blank">
                                         <img src="${goods.thumbnail}" width="175" height="175" alt="" title=""></a>
 										<p class="pro_title">
-											<a title="${goods.name}" href="./goods/view?goods.id=${goods.id}">${goods.name}</a>
+											<a title="${goods.name}" href="./goods/view?goodsId=${goods.id}"
+                                               target="_blank">${goods.name}</a>
 										</p>
 										<p class="brown">
 											惊喜价：<b>￥${goods.price2}</b>

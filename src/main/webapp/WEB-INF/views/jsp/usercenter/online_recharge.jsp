@@ -17,7 +17,7 @@ $(function(){
 	<div class="ucenter container">
 		<jsp:include page="../header.jsp"></jsp:include>
 		<jsp:include page="../navbar.jsp"></jsp:include>
-		<jsp:include page="../search.jsp"></jsp:include>
+		<jsp:include page="../search_backup.jsp"></jsp:include>
 		<div class="wrapper clearfix">
 			<jsp:include page="left.jsp" />
 
@@ -26,7 +26,7 @@ $(function(){
 					<label class="current"><span>在线充值</span></label>
 				</div>
 				<div class="form_content">
-					<form action='user_recharge'
+					<form action='./user/recharge'
 						method='post'>
 						<table class="border_table" cellpadding="0" cellspacing="0"
 							width='100%'>

@@ -24,7 +24,7 @@
 		<div id="admin_right">
 			<div class="content_box">
 				<div class="content form_content">
-					<form action="goods_addoper" method="post"
+					<form action="./goods/addoper" method="post"
 						enctype="multipart/form-data">
 						<div id="table_box_1">
 							<table class="form_table">

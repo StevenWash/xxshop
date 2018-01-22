@@ -9,7 +9,7 @@
 <jsp:include page="base.jsp"></jsp:include>
 <script type="text/javascript">
 	function finish() {
-		$.get("user_moneyLeftEnough?order.id=${order.id}", function(r) {
+		$.get("./user/moneyLeftEnough?orderId=${order.id}", function(r) {
 			if (r == "0") {
 				alert("订单提交失败，账户余额不足！");
 			} else {
@@ -71,31 +71,36 @@
 						</table>
 
 
-						<div class="blue_box gray m_10" id='order_detail'
-							style='display: none'>
+						<div class="blue_box gray m_10" id='order_detail'>
+							<%--style='display: none'>--%>
 							<table class="form_table t_l">
 								<col width="80px" />
 								<col />
 								<tbody>
 									<tr>
 										<td class="t_r">收货人姓名：</td>
-										<td>谭岚</td>
+										<td>${order.address.accept}</td>
 									</tr>
 									<tr>
 										<td class="t_r">联系方式：</td>
-										<td>15982352915</td>
+										<td>${order.address.phoneNum}</td>
+									</tr>
+									<tr>
+										<td class="t_r">配送方式：</td>
+										<td>${order.deliveryType}</td>
 									</tr>
 									<tr>
 										<td class="t_r">收货时间：</td>
-										<td>任意</td>
+										<td>${order.deliveryTime}</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
 
 						<!--不是货到付款并且支付方式为线上支付-->
-						<form action='./order;/pay' method='post' target='_blank' id="form1">
-							<input type="hidden" name="order.id" value="${order.id }" /> <input
+						<!-- 先检查用户余额是否足够 -->
+						<form action='./order/pay' method='post' target='_blank' id="form1">
+							<input type="hidden" name="orderId" value="${order.id }" /> <input
 								class="submit_pay" onclick="javascript:finish();" value="立即支付" />
 						</form>
 					</div>

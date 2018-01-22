@@ -19,11 +19,11 @@
 	</div>
 
 	<div class="searchbox">
-		<form method='get' action=''>
+		<form method='get' action='./goods/search'>
 			<input type='hidden' name='controller' value='site' /> <input
 				type='hidden' name='action' value='search_list' /> <input
 				class="text" type="text" name='word' autocomplete="off"
-				value="输入关键字..." /> <input class="btn" type="submit" value="商品搜索"
+				placeholder="输入关键字..." /> <input class="btn" type="submit" value="商品搜索"
 				onclick="checkInput('word','输入关键字...');" />
 		</form>
 

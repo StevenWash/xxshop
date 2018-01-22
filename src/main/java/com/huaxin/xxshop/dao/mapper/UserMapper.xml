@@ -14,12 +14,13 @@
 		<result property="regTime" column="regTime" />
 		<result property="role" column="role" />
 		<result property="status" column="status" />
+		<result property="email" column="email" />
 	</resultMap>
 
 	<insert id="addUser" parameterType="User">
 		insert into shop_user
 		values(#{id},#{name},#{password},#{phoneNum},#{money},
-		#{avatar,jdbcType=VARCHAR},#{regTime,jdbcType=CHAR},#{role},#{status})
+		#{avatar,jdbcType=VARCHAR},#{regTime,jdbcType=CHAR},#{role},#{status},#{email})
 	</insert>
 
 	<select id="getNumByName" parameterType="String" resultType="int">
@@ -32,6 +33,14 @@
 	</select>
 	<!--select * from shop_user where name=#{0} and password=#{1}-->
 
+	<update id="updateRole">
+		update shop_user set role=#{role} where id=#{id}
+	</update>
+
+	<update id="updatePassword">
+		update shop_user set password=#{password} where id=#{id}
+	</update>
+
 	<update id="updateAvatar">
 		update shop_user set avatar=#{avar} where id=#{id}
 	</update>
@@ -39,7 +48,7 @@
 
 
 	<update id="updateMoney">
-		update shop_user set money=#{money} where id=#id0}
+		update shop_user set money=#{money} where id=#{id}
 	</update>
 	<!--update shop_user set money=#{1} where id=#{0}-->
 

@@ -10,6 +10,22 @@ import com.huaxin.xxshop.entity.PageBean;
  * @author 没有蜡笔的小新 2015-12-26
  */
 public interface GoodsService {
+
+	/**
+	 * 搜索商品
+	 * @param keywords
+	 */
+	public List<Goods> search(String keywords);
+
+
+	/**
+	 * 简历商品的搜索索引
+	 *
+	 */
+	public  void createIndex();
+
+
+
 	/**
 	 * 添加商品
 	 * @param goods

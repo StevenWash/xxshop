@@ -37,7 +37,7 @@ public interface OrderService {
 
 	/**
 	 * 查询订单的信息
-	 * @param order
+	 * @param id 订单号
 	 * @return
 	 */
 	public Order getOrder(String id);

@@ -22,7 +22,7 @@
 
 	function delGoods(id) {
 		if (confirm("您确认要删除该商品吗？")) {
-			location.href = "goods_delete?goods.id=" + id;
+			location.href = "./goods/delete?goodsId=" + id;
 		}
 	}
 </script>
@@ -128,7 +128,7 @@
 									<td title="${order.payType }">${order.payType }</td>
 									<td title="${order.user.name }">${order.user.name }</td>
 									<td title="${order.orderTime }">${order.orderTime }</td>
-									<td><a href="admin/order_view.jsp"><img
+									<td><a href="./admin/toOrderView"><img
 											class="operator" src="images/admin/icon_check.gif" title="查看" /></a><a
 										href=""><img class="operator"
 											src="images/admin/icon_edit.gif" title="编辑" /></a><a

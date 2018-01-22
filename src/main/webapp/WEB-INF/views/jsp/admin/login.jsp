@@ -20,7 +20,7 @@
 	<div class="container">
 		<div id="header">
 			<div class="logo">
-				<a href="#"><img src="images/admin/logo.png" width="303" height="43" /></a>
+				<a href="#"><img src="images/admin/logo.png" width="250" height="53" /></a>
 			</div>
 		</div>
 		<div id="wrapper" class="clearfix">

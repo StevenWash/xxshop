@@ -1,5 +1,6 @@
 package com.huaxin.xxshop.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,27 @@ import com.huaxin.xxshop.service.GoodsService;
 import com.huaxin.xxshop.util.XXShopUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.wltea.analyzer.lucene.IKAnalyzer;
+
+import java.nio.file.FileSystems;
+
 
 /**
  * 商品实体类对应的服务层实现
@@ -24,6 +46,100 @@ public class GoodsServiceImpl implements GoodsService {
 	private GoodsDao goodsDao = null;
 	@Autowired
 	private CategoryDao categoryDao = null;
+
+	/**
+	 * 商品搜索
+	 *
+	 * @author 小轲轲是个美男子 2018年1月19日
+	 */
+	public static final String INDEX_PATH = "\\service";
+	public void createIndex() {
+		IndexWriter indexWriter = null;
+
+		List<Goods> goodsList = getGoods(new Goods());
+
+
+		try {
+			Directory directory = FSDirectory.open(FileSystems.getDefault().getPath(INDEX_PATH));
+			Analyzer analyzer = new IKAnalyzer(true);
+			//Analyzer analyzer = new StandardAnalyzer();
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			indexWriter = new IndexWriter(directory, indexWriterConfig);
+			indexWriter.deleteAll();
+
+
+			for (Goods goods : goodsList) {
+				Document document = new Document();
+				Field fieldID = new Field("ID", goods.getId(), TextField.TYPE_STORED);
+				Field fieldName = new Field("Name", goods.getName(), TextField.TYPE_STORED);
+				Field fieldDescription = new Field("Description", goods.getDescription(), TextField.TYPE_STORED);
+				System.out.println(goods.getId());
+				System.out.println(goods.getName());
+				System.out.println(goods.getDescription());
+				fieldID.setBoost((float) 2.0);
+				fieldName.setBoost((float) 0.5);
+				fieldDescription.setBoost((float) 0.1);
+				document.add(fieldID);
+				document.add(fieldName);
+				document.add(fieldDescription);
+				indexWriter.addDocument(document);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (indexWriter != null)
+					indexWriter.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	public List<Goods> search(String keyWord) {
+		DirectoryReader directoryReader = null;
+		List<Goods> goods_result = new ArrayList<>();
+		try {
+			Directory directory = FSDirectory.open(FileSystems.getDefault().getPath(INDEX_PATH));
+			directoryReader = DirectoryReader.open(directory);
+			IndexSearcher indexSearcher = new IndexSearcher(directoryReader);
+
+			Analyzer analyzer = new IKAnalyzer(true);
+
+			String[] fields = {"ID", "Name", "Description"};
+			BooleanClause.Occur[] clauses = {BooleanClause.Occur.SHOULD, BooleanClause.Occur.SHOULD,
+					BooleanClause.Occur.SHOULD};
+			Query multiFieldQuery = MultiFieldQueryParser.parse(keyWord, fields, clauses, analyzer);
+			TopDocs topDocs = indexSearcher.search(multiFieldQuery, 100);
+			//out.print("共搜索到<font color=red>" + topDocs.totalHits + "</font>条" + "关于<font color=red>" + keyWord
+			//		+ "</font>的结果<br>");
+			System.out.println("共搜索到<font color=red>" + topDocs.totalHits + "</font>条" + "关于<font color=red>" + keyWord
+					+ "</font>的结果<br>");
+			ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+
+			for (ScoreDoc scoreDoc : scoreDocs) {
+				Document document = indexSearcher.doc(scoreDoc.doc);
+				goods_result.add(getGoodsById(document.get("ID")));
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (directoryReader != null)
+					directoryReader.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		return goods_result;
+	}
+
+
+
 
 	@Override
 	public void addGoods(Goods goods) {

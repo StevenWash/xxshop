@@ -67,14 +67,15 @@
 		<li><a href="">首页</a></li>
 		<c:forEach items="${categories}" var="category">
 			<li><a
-				href="./goods/listByCate?goods.categoryId=${category.id}&order=sellnum">${category.name}</a></li>
+				href="./goods/listByCate?goodsCategoryId=${category.id}&order=sellnum">${category.name}</a></li>
 		</c:forEach>
 	</ul>
 
 	<div class="mycart">
 		<dl>
 			<dt>
-				<a href="cart.jsp">购物车<b name="mycart_count">0</b>件
+				<%--<a href="cart.jsp">购物车<b name="mycart_count">0</b>件--%>
+				<a href="./user/toCart">购物车<b name="mycart_count">0</b>件
 				</a>
 			</dt>
 			<dd>

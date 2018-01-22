@@ -58,7 +58,7 @@
 									现在免费注册成为${site}用户，便能立即享受便宜又放心的购物乐趣。<a class="blue" href="">网站首页>></a>
 								</p>
 								<p class="mt_10">
-									<a class="reg_btn" href="register.jsp">注册新用户</a>
+									<a class="reg_btn" href="./user/register">注册新用户</a>
 								</p>
 							</td>
 						</tr>

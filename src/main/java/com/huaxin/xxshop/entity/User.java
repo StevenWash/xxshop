@@ -18,6 +18,9 @@ public class User implements Serializable {
 	private String regTime;
 	private String role;
 	private int status;
+	private String email;
+
+
 
 	public User() {
 	    super();
@@ -37,10 +40,23 @@ public class User implements Serializable {
         this.status = status;
     }
 
+	@Override
+	public String toString() {
+		return "User{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", password='" + password + '\'' +
+				", phoneNum='" + phoneNum + '\'' +
+				", money=" + money +
+				", avatar='" + avatar + '\'' +
+				", regTime='" + regTime + '\'' +
+				", role='" + role + '\'' +
+				", status=" + status +
+				", email='" + email + '\'' +
+				'}';
+	}
 
-
-
-    public String getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -112,5 +128,11 @@ public class User implements Serializable {
 		this.status = status;
 	}
 
+	public String getEmail() {
+		return email;
+	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
 }

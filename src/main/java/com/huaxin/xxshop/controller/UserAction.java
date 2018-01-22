@@ -12,13 +12,16 @@ import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,24 +48,27 @@ public class UserAction {
     private CategoryService categoryService = null;
     @Autowired
 	private GoodsService goodsService = null;
+    @Autowired
+    private OrderService orderService;
 
 	private User user;
 	private List<User> userList;
-	private OrderService orderService;
 	private Order order;
-
 	private String recharge;
-
 	// 定义文件变量和文件名，用来接收来自前台页面的数据
 	private File avatar;
 	private String avatarFileName;
-
-	// 使用实现aware方法来获得一个session
-	private Map<String, Object> session = null;
-
 	// 在adminLogin方法中用来传递信息
 	private String msg;
 
+
+	@RequestMapping("/userInfo")
+	public ModelAndView userInfo(HttpSession session, ModelAndView mv) {
+		User user = userService.getUser(((User)session.getAttribute("user")).getId());
+		mv.addObject("user", user);
+		mv.setViewName("usercenter/user_info");
+		return mv;
+	}
 
 
     /**
@@ -71,7 +77,7 @@ public class UserAction {
      * @return 返回对应result
      */
     @RequestMapping(value = "/login", method= RequestMethod.POST)
-    public String login(String name, String password, HttpSession session, Model model) {
+    public String login(String name, String password, HttpSession session) {
     	User user = userService.findUser(name, password);
         if (user == null || user.getStatus() == 2) {
             return "login";
@@ -79,17 +85,9 @@ public class UserAction {
             user.setStatus(1);
             userService.updateStatus(user.getId(), user.getStatus());
             session.setAttribute("user", user);
-
-//            int MAX = 4;
-//            List<Goods> hotGoodses = goodsService.getGoodsBySellNum(MAX);
-//            session.setAttribute("hotGoodses", hotGoodses);
-//            List<Goods> goodsesLasted = goodsService.getGoodsBySellTime(MAX);            session.setAttribute("goodsesLasted", goodsesLasted);
-//            model.addAttribute("categories", categoryService.getCategories());
-
             // 重定向到 index 资源
             return "redirect:/index"; // 报错："Request method 'GET' not supported"
-
-//            return "index"; // 这样返回，session仍在??
+//            return "index"; // 这样返回，session仍在?? Yeah, request不在
         }
     }
 //    public String login() {
@@ -119,11 +117,20 @@ public class UserAction {
 	 * @return
 	 */
 	@RequestMapping("/register")
-    public String register(User user) {
-	    userService.register(user);
-	    return "login";
-    }
-
+	public String register(User user) {
+		// 检验各项信息
+		userService.register(user);
+		return "login";
+	}
+//  public String register(User user) {
+//	public String register(String name, String password, String phoneNum) {
+//		User user = new User();
+//		user.setName(name);
+//		user.setPassword(password);
+//		user.setPhoneNum(phoneNum);
+//		userService.register(user);
+//	    return "login";
+//    }
 
 	/**
 	 * 判断是否存在当前的用户信息，用于相应Ajax的方法
@@ -147,7 +154,7 @@ public class UserAction {
 	 * 实现上传头像的功能 使用了 org.apache.commons.io.FileUtils 中的静态方法copyFile()
 	 * @return 返回struts的对应result
 	 */
-	@RequestMapping("uploadAvatar")
+	@RequestMapping("/uploadAvatar")
 	public String uploadAvatar(HttpSession session, File avatar) {
 		String userId = ((User) session.getAttribute("user")).getId();
 		/*
@@ -179,11 +186,12 @@ public class UserAction {
 	 * 实现在线充值的功能
 	 */
 	@RequestMapping("/recharge")
-	public String recharge(HttpSession session) {
-		float money = ((User) session.getAttribute("user")).getMoney()
+	public String recharge(HttpSession session, String recharge) {
+		User user = (User) session.getAttribute("user");
+		float money = user.getMoney()
 				+ Float.parseFloat(recharge);
-		((User) session.getAttribute("user")).setMoney(money);
-		userService.updateMoney(((User) session.getAttribute("user")).getId(), money);
+		user.setMoney(money);
+		userService.updateMoney(user.getId(), money);
 		return "/usercenter/account_log";
 	}
 
@@ -228,40 +236,55 @@ public class UserAction {
 		return "/admin/member_list";
 	}
 
-	/*
+
+	/**
 	 * 删除一个用户
+	 * * 实际上是将用户的状态信息设置为2
+	 * @param userId
+	 * @return
 	 */
 	@RequestMapping("/delete")
-	public String delete() {
-		String id = user.getId();
-		if (userService.getUser(id) != null) {
-			userService.deleteUser(id);// 实际上是将用户的状态信息设置为2
+	public String delete(String userId) {
+		if (userService.getUser(userId) != null) {
+			userService.deleteUser(userId);
 		}
 //		return "opersuc";
-        // 重定向到 /hello 资源
         return "redirect:/user/member";
 	}
 
-	/*
+
+	/**
 	 * 检验当前用户余额是否足够
+	 * @param orderId
+	 * @param session
+	 * @param response
 	 */
-	public void moneyLeftEnough(Order order, HttpSession session) {
+	@RequestMapping("/moneyLeftEnough")
+	public void moneyLeftEnough(String orderId, HttpSession session,
+                                HttpServletResponse response) {
 	    User user = ((User) session.getAttribute("user"));
-		order = orderService.getOrder(order.getId());
+		System.out.println(orderId.getClass() + " got orderId: " + orderId);
+	    Order order = orderService.getOrder(orderId);
 		PrintWriter write = null;
 		try {
-			write = ServletActionContext.getResponse().getWriter();
-			if (order.getTotalMoney() <= user.getMoney()) {
+//		    write = ServletActionContext.getResponse().getWriter(); // 此为Struts2中的方法
+            write = response.getWriter();
+            if (order.getTotalMoney() <= user.getMoney()) {
 				write.print(1);
 			} else {
 				write.print(0);
 			}
 			write.flush();
 		} catch (IOException e) {
-		    //e.printStackTrace();
-//		    e.printStackTrace();
-		} finally {
-			write.close();
+            System.out.println("Something wrong!");
+		    e.printStackTrace();
+		} catch (Exception e) {
+            e.printStackTrace();
+        }
+		finally {
+			if(write!=null) {
+                write.close();
+            }
 		}
 	}
 
@@ -403,9 +426,4 @@ public class UserAction {
 		this.order = order;
 	}
 
-//	@Override
-//	public void setSession(Map<String, Object> arg0) {
-//		// TODO Auto-generated method stub
-//		this.session = arg0;
-//	}
 }

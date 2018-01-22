@@ -21,7 +21,7 @@
 	
 	function delGoods(id) {
 		if(confirm("您确认要删除该商品吗？")){
-			location.href="goods_delete?goods.id="+id;
+			location.href="./goods/delete?goodsId="+id;
 		}
 	}
 </script>
@@ -41,7 +41,7 @@
 		<div id="admin_right">
 			<div class="headbar">
 				<div class="searchbar">
-					<form action="goods_listByPage" method="get" id="form1">
+					<form action="./goods/listByPage" method="get" id="form1">
 						<input type="hidden" name="page" id="page" value="" /> <select
 							class="auto" name="goods.categoryId" id="category">
 							<option value="">选择分类</option>
@@ -94,7 +94,7 @@
 									<td>${goods.category.name}</td>
 									<td>${goods.price2}</td>
 									<td>${goods.stock}</td>
-									<td><a href="goods_update?goods.id=${goods.id}"><img
+									<td><a href="./goods/update?goodsId=${goods.id}"><img
 											class="operator" src="images/admin/icon_edit.gif" alt="编辑" /></a>
 										<a href="javascript:void(0)" onclick="delGoods('${goods.id}')"><img
 											class="operator" src="images/admin/icon_del.gif" alt="删除" /></a></td>

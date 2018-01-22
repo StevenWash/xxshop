@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
 		user.setId(XXShopUtil.getId());
 		user.setRegTime(XXShopUtil.getNow());
 		user.setRole("u");
+		user.setMoney(0);
 		userDao.addUser(user);
 	}
 
@@ -87,4 +88,10 @@ public class UserServiceImpl implements UserService {
 		userDao.updateStatus(id, status);
 	}
 
+	@Override
+	public void updateMember(String memberId, Integer status, String memberId1, String password, String role) {
+		userDao.updateStatus(memberId, status);
+		userDao.updatePassword(memberId, password);
+		userDao.updateRole(memberId, role);
+	}
 }

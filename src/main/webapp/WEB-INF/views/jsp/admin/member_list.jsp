@@ -12,7 +12,7 @@
 	function delMember(id) {
 		alert(id);
 		if (confirm("您确认要删除该用户吗？")) {
-			location.href = "./user/delete?user.id=" + id;
+			location.href = "./user/delete?userId=" + id;
 		}
 	}
 </script>
@@ -59,7 +59,7 @@
 				</div>
 			</div>
 
-			<form method="post" name="member_list">
+			<form method="post" name="./member_list">
 				<div class="content">
 					<table id="list_table" class="list_table">
 						<colgroup>
@@ -73,25 +73,31 @@
 							<col width="100px">
 						</colgroup>
 						<tbody>
-							<c:forEach items="${ userList}" var="user" varStatus="s">
+							<c:forEach items="${userList}" var="user" varStatus="s">
 								<tr>
 									<td>${s.index }</td>
 									<td title="${user.name }">${user.name }</td>
 									<td title="${user.phoneNum }">${user.phoneNum }</td>
 									<td title="${user.money }">${user.money }</td>
 									<td title="${user.regTime }">${user.regTime }</td>
-									<td title="${user.role }">${user.role }</td>
-									<td title="${user.status }"><c:if
-											test="${user.status eq 0}">
+									<td title="${user.role }">
+										<c:if test="${user.role eq 'a'}">
+											<span>管理员</span></c:if>
+										<c:if test="${user.role eq 'u'}">
+											<span>会员</span></c:if></td>
+									<td title="${user.status }">
+										<c:if test="${user.status eq 0}">
 											<span style="color:grey">下线</span>
 										</c:if> <c:if test="${user.status eq 1}">
 											<span style="color:blue">在线</span>
 										</c:if> <c:if test="${user.status eq 2}">
 											<span style="color:red">已删除</span>
 										</c:if></td>
-									<td><a href=""><img class="operator"
-											src="images/admin/icon_edit.gif" alt="修改" /></a> <a
-										href="javascript:delMember('${user.id }')"><img
+									<td><!-- 修改操作 -->
+										<a href="./admin/memberUpdate?memberId=${user.id}" target="_blank"><img class="operator"
+											src="images/admin/icon_edit.gif" alt="修改" /></a>
+										<!-- 删除操作-->
+										<a href="javascript:delMember('${user.id }')"><img
 											class="operator" src="images/admin/icon_del.gif" alt="删除" /></a></td>
 								</tr>
 							</c:forEach>

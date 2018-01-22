@@ -1,5 +1,9 @@
 package com.huaxin.xxshop.test;
+
 import static com.huaxin.xxshop.util.XXShopUtil.*;
+import com.huaxin.xxshop.entity.Address;
+import com.huaxin.xxshop.service.AddressService;
+import com.huaxin.xxshop.service.impl.AddressServiceImpl;
 import org.junit.jupiter.api.Test;
 
 public class TestUtils {
@@ -22,4 +26,11 @@ public class TestUtils {
         System.out.println("length: "+goodNo.length()+"\n"+goodNo);
     }
 
+    @Test
+    public void testGetAddressById(){
+        String addressId = "14a16cd98f4d4b879272d32937f08409";
+        AddressService addressService = new AddressServiceImpl();
+        Address address = addressService.getAddressById(addressId);
+        System.out.println(address);
+    }
 }

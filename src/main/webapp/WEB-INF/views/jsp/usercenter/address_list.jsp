@@ -46,9 +46,7 @@
 	}
 
 	function del(id) {
-
 		alert(id);
-
 	}
 </script>
 </head>
@@ -56,7 +54,7 @@
 	<div class="ucenter container">
 		<jsp:include page="../header.jsp"></jsp:include>
 		<jsp:include page="../navbar.jsp"></jsp:include>
-		<jsp:include page="../search.jsp"></jsp:include>
+		<jsp:include page="../search_backup.jsp"></jsp:include>
 		<div class="wrapper clearfix">
 			<jsp:include page="left.jsp"></jsp:include>
 			<div class="main f_r">
@@ -97,13 +95,13 @@
 											<td>${address.zip}</td>
 											<td><a class="blue" href='javascript:void(0)' onclick=''>修改</a>|
 												<a id="delete" class="blue"
-												href="./address/delete?address.id=${address.id}">删除</a>| <c:if
+												href="./usercenter/address/delete?addressId=${address.id}">删除</a>| <c:if
 													test="${address.isDefault eq 1}">
 													<a class="red2"
-														href="address_setDefault?address.id=${address.id}&address.isDefault=2">取消默认</a>
+														href="./usercenter/address/setDefault?addressId=${address.id}&addressIsDefault=2">取消默认</a>
 												</c:if> <c:if test="${address.isDefault eq 2}">
 													<a class="blue"
-														href="address_setDefault?address.id=${address.id}&address.isDefault=1">设为默认</a>
+														href="./usercenter/address/setDefault?addressId=${address.id}&addressIsDefault=1">设为默认</a>
 												</c:if></td>
 										</tr>
 									</c:forEach>
@@ -115,7 +113,7 @@
 
 				<!--表单修改-->
 				<div class="orange_box" id='address_form'>
-					<form action='./address/add' method='post' name='form'>
+					<form action='./usercenter/address/add' method='post' name='form'>
 						<table class="form_table" width="100%" cellpadding="0"
 							cellspacing="0">
 							<col width="120px" />
@@ -123,35 +121,35 @@
 							<caption>收货地址</caption>
 							<tr>
 								<th><span class="red">*</span> 收货人姓名：</th>
-								<td><input name='address.accept' class="normal" type="text" /><label>收货人真实姓名，方便快递公司联系</label></td>
+								<td><input name='accept' class="normal" type="text" /><label>收货人真实姓名，方便快递公司联系</label></td>
 							</tr>
 							<tr>
 								<th><span class="red">*</span> 所在地区：</th>
-								<td><select name="address.province" id="province"></select>
-									<select name="address.city" id="city"></select> <select
-									name="address.area" id="area"></select></td>
+								<td><select name="province" id="province"></select>
+									<select name="city" id="city"></select>
+									<select name="area" id="area"></select></td>
 							</tr>
 							<tr>
 								<th><span class="red">*</span> 街道地区：</th>
-								<td><input name='address.address' class="normal"
+								<td><input name='address' class="normal"
 									type="text" /><label>真实详细收货地址，方便快递公司联系</label></td>
 							</tr>
 							<tr>
 								<th>邮政编码：</th>
-								<td><input name='address.zip' class="normal" type="text" /><label>邮政编码,如250000</label></td>
+								<td><input name='zip' class="normal" type="text" /><label>邮政编码,如250000</label></td>
 							</tr>
 							<tr>
 								<th>电话号码：</th>
-								<td><input name='address.phoneNum' class="normal"
+								<td><input name='phoneNum' class="normal"
 									type="text" /><label>电话号码,如010-12345688</label></td>
 							</tr>
 							<tr>
 								<th>手机号码：</th>
-								<td><input name='address.mobile' class="normal" type="text" /><label>手机号码，如：13588888888</label></td>
+								<td><input name='mobile' class="normal" type="text" /><label>手机号码，如：13588888888</label></td>
 							</tr>
 							<tr>
 								<th>设为默认：</th>
-								<td><label><input name='address.isDefault'
+								<td><label><input name='isDefault'
 										type='checkbox' value='1'></label></td>
 							</tr>
 							<tr>

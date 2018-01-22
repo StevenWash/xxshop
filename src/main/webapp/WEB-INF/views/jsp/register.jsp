@@ -91,19 +91,25 @@
 				</p>
 
 				<div class="box clearfix">
-					<form action='user_reg' method="post">
+					<form action='./user/register' method="post">
+					<%--<form action='./user/reg' method="post">--%>
 						<table class="form_table f_l">
 							<col width="260px" />
 							<col />
 							<tr>
 								<th>用户名：</th>
-								<td><input class="gray" name='user.name' id="name"
+								<td><input class="gray" name='name' id="name"
 									type="text" value="${name}" tabindex="1" /><label id="namemsg">请填写用户名，格式为2-20个字符，可以为字数，数字下划线和中文</label></td>
+							</tr>
+							<tr>
+								<th>填写邮箱：</th>
+								<td><input class="gray" type="email" id="email"
+										   name='email' tabindex="2" /><label id="emailmsg">填写有效邮箱</label></td>
 							</tr>
 							<tr>
 								<th>设置密码：</th>
 								<td><input class="gray" type="password" id="password"
-									name='user.password' tabindex="2" /><label id="passmsg">填写登录密码，6-32个字符</label></td>
+									name='password' tabindex="2" /><label id="passmsg">填写登录密码，6-32个字符</label></td>
 							</tr>
 							<tr>
 								<th>确认密码：</th>
@@ -112,7 +118,7 @@
 							</tr>
 							<tr>
 								<th>手机号码：</th>
-								<td><input class="gray" name='user.phoneNum' type="text"
+								<td><input class="gray" name='phoneNum' type="text"
 									id="phonenum" tabindex="4"><label id="phonemsg"></label></td>
 							</tr>
 							<tr>

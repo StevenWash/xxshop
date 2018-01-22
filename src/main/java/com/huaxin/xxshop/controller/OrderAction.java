@@ -1,14 +1,15 @@
 package com.huaxin.xxshop.controller;
 
+import com.huaxin.xxshop.dto.OrderDetailListDTO;
 import com.huaxin.xxshop.entity.*;
 import com.huaxin.xxshop.service.*;
-import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -55,17 +56,26 @@ public class OrderAction {
 	 * 添加一条订单信息
 	 */
 	@RequestMapping("/add")
-	public String add(HttpSession session, List<OrderDetail> orderDetails, Model model) {
+	public String add(HttpSession session, String goodsId, int nums, Model model) {
+//	public String add(HttpSession session, List<OrderDetail> orderDetails, Model model) {
 		String userId = ((User) session.getAttribute("user")).getId();
+
+		OrderDetail orderDetail = new OrderDetail();
+
+		orderDetail.setGoodsId(goodsId);
+		orderDetail.setNums(nums);
+		List<OrderDetail> orderDetails = new ArrayList<>();
+		orderDetails.add(orderDetail);
+//		orderService.
+
 		List<Address> addresses = addressService.getAddress(userId);
 		// System.out.println("hash:"+this.hashCode());
-		for (OrderDetail orderDetail : orderDetails) {
-
-			System.out.println(orderDetail.toString());
-			orderDetail.setGoods(goodsService.getGoodsById(orderDetail
-					.getGoodsId()));
+		for (OrderDetail od : orderDetails) {
+			System.out.println(od.toString());
+			od.setGoods(goodsService.getGoodsById(od.getGoodsId()));
 		}
 		model.addAttribute("addresses", addresses);
+		model.addAttribute("orderDetails", orderDetails);
 		return "order_add";
 //		return "add";
 	}
@@ -74,10 +84,20 @@ public class OrderAction {
 	 * 处理提交订单的页面
 	 */
     @RequestMapping("/submit")
-	public String submit(Order order, List<OrderDetail> orderDetails, HttpSession session) {
+	public String submit(Order order, OrderDetailListDTO orderDetailListDTO, HttpSession session,Model model) {
 		String userId = ((User) session.getAttribute("user")).getId();
+		List<OrderDetail> orderDetailList = orderDetailListDTO.getOrderDetailList();
+		System.out.println("orderDetails.size: " + orderDetailList.size());
+
+		for(OrderDetail orderDetail : orderDetailList) {
+			System.out.println("orderDetail: " + orderDetail);
+		}
 		order.setUserId(userId);
-		orderService.addOrder(order, orderDetails);
+		System.out.println(order);
+		orderService.addOrder(order, orderDetailList);
+		System.out.println(order.getId());
+		model.addAttribute("order", order);
+		model.addAttribute("orderId",order.getId());
 //		return "submit";
         return "order_submit";
 	}
@@ -85,17 +105,25 @@ public class OrderAction {
 	/*
 	 * 处理订单的直接支付
 	 */
-	public String resubmit() {
-		order = orderService.getOrder(order.getId());
-		return "submit";
+	@RequestMapping("/resubmit")
+	public String resubmit(String orderId,	Model model) {
+		Order order = orderService.getOrder(orderId);
+		model.addAttribute("order", order);
+		return "order_submit";
+//		return "submit";
 	}
+
 
 	/*
 	 * 列出来所有的订单信息
 	 */
 	@RequestMapping("/listByUser")
 	public String listByUser(HttpSession session, Model model) {
-		String userId = ((User) session.getAttribute("user")).getId();
+        // 如果用户未登录，调回主页
+        if(!isOnline(session)) {
+            return "redirect:/index";
+        }
+	    String userId = ((User) session.getAttribute("user")).getId();
         List<Order> orders = orderService.getOrderByUserId(userId);
 		model.addAttribute("userId", userId);
 		model.addAttribute("orders", orders);
@@ -106,10 +134,10 @@ public class OrderAction {
 	/*
 	 * 带有所有商品分类的分页 进行分页查询
 	 */
-	@RequestMapping("/lisrByPage")
-	public String listByPage(int page, Model model) {
-		String userId = ((User) session.get("user")).getId();
-		if (page == 0) {
+	@RequestMapping("/listByPage")
+	public String listByPage(HttpSession session, Integer page, Model model) {
+		String userId = ((User) session.getAttribute("user")).getId();
+		if (page==null || page==0) {
 			page = 1;
 		}
         PageBean<Order> pageBean = orderService.getOrderByPage(page, order);
@@ -123,6 +151,11 @@ public class OrderAction {
 	 */
 	@RequestMapping("/uindex")
 	public String uindex(HttpSession session, Model model) {
+		// 如果用户未登录，调回主页
+        if(!isOnline(session)) {
+            return "redirect:/index";
+        }
+
 		String userId = ((User) session.getAttribute("user")).getId();
 		List<Order> orders = orderService.getOrderByUserId(userId);
         Map<String, Object> params = orderService.getOrderInfoByUserId(userId);
@@ -131,42 +164,87 @@ public class OrderAction {
         model.addAttribute("categories", categories);
 		model.addAttribute("orders", orders);
 		model.addAttribute("params", params);
-		return "/usercenter/index";
+		return "usercenter/index";
+	}
+
+
+	@RequestMapping("/payTest")
+	public String pay() {
+		String orderId = "0902753763e2482e80de9bf6112c4907";
+
+		// 更新订单和订单详细信息，还有商品的相关信息
+		Order order = orderService.getOrder(orderId);
+		order.setPayTime(new Date());
+		order.setStatus("2"); // 修改订单状态
+
+		List<OrderDetail> orderDetails = orderService.getOrderDetailByOrderId(order.getId());
+		System.out.println("orderDetails.size(): " + orderDetails.size());
+		Goods goods = null;
+		for (OrderDetail orderDetail : orderDetails) {// 支付完成后将支付状态设置为1，订单状态设置为2
+			System.out.println(orderDetail);
+			orderDetail.setPayStatus(1); // 支付状态改为"已支付"--"1"
+			orderDetail.setOrderStatus(2); // 订单状态改为"待发货"--"2"
+			System.out.println("goodsId: " + orderDetail.getGoodsId());
+			goods = goodsService.getGoodsById(orderDetail.getGoodsId());
+			if(goods != null) {
+
+				goods.setSellNum(goods.getSellNum() + orderDetail.getNums());
+				goods.setStock(goods.getStock() - orderDetail.getNums());
+				goodsService.updateGoods(goods);
+			} else {
+				System.out.println("goods = null!!!");
+			}
+		}
+		orderService.updateOrder(order, orderDetails);
+		return "TestJSP";
+//		return "paysuc";
 	}
 
 	/*
 	 * 进行支付
+	 * ？category的goodsNum未修改
 	 */
 	@RequestMapping("/pay")
-	public String pay(HttpSession session, Order order) {
-		order = orderService.getOrder(order.getId());
+	public String pay(HttpSession session, String orderId) {
+		Order order = orderService.getOrder(orderId);
+		// 这些修改业务是否一起放在service层
 		// 更新用户的余额信息
 		User user = (User) session.getAttribute("user");
 		float money = (user.getMoney() - order.getTotalMoney()) <= 0 ?
                 0 : user.getMoney() - order.getTotalMoney();
-		((User) session.getAttribute("user")).setMoney(money);
+		user.setMoney(money);
 		userService.updateMoney(user.getId(), money);
 
 		// 更新订单和订单详细信息，还有商品的相关信息
+
 		order.setPayTime(new Date());
+		order.setStatus("2"); // 修改订单状态
+
 		List<OrderDetail> orderDetails = orderService.getOrderDetailByOrderId(order.getId());
+		System.out.println("orderDetails.size(): " + orderDetails.size());
 		Goods goods = null;
 		for (OrderDetail orderDetail : orderDetails) {// 支付完成后将支付状态设置为1，订单状态设置为2
 			System.out.println(orderDetail);
-			orderDetail.setPayStatus(1);
-			orderDetail.setOrderStatus(2);
-
+			orderDetail.setPayStatus(1); // 支付状态改为"已支付"--"1"
+			orderDetail.setOrderStatus(2); // 订单状态改为"待发货"--"2"
+			System.out.println(orderDetail.getGoodsId());
 			goods = goodsService.getGoodsById(orderDetail.getGoodsId());
-			goods.setSellNum(goods.getSellNum() + orderDetail.getNums());
-			goods.setStock(goods.getStock() - orderDetail.getNums());
-
-			goodsService.updateGoods(goods);
-
+			if(goods != null) {
+				System.out.println("goods is changing!!!");
+				goods.setSellNum(goods.getSellNum() + orderDetail.getNums());
+				goods.setStock(goods.getStock() - orderDetail.getNums());
+				goodsService.updateGoods(goods);
+			}
 		}
 		orderService.updateOrder(order, orderDetails);
         return "pay_suc";
 //		return "paysuc";
 	}
+
+	public boolean isOnline(HttpSession session) {
+	    return  session.getAttribute("user") != null;
+    }
+
 
 //	@Override
 //	public void setSession(Map<String, Object> arg0) {

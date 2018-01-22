@@ -10,11 +10,11 @@ import net.sf.json.JSONArray;
 import net.sf.json.JsonConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
-import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
@@ -52,6 +52,22 @@ public class GoodsAction {
 
 	private String order;// 用来接收页面传输过来的排序规则
 
+
+	@RequestMapping(value="/search",method = RequestMethod.GET)
+	public String search(String word, HttpSession session, Model model) {
+		goodsService.createIndex();
+		List<Goods> search_result = goodsService.search(word);
+		System.out.println(word);
+		int MAX = 8;
+		List<Goods> hotGoodses = goodsService.getGoodsByRole(MAX);
+		List<Category> categories = categoryService.getCategoriesForIndex();
+		model.addAttribute("search_result",search_result);
+		model.addAttribute("hotGoodses", hotGoodses);
+		model.addAttribute("categories",categories);
+		return "search_result";
+	}
+
+
 	/*
 	 * 将商品的信息全部显示出来
 	 */
@@ -69,9 +85,10 @@ public class GoodsAction {
 	 * 带有所有商品分类的分页 进行分页查询
 	 */
 	@RequestMapping("/listByPage")
-	public String listByPage(int page, Goods goods, Model model) {
+//	public String listByPage(int page, Goods goods, Model model) {
+	public String listByPage(Integer page, Goods goods, Model model) {
 		List<Category> categories = categoryService.getCategories();
-		if (page == 0) {
+		if (page==null || page==0) {
 			page = 1;
 		}
 		PageBean<Goods> pageBean = goodsService.getGoodsByPage(page, goods);
@@ -128,10 +145,10 @@ public class GoodsAction {
 	/*
 	 * 跳转到更新的页面，将分类信息和商品信息带过去
 	 */
-	@RequestMapping("update")
-	public String update(Goods goods, Model model) {
+	@RequestMapping("/update")
+	public String update(String goodsId, Model model) {
 		List<Category> categories = categoryService.getCategories();
-		goods = goodsService.getGoodsById(goods.getId());
+		Goods goods = goodsService.getGoodsById(goodsId);
 		model.addAttribute("goods", goods);
 		model.addAttribute("categories", categories);
 		return "/admin/goods_update";
@@ -142,7 +159,7 @@ public class GoodsAction {
 	 * 实际上的更新操作
 	 */
 	@RequestMapping("/updateoper")
-	public String updateoper(Goods goods) {
+	public String updateoper(Goods goods, File thumbnail) {
 		/*
 		 * dir 获取当前文件存放的目录地址 suffix 用来获取当前上传的文件的扩展名
 		 */
@@ -178,7 +195,8 @@ public class GoodsAction {
 	 * 删除商品
 	 */
 	@RequestMapping("/delete")
-	public String delete(Goods goods) {
+	public String delete(String goodsId) {
+		Goods goods = goodsService.getGoodsById(goodsId);
 		goodsService.deleteGoods(goods);
 		return "redirect:/goods/listByPage";
 //		return "delsuc";
@@ -190,18 +208,35 @@ public class GoodsAction {
 	 * 通过categoryId来显示所有的商品
 	 */
 	@RequestMapping("/listByCate")
-	public String listByCate(Goods goods, String order, Model model) {
-		Category category = categoryService.getCategoryById(goods.getCategoryId());
+//	public String listByCate(Goods goods, String order, Model model) {
+	public ModelAndView listByCate(String goodsCategoryId, String order, ModelAndView mv) {
+//		Category category = categoryService.getCategoryById(goods.getCategoryId());
+		// 默认按销量排序
+		if(order == null) {
+			order = "sellnum";
+		}
+		Category category = categoryService.getCategoryById(goodsCategoryId);
 		List<Category> categories = categoryService.getCategories();
 		// 姑且只show6个商品
 		int MAX = 6;
-		List<Goods> goodses = goodsService.getGoodsByOrder(order, MAX, goods.getCategoryId());
-		List<Goods> goodsesWithOrder = goodsService.getGoodsBySellNum(10);
-        model.addAttribute("category", category);
-		model.addAttribute("categories", categories);
-		model.addAttribute("goodses", goodses);
-		model.addAttribute("goodsesWithOrder", goodsesWithOrder);
-		return "/goods_list";
+		int TEN = 10;
+
+		List<Goods> goodses = goodsService.getGoodsByOrder(order, MAX, goodsCategoryId);
+		List<Goods> goodsesWithOrder = goodsService.getGoodsBySellNum(TEN);
+
+		System.out.println(goodsesWithOrder.size());
+
+		mv.addObject("category", category);
+        mv.addObject("categories", categories);
+        mv.addObject("goodses", goodses);
+        mv.addObject("goodsesWithOrder", goodsesWithOrder);
+//		model.addAttribute("category", category);
+//		model.addAttribute("categories", categories);
+//		model.addAttribute("goodses", goodses);
+//		model.addAttribute("goodsesWitrder", goodsesWithOrder);
+		mv.setViewName("goods_list");
+		return mv;
+//		return "/goods_list";
 //		return "bycate";
 	}
 
@@ -209,13 +244,17 @@ public class GoodsAction {
 	 * 显示商品的信息
 	 */
 	@RequestMapping("/view")
-	public String view(Goods goods, Model model) {
-		goods = goodsService.getGoodsById(goods.getId());
+	public ModelAndView view(String goodsId, ModelAndView mv) {
+		Goods goods = goodsService.getGoodsById(goodsId);
 		List<Category> categories = categoryService.getCategories();
-		model.addAttribute("goods", goods);
-		model.addAttribute("categories", categories);
+//		model.addAttribute("goods", goods);
+//		model.addAttribute("categories", categories);
+		mv.addObject("goods", goods);
+		mv.addObject("categories", categories);
 //		session.setAttribute("goods", goods);
-		return "goods_view";
+		mv.setViewName("goods_view");
+		return mv;
+//		return "goods_view";
 //		return "view";
 	}
 
@@ -243,11 +282,11 @@ public class GoodsAction {
 	private String result;
 
 	/*
-	 * goodsIds用来接收来自前台的数据：包含了categoryId和num的json字符串 result
-	 * 则返回查询到的信息，也是封装成了一个json字符串
+	 * goodsIds用来接收来自前台的数据：包含了categoryId和num的json字符串
+	 * result 则返回查询到的信息，也是封装成了一个json字符串
 	 */
-	@RequestMapping("getGoodsByIds")
-	public String getGoodsesByIds(String goodsIds) {
+	@RequestMapping("/getGoodsesByIds")
+	public String getGoodsesByIds(String goodsIds, Model model) {
 //		System.out.println("goodsIds:" + goodsIds);
 		String[] ids = goodsIds.split(",");
 //		for (String s : ids) {
@@ -261,8 +300,11 @@ public class GoodsAction {
 				"sellNum", "score" });
 		JSONArray a = JSONArray.fromObject(goodses, c);
 		String result = a.toString();
+		model.addAttribute("result", result);
+		System.out.println(result);
 //		System.out.println("result:" + result);
-		return "getgoodsesbyids";
+		return "/TestJSP.jsp";
+//		return "getgoodsesbyids";
 
 	}
 

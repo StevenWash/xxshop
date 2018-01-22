@@ -1,5 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,17 +23,21 @@
 		<div id="admin_right">
 			<div class="headbar">
 				<div class="field">
-					<table class="list_table">
-						<col width="40px" />
-						<col width="150px" />
-						<col />
-						<col width="160px" />
-						<col width="95px" />
+					<%--<table class="list_table">--%>
+					<table class="list_table m_10 mt_10">
+						<col width="20%" />
+						<col width="10%" />
+						<col width="5%" />
+						<col width="40%" />
+						<col width="15%" />
+						<col width="10%" />
+
 						<thead>
 							<tr role="head">
-								<th>序号</th>
-								<th>评价人</th>
 								<th>评价商品</th>
+								<th>评论用户</th>
+								<th>评星</th>
+								<th>评价</th>
 								<th>评价时间</th>
 								<th>操作</th>
 							</tr>
@@ -44,25 +48,33 @@
 
 			<form method="post" name="comment_list">
 				<div class="content">
-					<table id="list_table" class="list_table">
-						<col width="40px" />
-						<col width="150px" />
-						<col />
-						<col width="160px" />
-						<col width="100px" />
+					<table id="list_table" class="list_table m_10 mt_10">
+					<%--<table id="list_table" class="list_table">--%>
+						<col width="20%" />
+						<col width="10%" />
+						<col width="5%" />
+						<col width="40%" />
+						<col width="15%" />
+						<col width="10%" />
 						<tbody>
+							<c:forEach items="${commentList}" var="comment">
 							<tr>
-								<td>1</td>
-								<td><a href="">谭岚</a></td>
-								<td><a href="" target="_blank">苹果（Apple）iPhone 6
-										(A1586) 16GB 金色 移动联通电信4G手机</a></td>
-								<td>2015-05-03 10:52:33</td>
-								<td><a href="admin/comment_view.jsp"><img class="operator"
-										src="images/admin/icon_check.gif" alt="查看" /></a> <a
-									href="javascript:void(0)" onclick=""><img class="operator"
-										src="images/admin/icon_del.gif" alt="删除" /></a></td>
+								<td><a class="orange" href="./goods/view?goodsId=${comment.goods.id}"
+									   target="_blank">${comment.goods.name}</a></td>
+								<td>${comment.user.name}</td>
+								<td>${comment.score}</td>
+								<td>${comment.remark}</td>
+								<td>${comment.createtime}</td>
+								<td><a href="./comment/view?commentId=${comment.id}">
+									<img class="operator" src="images/admin/icon_check.gif" alt="查看" /></a>
+									<!--删除按钮未设置-->
+									<a href="javascript:void(0)" onclick="">
+										<img class="operator" src="images/admin/icon_del.gif" alt="删除" /></a></td>
 							</tr>
+							</c:forEach>
 						</tbody>
+
+
 					</table>
 				</div>
 			</form>
@@ -72,4 +84,20 @@
 	</div>
 
 </body>
+
+<%--<tbody>--%>
+<%--<tr>--%>
+<%--<td>1</td>--%>
+<%--<td><a href="">谭岚</a></td>--%>
+<%--<td><a href="" target="_blank">苹果（Apple）iPhone 6--%>
+<%--(A1586) 16GB 金色 移动联通电信4G手机</a></td>--%>
+<%--<td>2015-05-03 10:52:33</td>--%>
+<%--<td><a href="./admin/toCommentView"><img class="operator"--%>
+<%--src="images/admin/icon_check.gif" alt="查看" /></a>--%>
+<%--<!--删除按钮未设置-->--%>
+<%--<a href="javascript:void(0)" onclick=""><img class="operator"--%>
+<%--src="images/admin/icon_del.gif" alt="删除" /></a></td>--%>
+<%--</tr>--%>
+<%--</tbody>--%>
+
 </html>

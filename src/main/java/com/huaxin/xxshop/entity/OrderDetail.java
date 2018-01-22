@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 /**
  * 商品明细表对应的实体类
- * 
  * @author 没有蜡笔的小新 2015-12-29
  */
 public class OrderDetail implements Serializable {
@@ -15,6 +14,7 @@ public class OrderDetail implements Serializable {
 	private int payStatus;
 	private int sendStatus;
 	private int orderStatus;
+	private float dealPrice;
 
 	private Goods goods;
 
@@ -87,12 +87,19 @@ public class OrderDetail implements Serializable {
 		this.orderStatus = orderStatus;
 	}
 
+	public float getDealPrice() {
+		return dealPrice;
+	}
+	public void setDealPrice(float dealprice) {
+		this.dealPrice = dealprice;
+	}
+
 	@Override
 	public String toString() {
 		return "OrderDetail [id=" + id + ", orderId=" + orderId + ", goodsId="
 				+ goodsId + ", nums=" + nums + ", goods=" + goods
 				+ ", payStatus=" + payStatus + ", sendStatus=" + sendStatus
-				+ ", orderStatus=" + orderStatus + "]";
+				+ ", orderStatus=" + orderStatus + ", dealPrice=" + dealPrice +  "]";
 	}
 
 }

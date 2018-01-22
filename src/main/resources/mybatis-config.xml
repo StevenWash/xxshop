@@ -19,6 +19,8 @@
 		<mapper resource="com/huaxin/xxshop/dao/mapper/GoodsMapper.xml" />
 		<mapper resource="com/huaxin/xxshop/dao/mapper/OrderMapper.xml" />
 		<mapper resource="com/huaxin/xxshop/dao/mapper/OrderDetailMapper.xml" />
+		<mapper resource="com/huaxin/xxshop/dao/mapper/CommentMapper.xml" />
+
 	</mappers>
 
 </configuration>

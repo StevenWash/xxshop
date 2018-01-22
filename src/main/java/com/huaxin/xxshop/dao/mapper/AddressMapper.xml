@@ -8,6 +8,11 @@
 		values(#{id},#{userId},#{accept},#{zip,jdbcType=VARCHAR},#{phoneNum,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{province},#{city},#{area},#{address},#{isDefault})
 	</insert>
 
+	<select id="getAddressById" resultType="Address">
+		SELECT * from shop_address
+		where id=#{id}
+	</select>
+
 	<select id="getAddress" resultType="Address">
 		select * from shop_address
 		where userId=#{userId}

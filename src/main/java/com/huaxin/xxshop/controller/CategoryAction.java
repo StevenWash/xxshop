@@ -25,7 +25,9 @@ public class CategoryAction {
 	 * 添加商品分类
 	 */
 	@RequestMapping("/add")
-	public String add(Category category) {
+	public String add(String categoryName) {
+		Category category = new Category();
+		category.setName(categoryName);
 		categoryService.addCategory(category);
 		return "redirect:/category/list";
 //		return "opersuc";
@@ -67,8 +69,8 @@ public class CategoryAction {
 	 * 删除当前用户的点击的商品分类
 	 */
 	@RequestMapping("/delete")
-	public String delete(Category category) {
-		categoryService.deleteCategory(category.getId());
+	public String delete(String categoryID) {
+		categoryService.deleteCategory(categoryID);
 		return "redirect:/category/list";
 //		return "opersuc";
 	}
@@ -77,11 +79,12 @@ public class CategoryAction {
 	 * 修改商品信息
 	 */
 	@RequestMapping("/update")
-	public void update(Category category) {
+	public void update(String categoryId) {
 //		System.out.println(category.getId() + "----"
 //				+ category.getName().trim());
-		boolean isexist = categoryService.getCategoryByName(category.getName()
-				.trim());
+		boolean isexist = (categoryService.getCategoryById(categoryId) == null);
+//		boolean isexist = categoryService.getCategoryByName(category.getName()
+//				.trim());
 		PrintWriter write = null;
 		try {
 			write = ServletActionContext.getResponse().getWriter();

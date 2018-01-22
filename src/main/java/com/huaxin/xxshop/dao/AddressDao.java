@@ -42,4 +42,10 @@ public interface AddressDao {
 	 */
 	public void deleteAddress(String id);
 
+	/**
+	 *
+	 * @param addressId
+	 * @return
+	 */
+	public Address getAddressById(String addressId);
 }

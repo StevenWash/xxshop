@@ -9,7 +9,7 @@
 <jsp:include page="base.jsp" />
 <script type="text/javascript">
 	function finish() {
-		var payType = $("#paymentBox input[name='order.payType']:checked")
+		var payType = $("#paymentBox input[name='payType']:checked")
 				.val();
 		if (payType != "预存款支付") {
 			alert("很抱歉，本系统暂不支持该种支付方式！请选择预存款支付！");
@@ -18,6 +18,8 @@
 		}
 	}
 </script>
+	<%--var payType = $("#paymentBox input[name='order.payType']:checked")--%>
+	<%--.val();--%>
 </head>
 <body class="second">
 	<div class="brand_list container_2">
@@ -35,8 +37,10 @@
 				</ul>
 			</div>
 
-			<form action='order_submit' method='post' name='order_form'
+			<form action='./order/submit' method='post' name='order_form'
 				id="form1">
+				<%--<form action='order_submit' method='post' name='order_form'--%>
+				<%--id="form1">--%>
 
 				<input type='hidden' name='opr' value='add' /> <input type='hidden'
 					name='totalmoney' value='${goods.price2*nums}' />
@@ -55,8 +59,8 @@
 								<strong>常用收货地址</strong>
 								<ul class="addr_list">
 									<c:forEach items="${addresses}" var="address">
-										<li><label><input class="radio"
-												name="order.addressId"
+										<%--坑爹！！数据库addressid,entity系addressID--%>
+										<li><label><input class="radio" name="addressId"
 												<c:if test="${address.isDefault eq 1}">checked</c:if>
 												type="radio" value="${address.id }" />
 												${address.accept }&nbsp;&nbsp;&nbsp;&nbsp;${address.province }
@@ -80,13 +84,13 @@
 								<tbody id="deliveryFormTrBox">
 									<tr>
 										<th><label><input type="radio"
-												name="order.deliveryType" paytype="0" alt="20.00" checked
+												name="deliveryType" paytype="0" alt="20.00" checked
 												value="快递">快递</label></th>
 										<td>直接由第三方物流公司配送 运费：￥20.00 &nbsp;&nbsp;</td>
 									</tr>
 									<tr>
 										<th><label><input type="radio"
-												name="order.deliveryType" paytype="0" alt="10.00"
+												name="deliveryType" paytype="0" alt="10.00"
 												value="EMS">EMS</label></th>
 										<td>运费：￥10.00 &nbsp;&nbsp;</td>
 									</tr>
@@ -95,11 +99,11 @@
 									<tr>
 										<th>指定送货时间：</th>
 										<td><label class="attr"> <input type="radio"
-												name="order.deliveryTime" checked="checked" value="任意">任意
+												name="deliveryTime" checked="checked" value="任意">任意
 										</label> <label class="attr"> <input type="radio"
-												name="order.deliveryTime" value="周一到周五">周一到周五
+												name="deliveryTime" value="周一到周五">周一到周五
 										</label> <label class="attr"><input type="radio"
-												name="order.deliveryTime" value="周末">周末</label></td>
+												name="deliveryTime" value="周末">周末</label></td>
 									</tr>
 								</tfoot>
 							</table>
@@ -119,19 +123,19 @@
 
 								<tr>
 									<th><label><input class="radio"
-											name="order.payType" checked alt="0" title="预存款支付"
+											name="payType" checked alt="0" title="预存款支付"
 											type="radio" value="预存款支付" />预存款支付</label></th>
 									<td>支付手续费：￥0</td>
 								</tr>
 								<tr>
 									<th><label><input class="radio"
-											name="order.payType" alt="0" title="支付宝" type="radio"
+											name="payType" alt="0" title="支付宝" type="radio"
 											value="支付宝" />支付宝</label></th>
 									<td>支付手续费：￥0</td>
 								</tr>
 								<tr>
 									<th><label><input class="radio"
-											name="order.payType" checked alt="0" title="货到付款"
+											name="payType" checked alt="0" title="货到付款"
 											type="radio" value="货到付款" />货到付款</label></th>
 									<td>支付手续费：￥0</td>
 								</tr>
@@ -159,15 +163,19 @@
 										<th class="last">小计</th>
 									</tr>
 								</thead>
+
 								<!-- 商品展示 开始-->
 								<tbody>
 									<c:set var="totalMoney" value="0"></c:set>
-									<c:forEach items="${ orderDetails}" var="orderDetail"
-										varStatus="s">
-										<input type="hidden" name="orderDetails[${s.index }].goodsId"
+									<c:forEach items="${orderDetails}" var="orderDetail" varStatus="s">
+										<input type="hidden" name="orderDetailList[${s.index }].goodsId"
 											value="${orderDetail.goods.id}" />
-										<input type="hidden" name="orderDetails[${s.index }].nums"
+										<input type="hidden" name="orderDetailList[${s.index }].nums"
 											value="${ orderDetail.nums}" />
+
+										<!--实售价-->
+										<input type="hidden" name="orderDetailList[${s.index }].dealrice"
+											   value="${ orderDetail.goods.price2}" />
 										<tr>
 											<td><img src="${orderDetail.goods.thumbnail }"
 												width="66px" height="66px" alt="${orderDetail.goods.name }"
@@ -183,8 +191,8 @@
 									</c:forEach>
 								</tbody>
 							</table>
-							<input type="hidden" name="order.totalMoney"
-								value="${totalMoney }" />
+							<input type="hidden" name="totalMoney" value="${totalMoney }" />
+							<%--<input type="hidden" name="orderDetailList" value="${orderDetails}" />--%>
 						</div>
 						<!--购买清单 结束-->
 

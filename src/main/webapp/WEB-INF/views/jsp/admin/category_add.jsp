@@ -31,7 +31,7 @@
 							<tr>
 								<th>分类名称：</th>
 								<td><input id="categoryName" class="normal"
-									name="category.name" type="text" value=""><label
+									name="categoryName" type="text" value=""><label
 									id="catemsg"></label></td>
 							</tr>
 							<tr>
@@ -58,7 +58,7 @@
 					"category.name" : {
 						required : true,
 						remote : {
-							url : "category_isexist",
+							url : "./category/isexist",
 							type : "post",
 						}
 					}

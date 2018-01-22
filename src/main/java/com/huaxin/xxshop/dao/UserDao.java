@@ -79,4 +79,9 @@ public interface UserDao {
 	public void updateStatus(@Param("id") String id,
                              @Param("status") int status);
 
+	public void updatePassword(@Param("id") String id,
+							   @Param("password") String password);
+
+	public void updateRole(@Param("id") String id,
+						   @Param("role") String role);
 }
