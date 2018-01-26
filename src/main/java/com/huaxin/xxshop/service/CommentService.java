@@ -23,5 +23,7 @@ public interface CommentService {
      * @param commentId
      * @return
      */
-    Comment getCommentById(String commentId);
+    public Comment getCommentById(String commentId);
+
+    public void deleteById(String commentId);
 }

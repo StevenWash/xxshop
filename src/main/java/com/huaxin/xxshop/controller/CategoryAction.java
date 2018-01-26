@@ -18,11 +18,11 @@ public class CategoryAction {
 	@Autowired
 	private CategoryService categoryService;
 
-	private Category category;
-	private List<Category> categories;
 
-	/*
-	 * 添加商品分类
+	/**
+	 * 增加商品分类
+	 * @param categoryName
+	 * @return
 	 */
 	@RequestMapping("/add")
 	public String add(String categoryName) {
@@ -30,25 +30,28 @@ public class CategoryAction {
 		category.setName(categoryName);
 		categoryService.addCategory(category);
 		return "redirect:/category/list";
-//		return "opersuc";
 	}
 
-	/*
+
+	/**
 	 * 显示所有的商品分类
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/list")
 	public String list(Model model) {
 		List<Category> categories = categoryService.getCategories();
 		model.addAttribute("categories", categories);
 		return "/admin/category_list";
-//		return "list";
 	}
 
-	/*
-	 * 用来判断当前的这个上商品的类别名称是否已经存在
+
+	/**
+	 * 用来判断当前商品是否已经存在
+	 * @param category
 	 */
 	@RequestMapping("/isexist")
-	public void isexist() {
+	public void isexist(Category category) {
 //		System.out.println(category.getName());
 		boolean isexist = categoryService.getCategoryByName(category.getName());
 //		System.out.println(isexist);
@@ -58,33 +61,38 @@ public class CategoryAction {
 			write.print(!isexist);
 			write.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			write.close();
 		}
 	}
 
-	/*
-	 * 删除当前用户的点击的商品分类
+
+	/**
+	 * 删除当前用户点击的商品分类
+	 * @param categoryId
+	 * @return
 	 */
 	@RequestMapping("/delete")
-	public String delete(String categoryID) {
-		categoryService.deleteCategory(categoryID);
+	public String delete(String categoryId) {
+		System.out.println("Now delete category where categoryId is: " + categoryId);
+		categoryService.deleteCategory(categoryId);
 		return "redirect:/category/list";
-//		return "opersuc";
 	}
 
-	/*
+
+	/**
+	 * unused
 	 * 修改商品信息
+	 * @param categoryId
+	 * @param category
 	 */
 	@RequestMapping("/update")
-	public void update(String categoryId) {
+	public void update(String categoryId, Category category) {
 //		System.out.println(category.getId() + "----"
 //				+ category.getName().trim());
 		boolean isexist = (categoryService.getCategoryById(categoryId) == null);
-//		boolean isexist = categoryService.getCategoryByName(category.getName()
-//				.trim());
+//		boolean isexist = categoryService.getCategoryByName(category.getName().trim());
 		PrintWriter write = null;
 		try {
 			write = ServletActionContext.getResponse().getWriter();
@@ -104,38 +112,14 @@ public class CategoryAction {
 		}
 	}
 
-	/*
+	/**
+	 * unused
 	 * 接受表单的数据，将页面刷新一下
+	 * @return
 	 */
 	@RequestMapping("/refresh")
 	public String refresh() {
 		return "redirect:/category/list";
-//		return "opersuc";
-	}
-
-	// getter 和setter
-	public Category getCategory() {
-		return category;
-	}
-
-	public void setCategory(Category category) {
-		this.category = category;
-	}
-
-	public CategoryService getCategoryService() {
-		return categoryService;
-	}
-
-	public void setCategoryService(CategoryService categoryService) {
-		this.categoryService = categoryService;
-	}
-
-	public List<Category> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<Category> categories) {
-		this.categories = categories;
 	}
 
 }

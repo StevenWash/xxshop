@@ -13,7 +13,7 @@
 	<div class="container">
 		<jsp:include page="header.jsp"></jsp:include>
 		<jsp:include page="navbar.jsp"></jsp:include>
-		<jsp:include page="search_backup.jsp"></jsp:include>
+		<jsp:include page="search.jsp"></jsp:include>
 
 		<div class="wrapper clearfix">
 			<div class="wrap_box">

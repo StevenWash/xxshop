@@ -34,7 +34,7 @@
 		params = params.substring(0, params.length - 1);
 		params += "\"}";
 		//alert(params);
-		$.getJSON("goods_getGoodsesByIds", JSON.parse(params), function(r) {
+		$.getJSON("./goods/getGoodsesByIds", JSON.parse(params), function(r) {
 			//alert(r);
 
 			var json = JSON.parse(r);
@@ -55,6 +55,12 @@
 		});
 
 	});
+
+	function delCart(id) {
+        if (confirm("您确认要删除该商品吗？")) {
+            location.href = "./cart/deleteById?cartId=" + id;
+        }
+    }
 </script>
 <script id="goodsTemplate" type="text/plain">
 <tr>
@@ -90,13 +96,13 @@
 					<li class="last"><span>3、成功提交订单</span></li>
 				</ul>
 			</div>
-			<form action="order_add" id="form1">
+			<form action="./order/addCastOrder" id="form1">
 				<table width="100%" class="cart_table m_10">
-					<col width="115px" />
-					<col width="400px" />
-					<col width="80px" />
-					<col width="80px" />
-					<col width="80px" />
+					<%--<col width="115px" />--%>
+					<%--<col width="400px" />--%>
+					<%--<col width="80px" />--%>
+					<%--<col width="80px" />--%>
+					<%--<col width="80px" />--%>
 					<caption>查看购物车</caption>
 					<thead>
 						<tr>
@@ -108,10 +114,33 @@
 							<th class="last">操作</th>
 						</tr>
 					</thead>
+
 					<tbody id="goodsList">
-
-
-
+						<!-- varStatus ??? 此处不加报错-->
+						<c:forEach items="${cartList}" var="cart" varStatus="s">
+							<!-- 此处可能传入"结算"需要的参数-->
+							<input type="hidden" name="cartList[${s.index }].id"
+								   value="${cart.id}" />
+							<input type="hidden" name="cartList[${s.index }].goodsId"
+								   value="${cart.goodsId}" />
+							<input type="hidden" name="cartList[${s.index }].num"
+								   value="${cart.num}" />
+							<tr>
+								<td><img src="${cart.goods.thumbnail }" width="66px" height="66px"/></td>
+								<td><a href="" class="blue">${cart.goods.name}</a></td>
+								<td>${cart.price}</td>
+								<td>${cart.num}</td>
+								<td>${cart.num * cart.price}</td>
+								<td><!-- 修改操作 -->
+									<a href="./admin/memberUpdate?memberId=${user.id}" target="_blank">
+										<img width="15px" height="15px" class="operator"
+											 src="images/admin/icon_edit.gif" alt="修改" /></a>
+									<!-- 删除操作-->
+									<a href="javascript:delCart('${cart.id }')">
+										<img width="5px" height="5px" class="operator"
+											 src="images/admin/icon_del.gif" alt="删除" /></a></td>
+							</tr>
+						</c:forEach>
 						<tr class="stats">
 							<td colspan="8">金额总计（不含运费）：<b class="orange" id='sum_price'>0</b></td>
 						</tr>
@@ -119,8 +148,10 @@
 					<tfoot>
 						<tr>
 							<td colspan="2" class="t_l"></td>
-							<td colspan="6" class="t_r"><a class="btn_continue" href="">继续购物</a>
-								<a class="btn_pay" href="javascript:finish();">去结算</a></td>
+							<td colspan="6" class="t_r">
+								<a class="btn_continue" href="">继续购物</a>
+								<%--<a class="btn_pay" href="javascript:finish();">去结算</a></td>--%>
+								<input class="submit_pay" type="submit" value="去结算" />
 						</tr>
 					</tfoot>
 				</table>
@@ -140,8 +171,8 @@
 						</p>
 						<p class="brown">
 							<b>￥5800.00</b>
-						</p> <label class="btn_orange2"><input type="submit"
-							onclick="" value="加入购物车"></label></li>
+						</p> <label class="btn_orange2">
+							<input type="submit" onclick="" value="加入购物车"></label></li>
 				</c:forEach>
 			</ul>
 		</div>

@@ -27,9 +27,7 @@ public class OrderServiceImpl implements OrderService {
 		order.setId(XXShopUtil.getId());
 		order.setOrderTime(new Date());
 		order.setStatus("1");
-
 		orderDao.addOrder(order);
-
 		for (OrderDetail orderDetail : orderDetails) {
 			orderDetail.setId(XXShopUtil.getId());
 			orderDetail.setOrderId(order.getId());
@@ -64,6 +62,8 @@ public class OrderServiceImpl implements OrderService {
 		pageBean.setTotalNum(totalNum);
 		int totalPage = totalNum % pageSize == 0 ? totalNum / pageSize
 				: totalNum / pageSize + 1;
+		System.out.println("ServiceImpl totalPage: " + totalPage
+						+ "ServiceImpl totalNum: " + totalNum);
 		pageBean.setTotalPage(totalPage);
 		return pageBean;
 	}

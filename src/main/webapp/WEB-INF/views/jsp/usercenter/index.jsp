@@ -3,9 +3,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8"></meta>
+<meta charset="UTF-8">
 <base href="${base}/" />
-<title>个人中心_${site}</title>
+<title>会员中心_${site}</title>
+<%--<title>个人中心_${site}</title>--%>
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">
@@ -22,7 +23,7 @@
 	<div class="ucenter container">
 		<jsp:include page="../header.jsp" />
 		<jsp:include page="../navbar.jsp" />
-		<jsp:include page="../search_backup.jsp" />
+		<jsp:include page="../search.jsp" />
 		<div class="position">
 			您当前的位置： <a href="">首页</a> » <a href="./order/uindex">我的账户</a>
 		</div>
@@ -37,9 +38,9 @@
 					<h3>用户信息</h3>
 					<dl class="userinfo_box">
 						<dt>
-							<a class="ico"><img id="user_ico_img"
-								src="${sessionScope.user.avatar}" width="100" height="100"
-								alt="加载失败" /></a>
+							<a class="ico">
+								<img id="user_ico_img"
+									 src="${sessionScope.user.avatar}" width="100" height="100" alt="加载失败" /></a>
 							<a class="blue" href="./user/usercenter/toAvatarChange">修改头像</a>
 							<%--<a class="blue" href="usercenter/user_avatar.jsp">修改头像</a>--%>
 						</dt>
@@ -101,8 +102,8 @@
 						</c:forEach>
 						<tfoot>
 							<tr>
-								<td colspan="6" class="t_r"><a class="blue"
-									href="./order/listByUser">更多订单&gt;&gt;</a></td>
+								<td colspan="6" class="t_r">
+									<a class="blue" href="./order/listByUser">更多订单&gt;&gt;</a></td>
 							</tr>
 						</tfoot>
 					</table>

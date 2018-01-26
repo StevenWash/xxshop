@@ -13,8 +13,15 @@
 	<%--rel="stylesheet">--%>
 <%--<script src="js/bootstrap-3.3.4-dist/jquery-2.1.4.min.js"></script>--%>
 <%--<script src="js/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>--%>
-
 <script type="text/javascript" src="js/jquery-2.0.3.js"></script>
+<script type="text/javascript">
+	function delCategory(id) {
+		if(confirm("您确认要删除该商品种类？")){
+		    location.href="./category/delete?categoryId="+id;
+		}
+    }
+</script>
+
 </head>
 <body>
 	<div class="container1">
@@ -61,12 +68,14 @@
 								<td>${category.name}</td>
 								<td>${category.goodsNum}</td>
 								<td><a class="update" data-update="${category.id}"
-									data-toggle="modal" data-target="#myModal"> <img
-										class="operator" src="images/admin/icon_edit.gif" alt="修改"
-										title="修改" />
-								</a> <a href="./category/delete?categoryId=${category.id}"><img
-										class="operator" src="images/admin/icon_del.gif" alt="删除"
-										title="删除" /></a></td>
+										data-toggle="modal" data-target="#myModal">
+										<img class="operator" src="images/admin/icon_edit.gif" alt="修改"
+										title="修改" /></a>
+									<a href="javascript:void(0)" onclick="delCategory('${category.id}')">
+										<img class="operator" src="images/admin/icon_del.gif" alt="删除" title="删除" /></a></td>
+									<%--<a href="./category/delete?categoryId=${category.id}"><img--%>
+										<%--class="operator" src="images/admin/icon_del.gif" alt="删除"--%>
+										<%--title="删除" /></a></td>--%>
 							</tr>
 						</c:forEach>
 					</tbody>
@@ -92,8 +101,8 @@
 						<form id="updateCategoryForm" action="./category/refresh"
 							class="bs-example bs-example-form" role="form">
 							<div class="input-group">
-								<span class="input-group-addon">商品类别</span> <input
-									id="updateCategory" type="text" class="form-control"
+								<span class="input-group-addon">商品类别</span>
+								<input id="updateCategory" type="text" class="form-control"
 									name="category.name"> <label id="catemsg"></label>
 							</div>
 							<br>

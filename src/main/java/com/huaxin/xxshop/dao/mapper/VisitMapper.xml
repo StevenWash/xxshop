@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+		"-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huaxin.xxshop.dao.VisitDao">
+
+	<select id="getVisitByPage" resultType="Visit"
+			parameterType="hashmap">
+		select * from visit ORDER BY "username" DESC
+			limit #{indexPage} ,#{pageSize}
+	</select>
+
+
+	<select id="getVisitNum" resultType="int">
+		select
+		count(*) from visit
+	</select>
+
+
+	<select id="getAllVisit" resultType="Visit">
+		SELECT * from visit
+	</select>
+
+
+</mapper>

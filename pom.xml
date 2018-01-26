@@ -19,8 +19,32 @@
 
     <dependencies>
 
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
 
+        <!-- 201801024 upload的依赖 -->
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+
+
+        <!--以下截止到 2018.1.24-->
         <!-- https://mvnrepository.com/artifact/com.janeluo/ikanalyzer -->
+        <!-- 此文件从maven仓库中下载的不work-->
         <dependency>
             <groupId>com.janeluo</groupId>
             <artifactId>ikanalyzer</artifactId>

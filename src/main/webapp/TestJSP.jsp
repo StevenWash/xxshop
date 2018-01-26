@@ -57,6 +57,28 @@
 </head>
 
 <body>
+
+<form action="./user/servletTest" method="post">
+    <input type="submit" value="uploadUtilTest" />
+</form>
+
+
+<form action="./user/uploadUtilTest" method="post" enctype="multipart/form-data">
+    <input type="file" required="required" name="pic" />
+    <input type="submit" value="uploadUtilTest" />
+</form>
+
+
+
+<form action="./user/uploadTest" method="post" enctype="multipart/form-data">
+    <input type="file" required="required" name="pic" id="exampleInputFile">
+    <input type="submit" value="uploadTest" />
+</form>
+
+
+<hr>
+
+
 <h2>
     <form action="/testPOJOWithPoint" method="post">
         <input type="button" value="测试" onclick="testJSON()"/>
@@ -75,6 +97,7 @@
         </tr>
     </table>
 </ul>
+
 
 <form action="./comment/view" method="post">
     <input type="text" value="1" />

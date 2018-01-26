@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GoodsDao {
 
+	public List<Goods> getGoodsByPageAndOrder(Map<String, Object> params);
+
 	/**
 	 * 添加商品
 	 * @param goods 要添加的商品实体

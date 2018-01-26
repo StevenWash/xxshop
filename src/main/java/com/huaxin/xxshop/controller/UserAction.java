@@ -1,13 +1,11 @@
 package com.huaxin.xxshop.controller;
 
-import com.huaxin.xxshop.entity.Goods;
-import com.huaxin.xxshop.entity.Order;
-import com.huaxin.xxshop.entity.User;
-import com.huaxin.xxshop.service.CategoryService;
-import com.huaxin.xxshop.service.GoodsService;
-import com.huaxin.xxshop.service.OrderService;
-import com.huaxin.xxshop.service.UserService;
+import com.huaxin.xxshop.entity.*;
+import com.huaxin.xxshop.service.*;
 import com.huaxin.xxshop.service.impl.UserServiceImpl;
+import com.huaxin.xxshop.util.PhotoUtil;
+import com.huaxin.xxshop.util.XXShopUtil;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
@@ -18,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -26,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.spi.http.HttpContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -40,8 +40,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserAction {
-//public class UserAction implements SessionAware {
-//	@Resource(name="userService")
     @Autowired
     private UserService userService = null;
 	@Autowired
@@ -50,18 +48,156 @@ public class UserAction {
 	private GoodsService goodsService = null;
     @Autowired
     private OrderService orderService;
+	@Autowired
+	private VisitService visitService = null;
 
-	private User user;
-	private List<User> userList;
-	private Order order;
-	private String recharge;
-	// 定义文件变量和文件名，用来接收来自前台页面的数据
-	private File avatar;
-	private String avatarFileName;
-	// 在adminLogin方法中用来传递信息
-	private String msg;
+	/**
+	 * 测试用方法
+	 * @param request
+	 */
+	@RequestMapping("/servletTest")
+	public void servletTest(HttpServletRequest request) {
+		System.out.println("request.getSession().getServletContext().getRealPath('/')"
+				+ request.getSession().getServletContext().getRealPath("/"));
+		// /Users/yin/Documents/Git/GitHub/Local/xxshop/target/xxshop/
+	}
+
+	/**
+	 * 进行登陆操作 判断当前的用户名和密码是否正确，如果验证正确还需要将
+	 * 用户信息存放在session里面
+	 * @return 返回对应result
+	 */
+	@RequestMapping(value = "/login", method= RequestMethod.POST)
+	public String login(String name, String password, HttpSession session,
+						HttpServletRequest request) {
+		User user = userService.findUser(name, password);
+		Visit visit = null;
+		if (user == null || user.getStatus() == 2) {
+			return "login";
+		} else {
+			user.setStatus(1);
+			userService.updateStatus(user.getId(), user.getStatus());
+			session.setAttribute("user", user);
+			user.setIp(getIpAddr(request));
+			//            visit.setUserId(user.getId());
+			userService.addLogin(user);
+			// 重定向到 index 资源
+			return "redirect:/index"; // 报错："Request method 'GET' not supported"
+			//            return "index"; // 这样返回，session仍在?? Yeah, request不在
+		}
+	}
+
+	/**
+	 *获取Ip地址的函数  方便上面的登录模块调用
+	 */
+	public String getIpAddr(HttpServletRequest request) {
+		String ip = request.getHeader("x-forwarded-for");
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		return ip;
+	}
 
 
+	@RequestMapping("/userUpdate")
+	public ModelAndView userUpdate(HttpSession session, ModelAndView mv) {
+		User user = userService.getUser(((User)session.getAttribute("user")).getId());
+		mv.addObject("user", user);
+		mv.setViewName("usercenter/user_update");
+		return mv;
+	}
+
+	@RequestMapping("/updateFailed")
+	public ModelAndView updateFailed(HttpSession session, ModelAndView mv) {
+		User user = userService.getUser(((User)session.getAttribute("user")).getId());
+		mv.addObject("user", user);
+		mv.setViewName("usercenter/update_failed");
+		return mv;
+	}
+
+
+	/**
+	 *尝试修改个人信息
+	 */
+	@RequestMapping("/update")
+	public String update(HttpSession session,HttpServletResponse response, String email,String phoneNum,String oldpass,String password) throws IOException {
+		User user = userService.getUser(((User)session.getAttribute("user")).getId());
+		System.out.println("UserAction :"+phoneNum);
+		userService.updateEmail(user.getId(),email);
+		userService.updatePhoneNum(user.getId(),phoneNum);
+		response.setContentType("text/html;charset=gb2312");
+		PrintWriter out = response.getWriter();
+		if(oldpass.equals("")){
+			System.out.println("旧密码为空，不执行密码修改操作");
+		}else if (oldpass.equals(user.getPassword())){
+			System.out.println("新旧密码相同，可以执行密码操作");
+			userService.updatePassword(user.getId(),password);
+		}else {
+			System.out.println("新旧密码不同，跳转到报错页面");
+			out.print("<script language=\"javascript\">alert('原始密码输入错误，修改失败……');window.location.href='/xxshop/login'</script>");
+			return "usercenter/update_failed";
+		}
+		System.out.println(user.getPassword());
+		System.out.println(oldpass);
+		return "redirect:/user/userInfo";
+	}
+
+	@RequestMapping("/listByPage")
+	public String listByPage(Integer page, Model model) {
+		if (page==null ) {
+			page = new Integer(1);
+		}
+		PageBean<Visit> pageBean = visitService.getVisitsByPage(page);
+		model.addAttribute("pageBean", pageBean);
+		return "admin/login_list";
+	}
+
+
+
+
+
+	/**
+	 * 传入商品图片并储存在对应文件夹下
+	 * @param mv
+	 * @param pic
+	 * @param request
+	 * @return
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	@RequestMapping("/uploadTest")
+	public ModelAndView uploadTest(ModelAndView mv, MultipartFile pic, HttpServletRequest request)
+				throws IllegalStateException, IOException {
+		String FILE_TARGET = "target";
+		String basePath = request.getSession().getServletContext().getRealPath("/"); // "/": 表示获取根目录
+		basePath = basePath.substring(0,basePath.lastIndexOf(FILE_TARGET));
+		String path = basePath + "src/main/webapp/goodsimage/";
+		System.out.println(path);
+		// 新图片的名称
+		String originFileName = pic.getOriginalFilename();
+		String newFileName = XXShopUtil.getId() +
+				originFileName.substring(originFileName.lastIndexOf("."));
+		// 新的图片
+		File newFile = new File(path + newFileName);
+		// 将内存中的数据写入磁盘
+		pic.transferTo(newFile);
+		return mv;
+	}
+
+	/**
+	 * 查询
+	 * 似乎可以直接从session中取出用户基本信息
+	 * 所以如果不需要更多的信息不需要该方法
+	 * @param session
+	 * @param mv
+	 * @return
+	 */
 	@RequestMapping("/userInfo")
 	public ModelAndView userInfo(HttpSession session, ModelAndView mv) {
 		User user = userService.getUser(((User)session.getAttribute("user")).getId());
@@ -71,25 +207,27 @@ public class UserAction {
 	}
 
 
-    /**
-     * 进行登陆操作 判断当前的用户名和密码是否正确，如果验证正确还需要将
-     * 用户信息存放在session里面
-     * @return 返回对应result
-     */
-    @RequestMapping(value = "/login", method= RequestMethod.POST)
-    public String login(String name, String password, HttpSession session) {
-    	User user = userService.findUser(name, password);
-        if (user == null || user.getStatus() == 2) {
-            return "login";
-        } else {
-            user.setStatus(1);
-            userService.updateStatus(user.getId(), user.getStatus());
-            session.setAttribute("user", user);
-            // 重定向到 index 资源
-            return "redirect:/index"; // 报错："Request method 'GET' not supported"
-//            return "index"; // 这样返回，session仍在?? Yeah, request不在
-        }
-    }
+
+
+//    /**
+//     * 进行登陆操作 判断当前的用户名和密码是否正确，如果验证正确还需要将
+//     * 用户信息存放在session里面
+//     * @return 返回对应result
+//     */
+//    @RequestMapping(value = "/login", method= RequestMethod.POST)
+//    public String login(String name, String password, HttpSession session) {
+//    	User user = userService.findUser(name, password);
+//        if (user == null || user.getStatus() == 2) {
+//            return "login";
+//        } else {
+//            user.setStatus(1);
+//            userService.updateStatus(user.getId(), user.getStatus());
+//            session.setAttribute("user", user);
+//            // 重定向到 index 资源
+//            return "redirect:/index"; // 报错："Request method 'GET' not supported"
+////            return "index"; // 这样返回，session仍在?? Yeah, request不在
+//        }
+//    }
 //    public String login() {
 //        if(userService == null) {
 //            System.out.println("Still not work!");
@@ -122,20 +260,12 @@ public class UserAction {
 		userService.register(user);
 		return "login";
 	}
-//  public String register(User user) {
-//	public String register(String name, String password, String phoneNum) {
-//		User user = new User();
-//		user.setName(name);
-//		user.setPassword(password);
-//		user.setPhoneNum(phoneNum);
-//		userService.register(user);
-//	    return "login";
-//    }
+
 
 	/**
 	 * 判断是否存在当前的用户信息，用于相应Ajax的方法
 	 */
-	public void isexist() {
+	public void isexist(User user) {
 		boolean isexist = userService.isexist(user.getName());
 		PrintWriter write = null;
 		try {
@@ -143,7 +273,7 @@ public class UserAction {
 			write.print(isexist);
 			write.flush();
 		} catch (IOException e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		} finally {
 			write.close();
 		}
@@ -151,11 +281,13 @@ public class UserAction {
 
 
 	/**
+	 * unused
 	 * 实现上传头像的功能 使用了 org.apache.commons.io.FileUtils 中的静态方法copyFile()
 	 * @return 返回struts的对应result
 	 */
 	@RequestMapping("/uploadAvatar")
-	public String uploadAvatar(HttpSession session, File avatar) {
+	public String uploadAvatar(HttpSession session, File avatar,
+							   String avatarFileName) {
 		String userId = ((User) session.getAttribute("user")).getId();
 		/*
 		 * dir 获取当前文件存放的目录地址 suffix 用来获取当前上传的文件的扩展名
@@ -182,8 +314,11 @@ public class UserAction {
         return "/usercenter/index";
 	}
 
-	/*
+	/**
 	 * 实现在线充值的功能
+	 * @param session
+	 * @param recharge
+	 * @return
 	 */
 	@RequestMapping("/recharge")
 	public String recharge(HttpSession session, String recharge) {
@@ -194,7 +329,6 @@ public class UserAction {
 		userService.updateMoney(user.getId(), money);
 		return "/usercenter/account_log";
 	}
-
 
     /**
      * 后台管理员登录
@@ -207,11 +341,11 @@ public class UserAction {
 	@RequestMapping("/adminLogin")
 	public String adminLogin(String name, String password, String captcha, HttpSession session) {
 		// 验证码的验证似乎应该在前台比较好
-	    String verifyCode = "uwv6";
-	    if(!captcha.toLowerCase().equals(verifyCode)) {
-	        //msg = "验证码不对";
-	        return "admin/login";
-        }
+//	    String verifyCode = "uwv6";
+//	    if(!captcha.toLowerCase().equals(verifyCode)) {
+//	        //msg = "验证码不对";
+//	        return "admin/login";
+//        }
         User adminUser = userService.findUser(name, password);
 //		User adminUser = userService.findUser(user.getName(), user.getPassword());
 		if (adminUser == null) {
@@ -265,7 +399,8 @@ public class UserAction {
 	    User user = ((User) session.getAttribute("user"));
 		System.out.println(orderId.getClass() + " got orderId: " + orderId);
 	    Order order = orderService.getOrder(orderId);
-		PrintWriter write = null;
+		System.out.println("Finally no more two orders!");
+	    PrintWriter write = null;
 		try {
 //		    write = ServletActionContext.getResponse().getWriter(); // 此为Struts2中的方法
             write = response.getWriter();
@@ -352,78 +487,5 @@ public class UserAction {
     	return "cart";
 	}
 
-
-	/* getter 和 setter方法 */
-	public UserService getUserService() {
-		return userService;
-	}
-
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public File getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(File avatar) {
-		this.avatar = avatar;
-	}
-
-	public String getAvatarFileName() {
-		return avatarFileName;
-	}
-
-	public void setAvatarFileName(String avatarFileName) {
-		this.avatarFileName = avatarFileName;
-	}
-
-	public String getRecharge() {
-		return recharge;
-	}
-
-	public void setRecharge(String recharge) {
-		this.recharge = recharge;
-	}
-
-	public String getMsg() {
-		return msg;
-	}
-
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-
-	public List<User> getUserList() {
-		return userList;
-	}
-
-	public void setUserList(List<User> userList) {
-		this.userList = userList;
-	}
-
-	public OrderService getOrderService() {
-		return orderService;
-	}
-
-	public void setOrderService(OrderService orderService) {
-		this.orderService = orderService;
-	}
-
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
 
 }

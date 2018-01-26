@@ -1,5 +1,6 @@
 package com.huaxin.xxshop.controller;
 
+import com.huaxin.xxshop.dto.CartListDTO;
 import com.huaxin.xxshop.dto.OrderDetailListDTO;
 import com.huaxin.xxshop.entity.*;
 import com.huaxin.xxshop.service.*;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -22,7 +24,6 @@ import java.util.Map;
 @Controller
 @RequestMapping("/order")
 public class OrderAction {
-	Map<String, Object> session;
 
 	@Autowired
 	private AddressService addressService;
@@ -34,26 +35,52 @@ public class OrderAction {
     private CategoryService categoryService;
     @Autowired
     private UserService userService;
+	@Autowired
+    private CartService cartService=null;
 
-	// 用来进行接收和传送数据
-	private Order order;
-	private List<Address> addresses;
-	private List<OrderDetail> orderDetails;
-	private List<Order> orders;
-	private List<Category> categories;
-	private Goods goods;
-	private User user;
 
-	private Map<String, Object> params;
-
-	private PageBean<Order> pageBean;
-	private int page = 0;
-
-	// 用来得到用户的id
-	private String userId;
-
-	/*
+	/**
 	 * 添加一条订单信息
+	 * @param session
+	 * @param cartListDTO
+	 * @param mv
+	 * @return
+	 */
+	@RequestMapping("/addCastOrder")
+	public ModelAndView addCastOrder(HttpSession session, CartListDTO cartListDTO, ModelAndView mv) {
+		String userId = ((User) session.getAttribute("user")).getId();
+		List<Address> addresses = addressService.getAddress(userId);
+		List<Cart> cartList = cartListDTO.getCartList();
+
+		System.out.println("cartList.size(): " + cartList.size());
+		// 取出cartList的goodsId和num
+		// 然后填入orderDetailList
+		//List<OrderDetail> orderDetails = orderService.addOrderDetailFromCast(cartList);
+		List<OrderDetail> orderDetails = new ArrayList<>();
+		for(Cart cart : cartList) {
+			OrderDetail od = new OrderDetail();
+			od.setGoodsId(cart.getGoodsId());
+			od.setNums(cart.getNum());
+			od.setGoods(goodsService.getGoodsById(od.getGoodsId()));
+			orderDetails.add(od);
+			// 此处删除可能为时尚早
+			//System.out.println("cart.id fot delete" + cart.getId());
+			cartService.deleteById(cart.getId());
+		}
+
+		mv.addObject("addresses", addresses);
+		mv.addObject("orderDetails", orderDetails);
+		mv.setViewName("order_add");
+		return mv;
+	}
+
+	/**
+	 * 快速购买
+	 * @param session
+	 * @param goodsId
+	 * @param nums
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/add")
 	public String add(HttpSession session, String goodsId, int nums, Model model) {
@@ -66,7 +93,6 @@ public class OrderAction {
 		orderDetail.setNums(nums);
 		List<OrderDetail> orderDetails = new ArrayList<>();
 		orderDetails.add(orderDetail);
-//		orderService.
 
 		List<Address> addresses = addressService.getAddress(userId);
 		// System.out.println("hash:"+this.hashCode());
@@ -77,13 +103,17 @@ public class OrderAction {
 		model.addAttribute("addresses", addresses);
 		model.addAttribute("orderDetails", orderDetails);
 		return "order_add";
-//		return "add";
 	}
 
-	/*
+	/**
 	 * 处理提交订单的页面
+	 * @param order
+	 * @param orderDetailListDTO
+	 * @param session
+	 * @param model
+	 * @return
 	 */
-    @RequestMapping("/submit")
+	@RequestMapping("/submit")
 	public String submit(Order order, OrderDetailListDTO orderDetailListDTO, HttpSession session,Model model) {
 		String userId = ((User) session.getAttribute("user")).getId();
 		List<OrderDetail> orderDetailList = orderDetailListDTO.getOrderDetailList();
@@ -95,27 +125,32 @@ public class OrderAction {
 		order.setUserId(userId);
 		System.out.println(order);
 		orderService.addOrder(order, orderDetailList);
-		System.out.println(order.getId());
+		System.out.println("Generate a new order: " + order.getId());
 		model.addAttribute("order", order);
 		model.addAttribute("orderId",order.getId());
-//		return "submit";
         return "order_submit";
 	}
 
-	/*
+
+	/**
 	 * 处理订单的直接支付
+	 * @param orderId
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/resubmit")
 	public String resubmit(String orderId,	Model model) {
 		Order order = orderService.getOrder(orderId);
 		model.addAttribute("order", order);
 		return "order_submit";
-//		return "submit";
 	}
 
 
-	/*
-	 * 列出来所有的订单信息
+	/**
+	 * 列出所有的订单信息
+	 * @param session
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/listByUser")
 	public String listByUser(HttpSession session, Model model) {
@@ -128,26 +163,57 @@ public class OrderAction {
 		model.addAttribute("userId", userId);
 		model.addAttribute("orders", orders);
 		return "/usercenter/order_list";
-//		return "listUser";
 	}
 
-	/*
+
+	/**
 	 * 带有所有商品分类的分页 进行分页查询
+	 * @param page
+	 * @param order
+	 * @param mv
+	 * @return
 	 */
 	@RequestMapping("/listByPage")
-	public String listByPage(HttpSession session, Integer page, Model model) {
-		String userId = ((User) session.getAttribute("user")).getId();
+	public ModelAndView listByPage(Integer page, Order order, ModelAndView mv) {
+//		System.out.println("queryPayStatus: " + queryPayStatus + " querySendStatus: "
+//							+ querySendStatus + " orderStatus: " + orderStatus);
+		System.out.println("page: " + page + ", " + order);
 		if (page==null || page==0) {
-			page = 1;
+			page = new Integer(1);
 		}
-        PageBean<Order> pageBean = orderService.getOrderByPage(page, order);
-		model.addAttribute("pageBean", pageBean);
-		return "admin/order_list";
-//		return "listAdmin";
+
+//		OrderDetail orderDetail = null;
+//		if(queryPayStatus!=null && queryPayStatus!=-1) {
+//			orderDetail = new OrderDetail();
+//			orderDetail.setPayStatus(queryPayStatus);
+//			mv.addObject("queryPayStatus",queryPayStatus);
+//		}
+//		if(querySendStatus!=null && querySendStatus!=-1) {
+//			if(orderDetail == null) {
+//				orderDetail = new OrderDetail();
+//			}
+//			orderDetail.setSendStatus(querySendStatus);
+//			mv.addObject("querySendStatus", querySendStatus);
+//		}
+//		if(orderStatus!=null && !orderStatus.equals("-1")) {
+//			order.setStatus(orderStatus);
+//			mv.addObject("orderStatus", orderStatus);
+//		}
+//		order.setOrderDetail(orderDetail);
+		PageBean<Order> pageBean = orderService.getOrderByPage(page, order);
+		mv.addObject("pageBean", pageBean);
+		System.out.println("TotalNum: " + pageBean.getTotalNum() +
+				           ", TotalPage:" + pageBean.getTotalPage());
+		mv.setViewName("admin/order_list");
+		return mv;
 	}
 
-	/*
+
+	/**
 	 * 用户中心的首页
+	 * @param session
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/uindex")
 	public String uindex(HttpSession session, Model model) {
@@ -167,7 +233,10 @@ public class OrderAction {
 		return "usercenter/index";
 	}
 
-
+	/**
+	 * 支付测试方法
+	 * @return
+	 */
 	@RequestMapping("/payTest")
 	public String pay() {
 		String orderId = "0902753763e2482e80de9bf6112c4907";
@@ -200,9 +269,13 @@ public class OrderAction {
 //		return "paysuc";
 	}
 
-	/*
+
+	/**
 	 * 进行支付
 	 * ？category的goodsNum未修改
+	 * @param session
+	 * @param orderId
+	 * @return
 	 */
 	@RequestMapping("/pay")
 	public String pay(HttpSession session, String orderId) {
@@ -215,6 +288,7 @@ public class OrderAction {
 		user.setMoney(money);
 		userService.updateMoney(user.getId(), money);
 
+		System.out.println("User's money can be updated!");
 		// 更新订单和订单详细信息，还有商品的相关信息
 
 		order.setPayTime(new Date());
@@ -236,132 +310,19 @@ public class OrderAction {
 				goodsService.updateGoods(goods);
 			}
 		}
+
+		System.out.println("Ready to update order!");
 		orderService.updateOrder(order, orderDetails);
         return "pay_suc";
-//		return "paysuc";
 	}
 
+	/**
+	 * 封装测试用户在线的方法
+	 * @param session
+	 * @return
+	 */
 	public boolean isOnline(HttpSession session) {
 	    return  session.getAttribute("user") != null;
     }
-
-
-//	@Override
-//	public void setSession(Map<String, Object> arg0) {
-//		this.session = arg0;
-//	}
-
-	// getter和setter
-	public AddressService getAddressService() {
-		return addressService;
-	}
-
-	public void setAddressService(AddressService addressService) {
-		this.addressService = addressService;
-	}
-
-	public List<Address> getAddresses() {
-		return addresses;
-	}
-
-	public void setAddresses(List<Address> addresses) {
-		this.addresses = addresses;
-	}
-
-	public List<OrderDetail> getOrderDetails() {
-		return orderDetails;
-	}
-
-	public void setOrderDetails(List<OrderDetail> orderDetails) {
-		this.orderDetails = orderDetails;
-	}
-
-	public GoodsService getGoodsService() {
-		return goodsService;
-	}
-
-	public void setGoodsService(GoodsService goodsService) {
-		this.goodsService = goodsService;
-	}
-
-	public OrderService getOrderService() {
-		return orderService;
-	}
-
-	public void setOrderService(OrderService orderService) {
-		this.orderService = orderService;
-	}
-
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	public PageBean<Order> getPageBean() {
-		return pageBean;
-	}
-
-	public void setPageBean(PageBean<Order> pageBean) {
-		this.pageBean = pageBean;
-	}
-
-	public int getPage() {
-		return page;
-	}
-
-	public void setPage(int page) {
-		this.page = page;
-	}
-
-	public List<Order> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<Order> orders) {
-		this.orders = orders;
-	}
-
-	public CategoryService getCategoryService() {
-		return categoryService;
-	}
-
-	public void setCategoryService(CategoryService categoryService) {
-		this.categoryService = categoryService;
-	}
-
-	public List<Category> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<Category> categories) {
-		this.categories = categories;
-	}
-
-	public Map<String, Object> getParams() {
-		return params;
-	}
-
-	public void setParams(Map<String, Object> params) {
-		this.params = params;
-	}
-
-	public UserService getUserService() {
-		return userService;
-	}
-
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
 
 }

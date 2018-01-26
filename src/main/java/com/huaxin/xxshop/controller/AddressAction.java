@@ -20,13 +20,12 @@ public class AddressAction {
     @Autowired
     private AddressService addressService;
 
-    // 定义一个session
-	Map<String, Object> session;
-	List<Address> addressList;
-	private Address address;
 
-	/*
+	/**
 	 * 增加地址信息
+	 * @param session
+	 * @param address
+	 * @return
 	 */
 	@RequestMapping("/add")
 	public String add(HttpSession session, Address address) {
@@ -37,8 +36,11 @@ public class AddressAction {
         return "redirect:/usercenter/address/list";
 	}
 
-	/*
-	 * 显示所有已经保存的地址信息
+	/**
+	 * 显示所有已保存的地址信息
+	 * @param session
+	 * @param model
+	 * @return
 	 */
 	@RequestMapping("/list")
 	public String list(HttpSession session, Model model) {
@@ -49,12 +51,15 @@ public class AddressAction {
 //		return "list";
 	}
 
-	/*
+	/**
 	 * 响应设置默认地址的方法
-     * 默认地址值："1"
+	 * 默认地址值："1"
+	 * @param addressId
+	 * @param addressIsDefault
+	 * @return
 	 */
     @RequestMapping("/setDefault")
-	public String setDefault(String addressId,String addressIsDefault) {
+	public String setDefault(String addressId, String addressIsDefault) {
         System.out.println(addressIsDefault.getClass());
         Address address = addressService.getAddressById(addressId);
         address.setIsDefault(addressIsDefault);
@@ -62,58 +67,22 @@ public class AddressAction {
 //        return "/usercenter/address_list";
         return "redirect:/usercenter/address/list";
     }
-//	public String setDefault(HttpSession session, String addressId) {
-//		String userId = ((User) session.getAttribute("user")).getId();
-//		Address address = new Address();
-//		address.setId(addressId);
-//		address.setUserId(userId);
-//		addressService.setDefault(address);
-//        return "/usercenter/address_list";
-//    }
 
-	/*
+
+	/**
 	 * 响应删除地址的方法
+	 * @param addressId
+	 * @return
 	 */
 	@RequestMapping("/delete")
-
 	public String delete(String addressId) {
         //	public String delete(HttpSession session, Address address) {
 //		String userId = ((User) session.getAttribute("user")).getId();
 //		address.setUserId(userId);
 //		addressService.deleteAddress(address);
         // 此处考虑检验session的userId吗
-//		return "/usercenter/address_list";
         addressService.deleteAddress(addressId);
         return "redirect:/usercenter/address/list";
 	}
 
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	public AddressService getAddressService() {
-		return addressService;
-	}
-
-	public void setAddressService(AddressService addressService) {
-		this.addressService = addressService;
-	}
-
-	public void setAddressList(List<Address> addressList) {
-		this.addressList = addressList;
-	}
-
-	public List<Address> getAddressList() {
-		return addressList;
-	}
-
-//	@Override
-//	public void setSession(Map<String, Object> arg0) {
-//		// TODO Auto-generated method stub
-//		this.session = arg0;
-//	}
 }

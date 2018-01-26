@@ -28,17 +28,11 @@
 						<ul class="prolist">
                             <!--此处热门商品为空-->
                             <c:forEach items="${hotGoodses}" var="goods">
-								<li><!--target="blank"-->
-                                    <a href="./goods/view?goodsId=${goods.id}" target="_blank">
-                                        <img src="${goods.thumbnail}" width="85"
-										height="85" alt="" />
-								</a>
+								<li><a href="./goods/view?goodsId=${goods.id}" target="_blank">
+                                        <img src="${goods.thumbnail}" width="80" height="80" alt="" /></a>
 									<p class="pro_title">
-										<a title="${goods.name}" href="./goods/view?goodsId=${goods.id}" target="_blank">${goods.name}</a>
-									</p>
-									<p class="brown">
-										<b>￥${goods.price2}</b>
-									</p></li>
+										<a title="${goods.name}" href="./goods/view?goodsId=${goods.id}" target="_blank">${goods.name}</a></p>
+									<p class="brown"><b>￥${goods.price2}</b></p></li>
 							</c:forEach>
 						</ul>
 					</div>
@@ -70,7 +64,7 @@
 										加上" target="_blank" "则跳转到新页面-->
 									<a href="./goods/view?goodsId=${goods.id}" target="_blank"><img
 									<%--<a href="./goods/view?goods.id=${goods.id}" target="_blank"><img--%>
-										src="${goods.thumbnail}" width="175" height="175" alt="" /></a>
+										src="${goods.thumbnail}" width="170" height="170" alt="" /></a>
 									<p class="pro_title">
 										<!--标题-->
 										<a title="" href="./goods/view?goodsId=${goods.id}" target="_blank">${goods.name}</a>

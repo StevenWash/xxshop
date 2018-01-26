@@ -8,7 +8,6 @@
 <meta charset="utf-8" />
 <link rel="stylesheet" href="css/admin.css" />
 <script type="text/javascript" src="js/jquery-2.0.3.js"></script>
-<script type="text/javascript" ></script>
 <script type="text/javascript">
 	function goPage(p) {
 		$("#page").val(p);
@@ -42,14 +41,13 @@
 			<div class="headbar">
 				<div class="searchbar">
 					<form action="./goods/listByPage" method="get" id="form1">
-						<input type="hidden" name="page" id="page" value="" /> <select
-							class="auto" name="goods.categoryId" id="category">
+						<input type="hidden" name="page" id="page" value="" />
+						<select class="auto" name="categoryId" id="category">
 							<option value="">选择分类</option>
 							<c:forEach items="${categories}" var="category">
 								<option value="${category.id}">${category.name}</option>
 							</c:forEach>
-						</select> 商品名： <input class="small" name="goods.name" id="name" type="text"
-							value="">
+						</select> 商品名：<input class="small" name="name" id="name" type="text" value="">
 						<button class="btn" type="submit">
 							<span class="sel">筛 选</span>
 						</button>
@@ -94,10 +92,10 @@
 									<td>${goods.category.name}</td>
 									<td>${goods.price2}</td>
 									<td>${goods.stock}</td>
-									<td><a href="./goods/update?goodsId=${goods.id}"><img
-											class="operator" src="images/admin/icon_edit.gif" alt="编辑" /></a>
-										<a href="javascript:void(0)" onclick="delGoods('${goods.id}')"><img
-											class="operator" src="images/admin/icon_del.gif" alt="删除" /></a></td>
+									<td><a href="./goods/update?goodsId=${goods.id}">
+											<img class="operator" src="images/admin/icon_edit.gif" alt="编辑" /></a>
+										<a href="javascript:void(0)" onclick="delGoods('${goods.id}')">
+											<img class="operator" src="images/admin/icon_del.gif" alt="删除" /></a></td>
 								</tr>
 							</c:forEach>
 						</tbody>

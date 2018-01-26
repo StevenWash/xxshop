@@ -31,6 +31,30 @@ public class UserServiceImpl implements UserService {
 //		this.userDao = userDao;
 //	}
 
+
+	@Override
+	public void addLogin(User user){
+		user.setLoginId(XXShopUtil.getId());
+		user.setLoginTime(XXShopUtil.getNow());
+
+		userDao.addLogin(user.getLoginId(),user.getIp(),user.getName(),user.getLoginTime());
+	}
+
+	@Override
+	public void updateEmail(String id, String email) {
+		userDao.updateEmail(id, email);
+	}
+	@Override
+	public void updatePassword(String id, String password) {
+		userDao.updatePassword(id, password);
+	}
+
+	@Override
+	public void updatePhoneNum(String id, String phoneNum) {
+		System.out.println("ServiceLmpl :"+phoneNum);
+		userDao.updatePhoneNum(id, phoneNum);
+	}
+
 	@Override
 	public void register(User user) {
 		user.setId(XXShopUtil.getId());

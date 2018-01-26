@@ -29,8 +29,8 @@
 		<div id="admin_right">
 			<div class="content_box">
 				<div class="content form_content">
-					<form action="./goods/updateoper" method="post"
-						enctype="multipart/form-data">
+					<%--<form action="./goods/updateoper" method="post" enctype="multipart/form-data">--%>
+					<form action="./goods/updateoper" method="post" enctype="multipart/form-data">
 						<input type="hidden" name="id" value="${goods.id}">
 						<div id="table_box_1">
 							<table class="form_table">
@@ -41,13 +41,14 @@
 								<tbody>
 									<tr>
 										<th>商品名称：</th>
-										<td><input class="normal" name="goods.name" type="text"
+										<td><input class="normal" name="name" type="text"
 											value="${goods.name}"><label>*</label></td>
 									</tr>
+
 									<tr>
 										<th>所属分类：</th>
-										<td><select name="goods.category.id" id="category"
-											disabled="disabled">
+										<td><select name="categoryId" id="category"
+											disabled="disabled" value="${goods.categoryId}">
 												<c:forEach items="${categories}" var="category">
 													<option value="${category.id}">${category.name}</option>
 												</c:forEach>
@@ -68,13 +69,13 @@
 													</thead>
 													<tbody id="goodsBaseBody">
 														<tr class="td_c">
-															<td><input class="small" name="goods.goodsNo"
+															<td><input class="small" name="goodsNo"
 																type="text" value="${goods.goodsNo}" readonly="readonly" /></td>
-															<td><input class="tiny" name="goods.stock"
+															<td><input class="tiny" name="stock"
 																type="text" value="${goods.stock}" /></td>
-															<td><input class="tiny" name="goods.price1"
+															<td><input class="tiny" name="price1"
 																type="text" value="${goods.price1}" /></td>
-															<td><input class="tiny" name="goods.price2"
+															<td><input class="tiny" name="price2"
 																type="text" value="${goods.price2}" /></td>
 														</tr>
 													</tbody>
@@ -84,14 +85,14 @@
 									</tr>
 									<tr>
 										<th>缩略图：</th>
-										<td><input type="hidden" name="goods.thumbnail"
-											value="${goods.thumbnail}"><img
-											src="${goods.thumbnail}" width="100" height="100"><input
-											type="file" name="thumbnail" /></td>
+										<td><input type="hidden" name="thumbnail" value="${goods.thumbnail}">
+											<img src="${goods.thumbnail}" width="100" height="100">
+											<input type="file" name="pic"
+												   accept="image/jpeg,image/jpg,image/png"/></td>
 									</tr>
 									<tr>
 										<th>产品描述：</th>
-										<td><textarea rows="5" cols="5" name="goods.description">${goods.description}</textarea></td>
+										<td><textarea rows="5" cols="5" name="description">${goods.description}</textarea></td>
 									</tr>
 								</tbody>
 							</table>

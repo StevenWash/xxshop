@@ -171,7 +171,7 @@
 										<input type="hidden" name="orderDetailList[${s.index }].goodsId"
 											value="${orderDetail.goods.id}" />
 										<input type="hidden" name="orderDetailList[${s.index }].nums"
-											value="${ orderDetail.nums}" />
+											value="${orderDetail.nums}" />
 
 										<!--实售价-->
 										<input type="hidden" name="orderDetailList[${s.index }].dealrice"

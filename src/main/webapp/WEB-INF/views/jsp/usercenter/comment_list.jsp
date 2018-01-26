@@ -6,24 +6,25 @@
 <head>
 <meta charset="UTF-8">
 <base href="${base}/" />
-<title>评价管理_${site}</title>
+<title>我的评价_${site}</title>
 <jsp:include page="../base.jsp" />
 
 <script type="text/javascript" src="/js/address.js"></script>
-
 <script type="text/javascript">
 	// 删除提示
-	function del(id) {
-		alert(id);
+	function delComment(id) {
+		//alert(id);
+		if(confirm("您确认要删除该评论吗？")) {
+		    location.href = "./comment/delete?commentId=" + id;
+		}
 	}
 </script>
 </head>
-
 <body class="index">
 	<div class="ucenter container">
 		<jsp:include page="../header.jsp"></jsp:include>
 		<jsp:include page="../navbar.jsp"></jsp:include>
-		<jsp:include page="../search_backup.jsp"></jsp:include>
+		<jsp:include page="../search.jsp"></jsp:include>
 		<div class="wrapper clearfix">
 			<jsp:include page="left.jsp"></jsp:include>
 			<div class="main f_r">
@@ -60,9 +61,9 @@
 											<td><%--跳转评论的商品网页--%>
 												<a class="blue" href="./goods/view?goodsId=${comment.targetid}"
 												   target="_blank">查看</a>|
-												<%--还未实现删除--%>
+												<%--删除--%>
 												<a id="delete" class="blue"
-												   href='javascript:del(${comment.id})' onclick=''>删除</a>
+												   href="javascript:delComment('${comment.id}')">删除</a>
 												<%--href="./usercenter/address/delete?addressId=${address.id}">删除</a>--%>
 										</tr>
 									</c:forEach>

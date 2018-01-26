@@ -17,6 +17,20 @@
 		<result property="email" column="email" />
 	</resultMap>
 
+	<insert id="addLogin" parameterType="User">
+		insert into visit
+		values(#{id},#{ip},#{userid},#{loginTime,jdbcType=CHAR})
+	</insert>
+
+	<update id="updateEmail">
+		update shop_user set email=#{email} where id=#{id}
+	</update>
+
+	<update id="updatePhoneNum">
+		update shop_user set phoneNum=#{phoneNum} where id=#{id}
+	</update>
+
+
 	<insert id="addUser" parameterType="User">
 		insert into shop_user
 		values(#{id},#{name},#{password},#{phoneNum},#{money},

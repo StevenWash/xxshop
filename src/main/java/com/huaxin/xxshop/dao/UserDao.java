@@ -12,6 +12,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserDao {
 
+	public void updateEmail(@Param("id") String id,
+							@Param("email") String email);
+
+	public void updatePhoneNum(@Param("id") String id,
+							   @Param("phoneNum") String phoneNum);
+
+	public void addLogin(@Param("id") String id,
+						 @Param("ip") String ip,
+						 @Param("userid") String userid,
+						 @Param("loginTime") String loginTime);
+
+
 	/**
 	 * 添加用户
 	 * @param user 用户的实体类的对象

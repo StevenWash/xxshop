@@ -42,23 +42,29 @@
 		<div id="admin_right">
 			<div class="headbar">
 				<div class="searchbar">
-					<form action="./order/listByPage" method="get" id="form1">
-						<input type="hidden" name="page" id="page" value="" /> <select
-							name="order.orderDetail.payStatus" class="auto" id="payStatus">
-							<option value="-1">选择支付状态</option>
+					<form action="./order/listByPage" method="post" id="form1">
+						<input type="hidden" name="page" id="page" value="" />
+						<%--<select name="order.orderDetail.payStatus" class="auto" id="payStatus">--%>
+						<select name="orderDetail.payStatus" id="payStatus">
+						<%--<select name="queryPayStatus" class="auto" id="payStatus">--%>
+							<%--<option value="-1">选择支付状态</option>--%>
+							<option value="-1" selected>选择支付状态</option>
 							<option value="0">未支付</option>
-							<option value="1">已支付</option>
-						</select> <select name="order.orderDetail.sendStatus" class="auto"
-							id="sendStatus">
-							<option value="-1">选择发货状态</option>
+							<option value="1">已支付</option></select>
+						<select name="orderDetail.sendStatus" id="sendStatus">
+						<%--<select name="querySendStatus" class="auto" id="sendStatus">--%>
+							<%--<option value="-1">选择发货状态</option>--%>
+							<option value="-1" selected>选择发货状态</option>
 							<option value="0">未发货</option>
-							<option value="1">已发货</option>
-						</select> <select name="order.status" class="auto" id="status">
-							<option value="-1">选择订单状态</option>
+							<option value="1">已发货</option></select>
+						<select name="status" id="status">
+						<%--<select name="orderStatus" class="auto" id="status">--%>
+							<%--<option value="-1">选择订单状态</option>--%>
+							<option value="-1" selected>选择订单状态</option>
+							<!--新订单，最近多久算新-->
 							<option value="0">新订单</option>
 							<option value="1">取消订单</option>
-							<option value="2">完成订单</option>
-						</select>
+							<option value="2">完成订单</option></select>
 						<button class="btn" type="submit">
 							<span class="sel">筛 选</span>
 						</button>
@@ -114,9 +120,9 @@
 									</td>
 									<td title="${order.id }">${order.id }</td>
 									<td title="${order.address.accept }">${order.address.accept }</td>
-									<td><c:if test="${order.orderDetail.payStatus eq 1 }">
+									<td><c:if test="${order.orderDetail.payStatus eq 0 }">
 											<b class='red'>未付款</b>
-										</c:if> <c:if test="${order.orderDetail.payStatus eq 0 }">
+										</c:if> <c:if test="${order.orderDetail.payStatus eq 1}">
 											<b class='green'>已付款</b>
 										</c:if></td>
 									<td><c:if test="${order.orderDetail.payStatus eq 0 }">
@@ -128,12 +134,12 @@
 									<td title="${order.payType }">${order.payType }</td>
 									<td title="${order.user.name }">${order.user.name }</td>
 									<td title="${order.orderTime }">${order.orderTime }</td>
-									<td><a href="./admin/toOrderView"><img
-											class="operator" src="images/admin/icon_check.gif" title="查看" /></a><a
-										href=""><img class="operator"
-											src="images/admin/icon_edit.gif" title="编辑" /></a><a
-										href="javascript:void(0)" onclick=""><img class="operator"
-											src="images/admin/icon_del.gif" title="删除" /></a></td>
+									<td><a href="./admin/toOrderView">
+										<img class="operator" src="images/admin/icon_check.gif" title="查看" /></a>
+										<a href="">
+											<img class="operator" src="images/admin/icon_edit.gif" title="编辑" /></a>
+										<a href="javascript:void(0)" onclick="">
+											<img class="operator" src="images/admin/icon_del.gif" title="删除" /></a></td>
 								</tr>
 							</c:forEach>
 
@@ -149,7 +155,8 @@
 						<c:forEach begin="1" end="${pageBean.totalPage}" var="p">
 							<option id="indeP" value="${p}">${p}</option>
 						</c:forEach>
-					</select> <a href='javascript:goPage(${pageBean.totalPage})' id="last">尾页</a><span>当前第${pageBean.page}页/共${pageBean.totalPage}页</span>
+					</select> <a href='javascript:goPage(${pageBean.totalPage})' id="last">尾页</a>
+					<span>当前第${pageBean.page}页/共${pageBean.totalPage}页</span>
 				</div>
 			</form>
 		</div>

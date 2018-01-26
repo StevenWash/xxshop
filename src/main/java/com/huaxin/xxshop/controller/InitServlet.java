@@ -10,6 +10,6 @@ public class InitServlet extends HttpServlet {
 	public void init() throws ServletException {
 		ServletContext context = getServletContext();
 		context.setAttribute("base", context.getContextPath());
-		context.setAttribute("site", "新新网上商城");
+		context.setAttribute("site", "灵微网上商城");
 	}
 }

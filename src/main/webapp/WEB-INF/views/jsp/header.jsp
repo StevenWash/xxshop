@@ -5,7 +5,7 @@
 		<a title="" style="background: url(images/logo.png);" href="">电子商务平台</a>
 	</h1>
 	<ul class="shortcut">
-		<li class="first"><a href="./order/uindex">我的账户</a></li>
+		<li class="first"><a href="./order/uindex">会员中心</a></li>
 		<%--<li class="first"><a href="order_uindex">我的账户</a></li>--%>
 		<li><a href="./order/listByUser">我的订单</a></li>
 		<%--<li><a href="order_listByUser">我的订单</a></li>--%>
@@ -20,7 +20,7 @@
         <!-- 判断当前用户登录状态-显示不同选项-->
 		<c:if test="${not empty sessionScope.user}">
 		<%--${user.name}您好，欢迎您来到${site}购物！[<a href="user_logout" class="reg">安全退出</a>]--%>
-		${user.name}您好，欢迎您来到${site}购物！[<a href="./user/logout" class="reg">安全退出</a>]
+		${user.name}您好，欢迎来到${site}！[<a href="./user/logout" class="reg">安全退出</a>]
 	  </c:if>
 		<c:if test="${empty sessionScope.user}">
 	  	<%--[<a href="login.jsp">登录</a> --%>

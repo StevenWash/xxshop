@@ -7,6 +7,16 @@ import com.huaxin.xxshop.service.impl.AddressServiceImpl;
 import org.junit.jupiter.api.Test;
 
 public class TestUtils {
+
+    public static void main(String[] args) {
+        String str = "/Users/yin/Documents/Git/GitHub/Local/xxshop/target/xxshop/";
+        String path = str.substring(0,str.lastIndexOf("target"));
+        path += "src/main/webapp/goodsimage";
+        System.out.println(path);
+        System.out.println("4fe197efa85d42a18a44fc5574b2db95".length());
+    }
+
+
     @Test
     public void testGetNow() {
         String str = getId();
@@ -33,4 +43,6 @@ public class TestUtils {
         Address address = addressService.getAddressById(addressId);
         System.out.println(address);
     }
+
+
 }

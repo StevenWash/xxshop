@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
  */
 public interface UserService {
 
+	public void addLogin(User user);
+	public void updateEmail(String id, String email);
+	public void updatePhoneNum(String id, String phoneNum);
+	public void updatePassword(String id, String password);
+
 	/**
 	 * 用于进行用户注册的操作
 	 * @param user 一个用户的实体类

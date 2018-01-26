@@ -55,6 +55,7 @@
 		});
 
 	});
+
 	function order_add() {
 		location.href = "./order/add?goodsId=${goods.id}&nums="
 				+ $("#buyNums").val();
@@ -62,8 +63,8 @@
 
 	//加入购物车
 	function joinCart() {
-		add("${goods.id}", $("#buyNums").val());
-		$("#product_myCart").show();
+        location.href = "./cart/add?goodsId=${goods.id}&num="
+            + $("#buyNums").val() + "&price=${goods.price2}";
 	}
 	
 	function closeCartDiv(){
@@ -89,9 +90,9 @@
 				var html = "";
                 // 此之所谓前台渲染
                 html += "<table width=\"100%\" class=\"list_table m_10 mt_10\">"
-					+ "<col width=\"15%\" /><col width=\"5%\" /><col width=\"60%\" /><col width=\"20%\" />"
-					+ "<thead class=\"thead\">"
-					+ "<tr><th>用户名</th><th>评星</th><th>评价</th><th>评价时间</th></tr></thead><tbody>";
+					+ "<col width=\"10%\" /><col width=\"5%\" /><col width=\"60%\" /><col width=\"20%\" />"
+					+ "<col width=\"5%\" /><thead class=\"thead\">"
+					+ "<tr><th>用户名</th><th>评星</th><th>评价</th><th>评价时间</th><th>留言</th></tr></thead><tbody>";
 				for (var i = 0; i < comments.length; i++) {
                     // console.log("here");
                     console.log(comments[i]);
@@ -100,7 +101,11 @@
                     html += "<tr><td>" + ls.user.name
                         + "</td><td>" + ls.score
                         + "</td><td>" + ls.remark
-                        + "</td><td>" + ls.createtime + "</td></tr>";
+                        + "</td><td>" + ls.createtime
+						+ "</td><td>" +
+						"<a href='./comment/listReCommentAboutGoods?commentId=" + ls.id + "'>*</a>"
+						// + "</td><td>" + "<a href='/Test.jsp'>*</a>"
+						+ "</td></tr>";
                 }
                 html += "</tbody></table>";
                 console.log(html);
@@ -119,7 +124,7 @@
 	<div class="container">
 		<jsp:include page="header.jsp"></jsp:include>
 		<jsp:include page="navbar.jsp"></jsp:include>
-		<jsp:include page="search_backup.jsp"></jsp:include>
+		<jsp:include page="search.jsp"></jsp:include>
 		<div class="wrapper clearfix">
 			<div class="summary">
 				<h2>${goods.name}</h2>
@@ -133,8 +138,7 @@
 					</li>
 					<li>库存：现货<span>(<label id="data_storeNums">${goods.stock}</label>)
 					</span></li>
-					<li>顾客评分：<span class="grade"><i style="width: 0px;"></i></span>(已有0人评价)
-					</li>
+					<%--<li>顾客评分：<span class="grade"><i style="width: 0px;"></i></span>(已有0人评价)</li>--%>
 				</ul>
 				<div class="current">
 					<dl class="m_10 clearfix">
@@ -209,8 +213,10 @@
 			<!--滑动面tab标签-->
 			<div class="main f_r" style="overflow: hidden">
 				<div class="uc_title" name="showButton">
-					<label class="current"><span>商品详情</span></label> <label><span>顾客评价(0)</span></label>
-					<label><span>购买记录(1)</span></label>
+					<%--<label class="current"><span>商品详情</span></label> <label><span>顾客评价(0)</span></label>--%>
+					<label class="current"><span>商品详情</span></label> <label onclick="testJSON()"><span>顾客评价</span></label>
+					<%--<label><span>购买记录(1)</span></label>--%>
+					<label><span>购买记录</span></label>
 				</div>
 				<div name="showBox">
 					<!-- 商品详情 start -->
@@ -221,13 +227,12 @@
 					<div class="hidden comment_list box">
 						<div class="title3">
 							<span class="f_r f12 light_gray normal"> 只有购买过该商品的用户才能进行评价
-							</span> <img src="images/front/comm.gif" width="16px" height="16px" />商品评价<span
-								class="f12 normal">
+							</span> <img src="images/front/comm.gif" width="16px" height="16px" />商品评价<span class="f12 normal">
 							<!--（已有<b class="red2">0</b>条）-->
 							</span>
 						</div>
 						<div>
-							<input type="button" value="显示评价" onclick="testJSON()"/>
+							<%--<input type="button" value="显示评价" onclick="testJSON()"/>--%>
 							<ul id="ulul"></ul>
 						</div>
 
@@ -251,9 +256,6 @@
 
 							</div>
 						</c:if>
-
-							<%--<textarea id="judgecontent" name="comment"></textarea>--%>
-							<%--<input type="button" value="发表" id="judge" />--%>
 
 						<div id='commentBox'></div>
 					</div>

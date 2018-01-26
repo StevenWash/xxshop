@@ -39,6 +39,24 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.getCommentById(commentId);
     }
 
+    /**
+     * 删除某条评价
+     * @param commentId 评价在数据库里的id
+     */
+    @Override
+    public void deleteById(String commentId) {
+        Comment comment = commentDao.getCommentById(commentId);
+        // 删除针对商品的评价(statusNum=0)
+        // 需要删除对该回复的回复
+        if(comment.getStatusnum() == 0) {
+            List<Comment> reCommentList = commentDao.getCommentsByTargetId(commentId);
+            for(Comment c : reCommentList) {
+                commentDao.deleteById(c.getId());
+            }
+        }
+        commentDao.deleteById(commentId);
+    }
+
 
     @Autowired
     private CommentDao commentDao = null;

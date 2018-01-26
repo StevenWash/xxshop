@@ -47,18 +47,41 @@ public class GoodsServiceImpl implements GoodsService {
 	@Autowired
 	private CategoryDao categoryDao = null;
 
+
+
+	public PageBean<Goods> getGoodsByPageAndOrder(int page,Goods goods,String order){
+		int pageSize = 6;
+		PageBean<Goods> pageBean = new PageBean<>();
+		Map<String, Object> params = new HashMap<>();
+		params.put("indexPage", (page - 1) * pageSize);
+		params.put("pageSize", pageSize);
+		params.put("goods", goods);
+		params.put("order",order);
+
+		System.out.println(params);
+
+		List<Goods> data = goodsDao.getGoodsByPageAndOrder(params);
+
+		pageBean.setData(data);
+		pageBean.setPage(page);
+		pageBean.setPageSize(pageSize);
+		pageBean.setActualPageSize(data.size());
+		int totalNum = goodsDao.getGoodsNum(goods);
+		pageBean.setTotalNum(totalNum);
+		int totalPage = totalNum % pageSize == 0 ? totalNum / pageSize
+				: totalNum / pageSize + 1;
+		pageBean.setTotalPage(totalPage);
+		return pageBean;
+	}
+
 	/**
 	 * 商品搜索
-	 *
 	 * @author 小轲轲是个美男子 2018年1月19日
 	 */
 	public static final String INDEX_PATH = "\\service";
 	public void createIndex() {
 		IndexWriter indexWriter = null;
-
 		List<Goods> goodsList = getGoods(new Goods());
-
-
 		try {
 			Directory directory = FSDirectory.open(FileSystems.getDefault().getPath(INDEX_PATH));
 			Analyzer analyzer = new IKAnalyzer(true);
@@ -66,7 +89,6 @@ public class GoodsServiceImpl implements GoodsService {
 			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
 			indexWriter = new IndexWriter(directory, indexWriterConfig);
 			indexWriter.deleteAll();
-
 
 			for (Goods goods : goodsList) {
 				Document document = new Document();
@@ -86,7 +108,6 @@ public class GoodsServiceImpl implements GoodsService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-
 		} finally {
 			try {
 				if (indexWriter != null)
@@ -97,6 +118,12 @@ public class GoodsServiceImpl implements GoodsService {
 		}
 	}
 
+	/**
+	 *
+	 * @author 小轲轲是个美男子 2018年1月19日
+	 * @param keyWord
+	 * @return
+	 */
 	@Override
 	public List<Goods> search(String keyWord) {
 		DirectoryReader directoryReader = null;

@@ -15,6 +15,12 @@ public class AdminAction {
     @Autowired
     private UserService userService = null;
 
+
+    /**
+     * 查询用户权限列表
+     * @param mv
+     * @return
+     */
     @RequestMapping("/authorityList")
     public ModelAndView authorityList(ModelAndView mv) {
         List<User> userList = userService.getAllUser();
@@ -24,6 +30,12 @@ public class AdminAction {
         return mv;
     }
 
+    /**
+     * 向用户信息更新页面跳转
+     * @param memberId
+     * @param mv
+     * @return
+     */
     @RequestMapping("/memberUpdate")
     public ModelAndView memberUpdate(String memberId, ModelAndView mv) {
         User member = userService.getUser(memberId);
@@ -32,17 +44,20 @@ public class AdminAction {
         return mv;
     }
 
+    /**
+     * 用户信息更新
+     * @param status
+     * @param memberId
+     * @param password
+     * @param role
+     * @param mv
+     * @return
+     */
     @RequestMapping("/memberUpdateOper")
     public ModelAndView memberUpdateOper(Integer status, String memberId, String password,
                                          String role, ModelAndView mv) {
         System.out.println("password: " + password + ", role:" + role + ", status:" + status);
-//        User member = userService.getUser(memberId);
-//        member.setPassword(password);
-//        member.setRole(role);
-//        member.setStatus(status);
         userService.updateMember(memberId, status, memberId, password, role);
-//        mv.addObject("member", member);
-//        mv.setViewName("redirect:/user/member");
         mv.setViewName("admin/index");
         return mv;
     }
@@ -64,7 +79,6 @@ public class AdminAction {
     public String toCommentView() {
         return "admin/comment_view";
     }
-
 
     /**
      * 向种类添加页面跳转
@@ -92,4 +106,5 @@ public class AdminAction {
     public String toOrderView() {
         return "admin/order_view";
     }
+
 }

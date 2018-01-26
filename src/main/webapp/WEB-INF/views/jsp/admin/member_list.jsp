@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="css/admin.css" />
 <script type="text/javascript">
 	function delMember(id) {
-		alert(id);
+		//alert(id);
 		if (confirm("您确认要删除该用户吗？")) {
 			location.href = "./user/delete?userId=" + id;
 		}

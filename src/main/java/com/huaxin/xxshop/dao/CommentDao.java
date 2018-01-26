@@ -38,4 +38,6 @@ public interface CommentDao {
      * @return
      */
     public Comment getCommentById(String commentId);
+
+    public void deleteById(String commentId);
 }

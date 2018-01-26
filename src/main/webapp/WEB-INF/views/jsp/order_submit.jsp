@@ -11,7 +11,7 @@
 	function finish() {
 		$.get("./user/moneyLeftEnough?orderId=${order.id}", function(r) {
 			if (r == "0") {
-				alert("订单提交失败，账户余额不足！");
+				alert("订单提交失败，账户余额不足!");
 			} else {
 				$("#form1").submit();
 			}
@@ -100,8 +100,8 @@
 						<!--不是货到付款并且支付方式为线上支付-->
 						<!-- 先检查用户余额是否足够 -->
 						<form action='./order/pay' method='post' target='_blank' id="form1">
-							<input type="hidden" name="orderId" value="${order.id }" /> <input
-								class="submit_pay" onclick="javascript:finish();" value="立即支付" />
+							<input type="hidden" name="orderId" value="${order.id }" />
+							<input class="submit_pay" onclick="javascript:finish();" value="立即支付" />
 						</form>
 					</div>
 				</div>

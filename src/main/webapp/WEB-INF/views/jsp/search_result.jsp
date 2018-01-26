@@ -15,7 +15,7 @@
 	<div class="container">
 		<jsp:include page="header.jsp"></jsp:include>
 		<jsp:include page="navbar.jsp"></jsp:include>
-		<jsp:include page="search_backup.jsp"></jsp:include>
+		<jsp:include page="search.jsp"></jsp:include>
 
 		<div class="wrapper clearfix">
 			<div class="sidebar f_r">
@@ -27,19 +27,13 @@
 					<div class="cont clearfix">
 						<ul class="prolist">
                             <form action="./goods/getHotGoods" />
-                            <c:if test="${hotGoodses==null}">
-                                <h2>hotGoodses = null</h2>
-                            </c:if>
-                            <%--<a href="./goods/getHotGoods">1</a>--%>
-                            <!--此处热门商品为空-->
                             <c:forEach items="${hotGoodses}" var="goods">
-                            <%--<c:forEach items="${goodses}" var="goods">--%>
-								<li><a href="./goods/view?goods.id=${goods.id}"
+								<li><a href="./goods/view?goodsId=${goods.id}"
 									target="_blank"> <img src="${goods.thumbnail}" width="85"
 										height="85" alt="" />
 								</a>
 									<p class="pro_title">
-										<a title="${goods.name}" href="./goods/view?goods.id=${goods.id}"
+										<a title="${goods.name}" href="./goods/view?goodsId=${goods.id}"
 										target="_blank">${goods.name}</a>
 									</p>
 									<p class="brown">
@@ -55,8 +49,6 @@
 
 			<h2></h2>
 			<div class="main f_l">
-
-
 				<!--搜索结果 start-->
 				<div class="box yellow m_10">
 					<div class="title title3">
@@ -66,17 +58,16 @@
 					</div>
 					<div class="cont clearfix">
 						<ul class="prolist">
-
 							<c:if test="${search_result==null}">
                                 <h2>search_result = null</h2>
                             </c:if>
 
 							<c:forEach items="${search_result}" var="goods">
 								<li style="overflow: hidden"><a
-									href="./goods/view?goods.id=${goods.id}" target="_blank"><img
+									href="./goods/view?goodsId=${goods.id}" target="_blank"><img
 										src="${goods.thumbnail}" width="175" height="175" alt="" /></a>
 									<p class="pro_title">
-										<a title="" href="./goods/view?goods.id=${goods.id}">${goods.name}</a>
+										<a title="" href="./goods/view?goodsId=${goods.id}">${goods.name}</a>
 									</p>
 									<p class="brown">
 										惊喜价：<b>￥${goods.price2}</b>
@@ -89,11 +80,6 @@
 					</div>
 				</div>
 				<!--最新商品 end-->
-
-
-
-
-
 			</div>
 		</div> 
 		<jsp:include page="help.jsp"></jsp:include>

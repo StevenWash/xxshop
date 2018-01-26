@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huaxin.xxshop.dao.CartDao">
+	<resultMap type="Cart" id="CartResultMap">
+		<id property="id" column="id" />
+		<result property="userId" column="userid" />
+		<result property="goodsId" column="goodsid" />
+		<result property="num" column="num" />
+		<result property="price" column="price" />
+
+		<association property="goods" javaType="Goods">
+			<id property="id" column="gid" />
+			<result property="name" column="name" />
+			<result property="thumbnail" column="thumbnail" />
+		</association>
+	</resultMap>
+
+
+	<insert id="addCart" parameterType="Cart">
+		insert into shop_cart
+		values(#{id},#{userId},#{goodsId},#{num},#{price})
+	</insert>
+
+	<select id="getCartsByUserId" parameterType="String" resultMap="CartResultMap">
+		SELECT c.*, g.name, g.thumbnail
+		FROM shop_cart c, shop_goods g
+		WHERE userid=#{userId}
+		AND g.id=c.goodsid
+	</select>
+
+	<delete id="deleteById" parameterType="String">
+		delete from shop_cart where id=#{id}
+	</delete>
+	<!--<select id="getCommentsInOrder" resultMap="CommentResultMap">-->
+		<!--select c.*, u.name as uname, g.name as gname, g.id as gid-->
+		<!--from shop_comment c, shop_user u, shop_goods g-->
+		<!--where c.targetid=g.id and c.ownerid=u.id-->
+		<!--order by createtime DESC-->
+	<!--</select>-->
+
+</mapper>

@@ -11,8 +11,9 @@
 			goodsTotalNum = parseInt(goodsTotalNum)
 					+ parseInt(goodses[i].goodsNum);
 		}
+
 		//将总的商品个数显示到购物车上
-		$("b[name=mycart_count]").html(goodsTotalNum);
+		//$("b[name=mycart_count]").html(goodsTotalNum);
 
 		//去掉最后一个","
 		params = params.substring(0, params.length - 1);
@@ -66,8 +67,8 @@
 	<ul>
 		<li><a href="">首页</a></li>
 		<c:forEach items="${categories}" var="category">
-			<li><a
-				href="./goods/listByCate?goodsCategoryId=${category.id}&order=sellnum">${category.name}</a></li>
+			<%--<li><a href="./goods/listByCate?goodsCategoryId=${category.id}&order=sellnum">${category.name}</a></li>--%>
+			<li><a href="./goods/listByPageCate?categoryId=${category.id}&order=sellnum">${category.name}</a></li>
 		</c:forEach>
 	</ul>
 
@@ -75,27 +76,27 @@
 		<dl>
 			<dt>
 				<%--<a href="cart.jsp">购物车<b name="mycart_count">0</b>件--%>
-				<a href="./user/toCart">购物车<b name="mycart_count">0</b>件
-				</a>
+				<a href="./cart/listByUser">购物车</a>
 			</dt>
 			<dd>
-				<a href="./user/toCart">去结算</a>
+				<a href="./cart/listByUser">去结算</a>
+				<%--<a href="./user/toCart">去结算</a>--%>
 			</dd>
 		</dl>
 
 		<!--购物车浮动div 开始-->
-		<div class="shopping" id="div_mycart" style="display: none;">
-			<dl class="cartlist" id="shopcarDiv">
-				<dd class="static">
-					<span>共<b name="mycart_count">0</b>件商品
-					</span>金额总计：<b name="mycart_sum">0.00</b>
-				</dd>
-				<dd class="static">
-					<label class="btn_orange"><input type="button"
-						value="去购物车结算" onclick="location.href='user/toCart'"></label>
-				</dd>
-			</dl>
-		</div>
+		<%--<div class="shopping" id="div_mycart" style="display: none;">--%>
+			<%--<dl class="cartlist" id="shopcarDiv">--%>
+				<%--<dd class="static">--%>
+					<%--<span>共<b name="mycart_count">0</b>件商品--%>
+					<%--</span>金额总计：<b name="mycart_sum">0.00</b>--%>
+				<%--</dd>--%>
+				<%--<dd class="static">--%>
+					<%--<label class="btn_orange"><input type="button"--%>
+						<%--value="去购物车结算" onclick="location.href='user/toCart'"></label>--%>
+				<%--</dd>--%>
+			<%--</dl>--%>
+		<%--</div>--%>
 
 	</div>
 </div>

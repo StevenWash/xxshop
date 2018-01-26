@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8"></meta>
 <base href="${base}/" />
-<title>账户充值_${site}</title>
+<title>在线充值_${site}</title>
 <jsp:include page="../base.jsp" />
 <script type="text/javascript">
 $(function(){
@@ -17,7 +17,7 @@ $(function(){
 	<div class="ucenter container">
 		<jsp:include page="../header.jsp"></jsp:include>
 		<jsp:include page="../navbar.jsp"></jsp:include>
-		<jsp:include page="../search_backup.jsp"></jsp:include>
+		<jsp:include page="../search.jsp"></jsp:include>
 		<div class="wrapper clearfix">
 			<jsp:include page="left.jsp" />
 

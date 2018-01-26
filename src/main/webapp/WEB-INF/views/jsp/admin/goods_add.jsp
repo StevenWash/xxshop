@@ -24,8 +24,8 @@
 		<div id="admin_right">
 			<div class="content_box">
 				<div class="content form_content">
-					<form action="./goods/addoper" method="post"
-						enctype="multipart/form-data">
+					<%--<form action="./goods/addoper" method="post" enctype="multipart/form-data">--%>
+					<form action="./goods/addoper" method="post" enctype="multipart/form-data">
 						<div id="table_box_1">
 							<table class="form_table">
 								<colgroup>
@@ -35,12 +35,12 @@
 								<tbody>
 									<tr>
 										<th>商品名称：</th>
-										<td><input class="normal" name="goods.name" type="text"
-											value=""><label>*</label></td>
+										<td><input class="normal" name="name" type="text" value="">
+											<label>*</label></td>
 									</tr>
 									<tr>
 										<th>所属分类：</th>
-										<td><select name="goods.categoryId">
+										<td><select name="categoryId">
 												<c:forEach items="${categories}" var="category">
 													<option value="${category.id}">${category.name}</option>
 												</c:forEach>
@@ -62,13 +62,13 @@
 													</thead>
 													<tbody id="goodsBaseBody">
 														<tr class="td_c">
-															<td><input class="small" name="goods.goodsNo"
+															<td><input class="small" name="goodsNo"
 																type="text" value="${goodsNo}" readonly /></td>
-															<td><input class="tiny" name="goods.stock"
+															<td><input class="tiny" name="stock"
 																type="text"></td>
-															<td><input class="tiny" name="goods.price1"
+															<td><input class="tiny" name="price1"
 																type="text"></td>
-															<td><input class="tiny" name="goods.price2"
+															<td><input class="tiny" name="price2"
 																type="text"></td>
 														</tr>
 													</tbody>
@@ -78,19 +78,21 @@
 									</tr>
 									<tr>
 										<th>缩略图：</th>
-										<td><input type="file" name="thumbnail" /></td>
+										<%--<td><input type="file" name="thumbnail" /></td>--%>
+										<td><input type="file" name="pic"
+												   accept="image/jpeg,image/jpg,image/png"/></td>
 									</tr>
 									<tr>
 										<th>设置热度：</th>
-										<td><input type="text" name="goods.role" /></td>
+										<td><input type="text" name="role" /></td>
 									</tr>
 									<tr>
 										<th>设置新度：</th>
-										<td><input type="text" name="goods.sellTime" /></td>
+										<td><input type="text" name="sellTime" /></td>
 									</tr>
 									<tr>
 										<th>产品描述：</th>
-										<td><textarea rows="5" cols="5" name="goods.description"></textarea>
+										<td><textarea rows="5" cols="5" name="description"></textarea>
 										</td>
 									</tr>
 								</tbody>

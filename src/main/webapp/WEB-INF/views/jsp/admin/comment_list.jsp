@@ -7,6 +7,15 @@
 <title>后台管理</title>
 <meta charset="utf-8" />
 <link rel="stylesheet" href="css/admin.css" />
+<script type="text/javascript" src="js/jquery-2.0.3.js"></script>
+<script type="text/javascript">
+	function delComment(id) {
+		if(confirm("您确定要删除该条评论吗？")){
+		    location.href = ("./comment/adminDelete?commentId=" + id);
+		}
+    }
+</script>
+
 </head>
 <body>
 	<div class="container">
@@ -67,8 +76,7 @@
 								<td>${comment.createtime}</td>
 								<td><a href="./comment/view?commentId=${comment.id}">
 									<img class="operator" src="images/admin/icon_check.gif" alt="查看" /></a>
-									<!--删除按钮未设置-->
-									<a href="javascript:void(0)" onclick="">
+									<a href="javascript:void(0)" onclick="delComment('${comment.id}')">
 										<img class="operator" src="images/admin/icon_del.gif" alt="删除" /></a></td>
 							</tr>
 							</c:forEach>

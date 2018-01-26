@@ -11,6 +11,8 @@ import com.huaxin.xxshop.entity.PageBean;
  */
 public interface GoodsService {
 
+	public PageBean<Goods> getGoodsByPageAndOrder(int page,Goods goods,String order);
+
 	/**
 	 * 搜索商品
 	 * @param keywords
@@ -23,7 +25,6 @@ public interface GoodsService {
 	 *
 	 */
 	public  void createIndex();
-
 
 
 	/**
@@ -61,7 +62,7 @@ public interface GoodsService {
 
 	/**
 	 * 通过id来删除一个商品
-	 * @param id 删除商品的id
+	 * @param goods
 	 */
 	public void deleteGoods(Goods goods);
 

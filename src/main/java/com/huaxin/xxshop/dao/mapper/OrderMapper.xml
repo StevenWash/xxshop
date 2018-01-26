@@ -36,59 +36,63 @@
 		values(#{id},#{userId},#{orderTime},#{payType},#{addressId},#{totalMoney},#{deliveryType},#{deliveryTime},#{status})
 	</insert>
 
-	<select id="getOrderByPage" resultMap="OrderResultMap"
-		parameterType="hashmap">
+	<select id="getOrderByPage" resultMap="OrderResultMap" parameterType="hashmap">
 		SELECT
 		ord.*,u.name uname,ad.accept accept,od.paystatus
 		paystatus,od.sendstatus sendStatus
 		FROM
-		shop_order
-		ord,
-		shop_orderdetail
-		od,
+		shop_order ord,
+		shop_orderdetail od,
 		shop_address ad,
 		shop_user u
 		WHERE
-		ord.userid =
-		u.ID
+		ord.userid=u.ID
 		AND
 		ord.addressid=ad.id
 		AND od.orderid=ord.id
 		<if test="order!=null">
-			<if test="order.orderDetail.payStatus!=-1">
-				AND od.paystatus=#{order.orderDetail.payStatus}
-			</if>
-			<if test="order.orderDetail.sendStatus!=-1">
-				AND od.sendstatus=#{order.orderDetail.sendStatus}
-			</if>
-			<if test="order.status!=-1">
+			<if test="order.status!=null and order.status!=-1">
 				AND ord.status=#{order.status}
 			</if>
-			limit #{indexPage} ,#{pageSize}
+			<if test="order.orderDetail!=null">
+				<if test="order.orderDetail.payStatus!=null and order.orderDetail.payStatus!=-1">
+					AND od.paystatus=#{order.orderDetail.payStatus}
+				</if>
+				<if test="order.orderDetail.sendStatus!=null and order.orderDetail.sendStatus!=-1">
+					AND od.sendstatus=#{order.orderDetail.sendStatus}
+				</if>
+			</if>
+		limit #{indexPage} ,#{pageSize}
 		</if>
-
 	</select>
 
 	<select id="getOrderNum" resultType="int" parameterType="Order">
 		SELECT
 		count(*)
 		FROM
-		shop_order
-		ord,
+		shop_order ord,
 		shop_orderdetail od,
 		shop_address ad,
 		shop_user u
 		WHERE
-		ord.userid =
-		u.ID
+		ord.userid =u.ID
 		AND ord.addressid=ad.id
-		AND
-		od.orderid=ord.id
-
+		AND od.orderid=ord.id
+		<if test="status!=null and status!=-1">
+			AND ord.status=#{status}
+		</if>
+		<if test="orderDetail!=null">
+			<if test="orderDetail.payStatus!=null and orderDetail.payStatus!=-1">
+				AND od.paystatus=#{orderDetail.payStatus}
+			</if>
+			<if test="orderDetail.sendStatus!=null and orderDetail.sendStatus!=-1">
+				AND od.sendstatus=#{orderDetail.sendStatus}
+			</if>
+		</if>
 	</select>
 
 	<select id="getOrder" resultType="Order" parameterType="String">
-		SELECT
+		SELECT DISTINCT
 		ord.*,u.name uname,ad.accept accept,
 		od.paystatus paystatus,od.sendstatus sendStatus,
 		od.orderStatus orderStatus
