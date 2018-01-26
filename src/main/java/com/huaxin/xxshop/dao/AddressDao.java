@@ -1,29 +1,25 @@
 package com.huaxin.xxshop.dao;
 
 import java.util.List;
-
 import com.huaxin.xxshop.entity.Address;
+import org.springframework.stereotype.Repository;
 
 /**
  * 地址实体类的数据访问接口
- * 
  * @author 没有蜡笔的小新 2015-12-23
  */
+@Repository
 public interface AddressDao {
 
 	/**
 	 * 添加一个地址
-	 * 
-	 * @param address
-	 *            地址实体类对应的对象
+	 * @param address 地址实体类对应的对象
 	 */
 	public void addAddress(Address address);
 
 	/**
 	 * 得到当前登录用户的所有收货地址
-	 * 
-	 * @param userId
-	 *            当前在线的用户id
+	 * @param userId 当前在线的用户id
 	 * @return 地址的集合
 	 */
 	public List<Address> getAddress(String userId);
@@ -46,4 +42,10 @@ public interface AddressDao {
 	 */
 	public void deleteAddress(String id);
 
+	/**
+	 *
+	 * @param addressId
+	 * @return
+	 */
+	public Address getAddressById(String addressId);
 }

@@ -13,8 +13,10 @@ public class XXShopUtil {
 
 	/**
 	 * 使用UUID类提供的静态方法randomUUID() 得到一个id
-	 * 
-	 * @return 以恶搞随机id
+	 * UUID: A class that represents an immutable universally unique identifier (UUID).
+	 * A UUID represents a 128-bit value.
+	 * length: 32
+	 * @return 随机id，32位字符串
 	 */
 	public static String getId() {
 		UUID uuid = UUID.randomUUID();
@@ -23,8 +25,7 @@ public class XXShopUtil {
 
 	/**
 	 * 得到当前的时间
-	 * 
-	 * @return
+	 * @return 当前时间，格式为"yyyy-MM-dd  HH:mm:ss"
 	 */
 	public static String getNow() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
@@ -33,7 +34,7 @@ public class XXShopUtil {
 
 	/**
 	 * 得到商品的货号，用时间作为产生的方法
-	 * @return
+	 * @return 18位商品货号，格式为"yyyyMMddHHmmssms"
 	 */
 	public static String getGoodsNo() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssms");

@@ -1,11 +1,13 @@
 package com.huaxin.xxshop.entity;
 
+import java.io.Serializable;
+
 /**
  * 用户实体类
  * @author 没有蜡笔的小新
  * 2015-12-21
  */
-public class User {
+public class User implements Serializable {
 
 	private String id;
 	private String name;
@@ -16,6 +18,46 @@ public class User {
 	private String regTime;
 	private String role;
 	private int status;
+	private String email;
+
+	private String loginId;
+	private String loginTime;
+	private String ip;
+
+
+	public User() {
+	    super();
+    }
+
+//    // 必要吗？
+//    public User(String id, String name, String password, String phoneNum,
+//                float money, String avatar, String regTime, String role, int status) {
+//        this.id = id;
+//        this.name = name;
+//        this.password = password;
+//        this.phoneNum = phoneNum;
+//        this.money = money;
+//        this.avatar = avatar;
+//        this.regTime = regTime;
+//        this.role = role;
+//        this.status = status;
+//    }
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"id='" + id + '\'' +
+				", name='" + name + '\'' +
+				", password='" + password + '\'' +
+				", phoneNum='" + phoneNum + '\'' +
+				", money=" + money +
+				", avatar='" + avatar + '\'' +
+				", regTime='" + regTime + '\'' +
+				", role='" + role + '\'' +
+				", status=" + status +
+				", email='" + email + '\'' +
+				'}';
+	}
 
 	public String getId() {
 		return id;
@@ -88,6 +130,36 @@ public class User {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+
+	public String getLoginTime() {
+		return loginTime;
+	}
+
+	public void setLoginTime(String loginTime) {
+		this.loginTime = loginTime;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
 }

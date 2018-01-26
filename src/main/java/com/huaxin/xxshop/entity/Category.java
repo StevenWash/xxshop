@@ -1,5 +1,6 @@
 package com.huaxin.xxshop.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,13 +8,16 @@ import java.util.List;
  * 
  * @author 没有蜡笔的小新 2015-12-24
  */
-public class Category {
+public class Category implements Serializable {
 	private String id;
 	private String name;
 	private int goodsNum;
-
 	//为了在得到类别的时候得到该类别下面的商品
 	private List<Goods> goodses;
+
+	public Category() {
+		super();
+	}
 
 	public String getId() {
 		return id;
@@ -38,6 +42,7 @@ public class Category {
 	public void setGoodsNum(int goodsNum) {
 		this.goodsNum = goodsNum;
 	}
+
 
 	public List<Goods> getGoodses() {
 		return goodses;

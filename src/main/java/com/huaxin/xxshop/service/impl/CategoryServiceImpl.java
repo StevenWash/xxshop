@@ -7,16 +7,20 @@ import com.huaxin.xxshop.dao.GoodsDao;
 import com.huaxin.xxshop.entity.Category;
 import com.huaxin.xxshop.service.CategoryService;
 import com.huaxin.xxshop.util.XXShopUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 商品分类服务接口的实现
  * 
  * @author 没有蜡笔的小新 2015-12-24
  */
+@Service("categoryService")
 public class CategoryServiceImpl implements CategoryService {
-
-	private CategoryDao categoryDao;
-	private GoodsDao goodsDao;
+	@Autowired
+	private CategoryDao categoryDao = null;
+	@Autowired
+	private GoodsDao goodsDao = null;
 
 	@Override
 	public void addCategory(Category category) {

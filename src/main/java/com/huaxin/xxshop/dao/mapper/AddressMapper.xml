@@ -8,22 +8,31 @@
 		values(#{id},#{userId},#{accept},#{zip,jdbcType=VARCHAR},#{phoneNum,jdbcType=VARCHAR},#{mobile,jdbcType=VARCHAR},#{province},#{city},#{area},#{address},#{isDefault})
 	</insert>
 
+	<select id="getAddressById" resultType="Address">
+		SELECT * from shop_address
+		where id=#{id}
+	</select>
+
 	<select id="getAddress" resultType="Address">
 		select * from shop_address
-		where userId=#{0}
+		where userId=#{userId}
 	</select>
+	<!--where userId=#{0}-->
 
 	<update id="setDefault">
 		update shop_address set isDefault='1'
-		where id=#{0}
+		where id=#{id}
 	</update>
+	<!--where id=#{0}-->
 
 	<update id="setNotDefault">
 		update shop_address set isDefault='2'
-		where userId=#{0} and isDefault='1'
+		where userId=#{userId} and isDefault='1'
 	</update>
+	<!--where userId=#{0} and isDefault='1'-->
 
 	<delete id="deleteAddress">
-		delete from shop_address where id=#{0}
+		delete from shop_address where id=#{id}
 	</delete>
+	<!--delete from shop_address where id=#{0}-->
 </mapper>
