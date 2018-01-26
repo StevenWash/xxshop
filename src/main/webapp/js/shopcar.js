@@ -45,7 +45,6 @@ function addJSON(target, src) {
 
 /**
  * 通过goodsId得到对应的goodsNum
- * 
  * @param goodses
  * @param goodsId
  * @returns

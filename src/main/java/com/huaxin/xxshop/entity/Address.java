@@ -1,11 +1,12 @@
 package com.huaxin.xxshop.entity;
 
+import java.io.Serializable;
+
 /**
  * 一个地址实体类
- * 
  * @author 没有蜡笔的小新 2015-12-23
  */
-public class Address {
+public class Address implements Serializable {
 	private String id;
 	private String userId;
 	private String accept;
@@ -17,6 +18,15 @@ public class Address {
 	private String area;
 	private String address;
 	private String isDefault;
+
+	@Override
+	public String toString() {
+		return id + " " + zip + " " + isDefault + " " + address + " " + userId;
+	}
+
+	public Address() {
+		super();
+	}
 
 	public String getId() {
 		return id;

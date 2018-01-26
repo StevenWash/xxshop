@@ -3,7 +3,7 @@
 	"-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.huaxin.xxshop.dao.CategoryDao">
-	<insert id="addCategory">
+	<insert id="addCategory" parameterType="Category">
 		insert into shop_category
 		values(#{id},#{name},#{goodsNum})
 	</insert>
@@ -14,26 +14,30 @@
 
 	<select id="getCategoryByName" resultType="int" parameterType="String">
 		select count(*) from
-		shop_category where name=#{0}
+		shop_category where name=#{name}
 	</select>
+	<!--shop_category where name=#{0}-->
 
 	<delete id="deleteCategory" parameterType="String">
 		delete from
-		shop_category where id=#{0}
+		shop_category where id=#{id}
 	</delete>
+	<!--shop_category where id=#{0}-->
 
 	<update id="updateCategory">
-		update shop_category set name=#{1} where id=#{0}
+		update shop_category set name=#{name} where id=#{id}
 	</update>
+	<!--update shop_category set name=#{1} where id=#{0}-->
+
 
 	<update id="updateGoodsNum">
-		update shop_category set goodsNum=#{1} where
-		id=#{0}
+		update shop_category set goodsNum=#{goodsNum} where id=#{id}
 	</update>
+	<!--update shop_category set goodsNum=#{1} where id=#{0}-->
 
 	<select id="getCategoryById" resultType="Category"
 		parameterType="String">
-		select * from shop_category where id=#{0}
+		select * from shop_category where id=#{id}
 	</select>
 
 </mapper>

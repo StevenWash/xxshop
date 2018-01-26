@@ -73,7 +73,8 @@ button.hidefocus::-moz-focus-inner {
 	color: #666
 }
 
-.dark_gray { #3f3f3f
+.dark_gray {
+	color: #3f3f3f
 	
 }
 

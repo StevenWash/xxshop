@@ -7,6 +7,11 @@
 	<typeAliases>
 		<package name="com.huaxin.xxshop.entity" />
 	</typeAliases>
+
+	<!-- Spring中已经配置数据源和mapper接口文件扫描器
+	     MyBatis的配置文件只需要根据POJO类路径进行别名配置-->
+
+	<!--&lt;!&ndash; 制定映射器路径 &ndash;&gt;-->
 	<mappers>
 		<mapper resource="com/huaxin/xxshop/dao/mapper/UserMapper.xml" />
 		<mapper resource="com/huaxin/xxshop/dao/mapper/AddressMapper.xml" />
@@ -14,6 +19,10 @@
 		<mapper resource="com/huaxin/xxshop/dao/mapper/GoodsMapper.xml" />
 		<mapper resource="com/huaxin/xxshop/dao/mapper/OrderMapper.xml" />
 		<mapper resource="com/huaxin/xxshop/dao/mapper/OrderDetailMapper.xml" />
+		<mapper resource="com/huaxin/xxshop/dao/mapper/CommentMapper.xml" />
+		<mapper resource="com/huaxin/xxshop/dao/mapper/CartMapper.xml" />
+		<mapper resource="com/huaxin/xxshop/dao/mapper/VisitMapper.xml" />
+
 	</mappers>
 
 </configuration>

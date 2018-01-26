@@ -1,5 +1,6 @@
 package com.huaxin.xxshop.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  * 
  * @author 没有蜡笔的小新 2015-12-29
  */
-public class Order {
+public class Order implements Serializable {
 	private String id;
 	private String userId;
 	private Date orderTime;
@@ -24,6 +25,11 @@ public class Order {
 	private User user;
 	private Address address;
 	private OrderDetail orderDetail;
+
+	public Order() {
+	    super();
+	}
+
 
 	public String getId() {
 		return id;

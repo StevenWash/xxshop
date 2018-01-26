@@ -14,50 +14,79 @@
 		<result property="regTime" column="regTime" />
 		<result property="role" column="role" />
 		<result property="status" column="status" />
-		
+		<result property="email" column="email" />
 	</resultMap>
+
+	<insert id="addLogin" parameterType="User">
+		insert into visit
+		values(#{id},#{ip},#{userid},#{loginTime,jdbcType=CHAR})
+	</insert>
+
+	<update id="updateEmail">
+		update shop_user set email=#{email} where id=#{id}
+	</update>
+
+	<update id="updatePhoneNum">
+		update shop_user set phoneNum=#{phoneNum} where id=#{id}
+	</update>
+
 
 	<insert id="addUser" parameterType="User">
 		insert into shop_user
 		values(#{id},#{name},#{password},#{phoneNum},#{money},
-		#{avatar,jdbcType=VARCHAR},#{regTime,jdbcType=CHAR},#{role},#{status})
+		#{avatar,jdbcType=VARCHAR},#{regTime,jdbcType=CHAR},#{role},#{status},#{email})
 	</insert>
 
 	<select id="getNumByName" parameterType="String" resultType="int">
 		select count(*) from shop_user where name=#{name}
 	</select>
 
-	<select id="getUserByNameAndPwd" resultType="User">
+	<select id="getUserByNameAndPwd" parameterType="String" resultType="User">
 		select * from
-		shop_user where name=#{0} and password=#{1}
+		shop_user where name=#{name} and password=#{password}
 	</select>
+	<!--select * from shop_user where name=#{0} and password=#{1}-->
+
+	<update id="updateRole">
+		update shop_user set role=#{role} where id=#{id}
+	</update>
+
+	<update id="updatePassword">
+		update shop_user set password=#{password} where id=#{id}
+	</update>
 
 	<update id="updateAvatar">
-		update shop_user set avatar=#{1} where id=#{0}
+		update shop_user set avatar=#{avar} where id=#{id}
 	</update>
+	<!--update shop_user set avatar=#{1} where id=#{0}-->
+
 
 	<update id="updateMoney">
-		update shop_user set money=#{1} where id=#{0}
+		update shop_user set money=#{money} where id=#{id}
 	</update>
+	<!--update shop_user set money=#{1} where id=#{0}-->
+
 
 	<select id="getAllUser" resultMap="UserResultMap">
 		select * from shop_user
 	</select>
-	
+
 	<update id="updateStatus" >
 		update shop_user set
-		status=#{1} where id=#{0}
+		status=#{status} where id=#{id}
 	</update>
-	
+    <!--update shop_user set-->
+    <!--status=#{1} where id=#{0}-->
+
 	<update id="deleteUser" parameterType="String">
 		update shop_user set
-		status=2 where id=#{0}
-	</update>
+		status=2 where id=#{id}
+	</update><!--id=#{0}-->
 
 	<select id="getUser" parameterType="String" resultType="User">
 		select *
 		from shop_user where
-		id=#{0}
-	</select>
+		id=#{id}
+	</select><!--id=#{0}-->
 
 </mapper>

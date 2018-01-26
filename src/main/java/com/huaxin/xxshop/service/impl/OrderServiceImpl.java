@@ -12,19 +12,22 @@ import com.huaxin.xxshop.entity.OrderDetail;
 import com.huaxin.xxshop.entity.PageBean;
 import com.huaxin.xxshop.service.OrderService;
 import com.huaxin.xxshop.util.XXShopUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("orderService")
 public class OrderServiceImpl implements OrderService {
-	private OrderDao orderDao;
-	private OrderDetailDao orderDetailDao;
+	@Autowired
+	private OrderDao orderDao = null;
+	@Autowired
+	private OrderDetailDao orderDetailDao = null;
 
 	@Override
 	public void addOrder(Order order, List<OrderDetail> orderDetails) {
 		order.setId(XXShopUtil.getId());
 		order.setOrderTime(new Date());
 		order.setStatus("1");
-
 		orderDao.addOrder(order);
-
 		for (OrderDetail orderDetail : orderDetails) {
 			orderDetail.setId(XXShopUtil.getId());
 			orderDetail.setOrderId(order.getId());
@@ -59,6 +62,8 @@ public class OrderServiceImpl implements OrderService {
 		pageBean.setTotalNum(totalNum);
 		int totalPage = totalNum % pageSize == 0 ? totalNum / pageSize
 				: totalNum / pageSize + 1;
+		System.out.println("ServiceImpl totalPage: " + totalPage
+						+ "ServiceImpl totalNum: " + totalNum);
 		pageBean.setTotalPage(totalPage);
 		return pageBean;
 	}
@@ -106,7 +111,6 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void updateOrder(Order order, List<OrderDetail> orderDetails) {
 		orderDao.updateOrder(order);
-
 		for (OrderDetail orderDetail : orderDetails) {
 			orderDetailDao.updateOrderDetail(orderDetail);
 		}
@@ -116,6 +120,8 @@ public class OrderServiceImpl implements OrderService {
 	public List<OrderDetail> getOrderDetailByOrderId(String orderId) {
 		return orderDetailDao.getOrderDetailByOrderId(orderId);
 	}
+
+
 
 	// getter 和getter
 	public OrderDao getOrderDao() {

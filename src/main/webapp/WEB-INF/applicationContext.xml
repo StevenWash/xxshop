@@ -12,7 +12,7 @@
 		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
 
 	<!-- 1、首先配置数据源 -->
-	<!-- ①、导入资源配置文件 -->
+	<!-- ①、导入资源配置文件db.properties -->
 	<context:property-placeholder location="classpath:db.properties" />
 	<!-- ②、引入数据源 -->
 	<!-- <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
@@ -28,118 +28,135 @@
 		<property name="maxPoolSize" value="${maxPoolSize}"></property>
 	</bean>
 
+
+    <!-- 配置数据源事务管理器 -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
-		<tx:attributes>
-			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
-			<tx:method name="*" propagation="REQUIRED" />
-		</tx:attributes>
-	</tx:advice>
+    <!-- 开启事务注解 -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
 
-	<aop:config>
-		<aop:pointcut id="pc"
-			expression="execution(* com.huaxin.xxshop.service.impl.*.*(..))" />
-		<aop:advisor pointcut-ref="pc" advice-ref="txAdvice" />
-	</aop:config>
+	<!--<tx:advice id="txAdvice" transaction-manager="transactionManager">-->
+		<!--<tx:attributes>-->
+			<!--<tx:method name="get*" propagation="SUPPORTS" read-only="true" />-->
+			<!--<tx:method name="*" propagation="REQUIRED" />-->
+		<!--</tx:attributes>-->
+	<!--</tx:advice>-->
 
-	<!-- MyBatis的配置 -->
+	<!--<aop:config>-->
+		<!--<aop:pointcut id="pc"-->
+			<!--expression="execution(* com.huaxin.xxshop.service.impl.*.*(..))" />-->
+		<!--<aop:advisor pointcut-ref="pc" advice-ref="txAdvice" />-->
+	<!--</aop:config>-->
+
+	<!-- 集成MyBatis的配置 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource"></property>
-		<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		<!-- 注入数据源 -->
+        <property name="dataSource" ref="dataSource"></property>
+		<!-- 指定核心MyBatis配置文件 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
 	</bean>
 
-	<!-- User 相关的bean -->
-	<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.huaxin.xxshop.dao.UserDao"></property>
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	<bean id="userService" class="com.huaxin.xxshop.service.impl.UserServiceImpl">
-		<property name="userDao" ref="userMapper"></property>
-	</bean>
-	<!-- 与struts相关联的bean ,注意要添加上scope -->
-	<bean id="userAction" class="com.huaxin.xxshop.web.UserAction"
-		scope="prototype">
-		<property name="userService" ref="userService"></property>
-		<property name="orderService" ref="orderService"></property>
-	</bean>
+    <!-- 配置mapper扫描器
+         接口开发，写在此包下的接口即可被扫描到 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.huaxin.xxshop.dao" />
+    </bean>
 
-	<!-- Address 相关的bean -->
-	<bean id="addressMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.huaxin.xxshop.dao.AddressDao"></property>
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	<bean id="addressService" class="com.huaxin.xxshop.service.impl.AddressServiceImpl">
-		<property name="addressDao" ref="addressMapper"></property>
-	</bean>
-	<!-- 与struts相关联的bean ,注意要添加上scope -->
-	<bean id="addressAction" class="com.huaxin.xxshop.web.AddressAction"
-		scope="prototype">
-		<property name="addressService" ref="addressService"></property>
-	</bean>
-	
-	<bean name="randomAction" class="com.huaxin.xxshop.web.VerifyCodeAction" scope="prototype"></bean>
+    <!-- 扫描Service -->
+    <context:component-scan base-package="com.huaxin.xxshop.service" />
 
-	<!-- Category 相关的bean -->
-	<bean id="categoryMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.huaxin.xxshop.dao.CategoryDao"></property>
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	<bean id="categoryService" class="com.huaxin.xxshop.service.impl.CategoryServiceImpl">
-		<property name="categoryDao" ref="categoryMapper"></property>
-		<property name="goodsDao" ref="goodsMapper"></property>
-	</bean>
-	<bean id="categoryAction" class="com.huaxin.xxshop.web.CategoryAction"
-		scope="prototype">
-		<property name="categoryService" ref="categoryService"></property>
-	</bean>
+	<!--&lt;!&ndash; User 相关的bean &ndash;&gt;-->
+	<!--<bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+		<!--<property name="mapperInterface" value="com.huaxin.xxshop.dao.UserDao"></property>-->
+		<!--<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>-->
+	<!--</bean>-->
+	<!--<bean id="userService" class="com.huaxin.xxshop.service.impl.UserServiceImpl">-->
+		<!--<property name="userDao" ref="userMapper"></property>-->
+	<!--</bean>-->
 
-	<!-- Goods 相关的bean -->
-	<bean id="goodsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.huaxin.xxshop.dao.GoodsDao"></property>
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	<bean id="goodsService" class="com.huaxin.xxshop.service.impl.GoodsServiceImpl">
-		<property name="goodsDao" ref="goodsMapper"></property>
-		<property name="categoryDao" ref="categoryMapper"></property>
-	</bean>
-	<bean id="goodsAction" class="com.huaxin.xxshop.web.GoodsAction">
-		<property name="categoryService" ref="categoryService"></property>
-		<property name="goodsService" ref="goodsService"></property>
-	</bean>
+	<!--&lt;!&ndash; 与struts相关联的bean ,注意要添加上scope &ndash;&gt;-->
+	<!--<bean id="userAction" class="com.huaxin.xxshop.web.UserAction"-->
+		<!--scope="prototype">-->
+		<!--<property name="userService" ref="userService"></property>-->
+		<!--<property name="orderService" ref="orderService"></property>-->
+	<!--</bean>-->
 
-	<!-- 配置indexAction -->
-	<bean name="indexAction" class="com.huaxin.xxshop.web.IndexAction"
-		scope="prototype">
-		<property name="categoryService" ref="categoryService"></property>
-		<property name="goodsService" ref="goodsService"></property>
-	</bean>
+	<!--&lt;!&ndash; Address 相关的bean &ndash;&gt;-->
+	<!--<bean id="addressMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+		<!--<property name="mapperInterface" value="com.huaxin.xxshop.dao.AddressDao"></property>-->
+		<!--<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>-->
+	<!--</bean>-->
+	<!--<bean id="addressService" class="com.huaxin.xxshop.service.impl.AddressServiceImpl">-->
+		<!--<property name="addressDao" ref="addressMapper"></property>-->
+	<!--</bean>-->
+	<!--&lt;!&ndash; 与struts相关联的bean ,注意要添加上scope &ndash;&gt;-->
+	<!--<bean id="addressAction" class="com.huaxin.xxshop.web.AddressAction"-->
+		<!--scope="prototype">-->
+		<!--<property name="addressService" ref="addressService"></property>-->
+	<!--</bean>-->
+	<!---->
+	<!--<bean name="randomAction" class="com.huaxin.xxshop.web.VerifyCodeAction" scope="prototype"></bean>-->
 
-	<!-- Order 相关的bean -->
-	<bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.huaxin.xxshop.dao.OrderDao"></property>
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
-	<bean id="orderService" class="com.huaxin.xxshop.service.impl.OrderServiceImpl">
-		<property name="orderDao" ref="orderMapper"></property>
-		<property name="orderDetailDao" ref="orderDetailMapper"></property>
-	</bean>
-	<bean id="orderAction" class="com.huaxin.xxshop.web.OrderAction">
-		<property name="addressService" ref="addressService"></property>
-		<property name="goodsService" ref="goodsService"></property>
-		<property name="orderService" ref="orderService"></property>
-		<property name="categoryService" ref="categoryService"></property>
-		<property name="userService" ref="userService"></property>
-	</bean>
+	<!--&lt;!&ndash; Category 相关的bean &ndash;&gt;-->
+	<!--<bean id="categoryMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+		<!--<property name="mapperInterface" value="com.huaxin.xxshop.dao.CategoryDao"></property>-->
+		<!--<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>-->
+	<!--</bean>-->
+	<!--<bean id="categoryService" class="com.huaxin.xxshop.service.impl.CategoryServiceImpl">-->
+		<!--<property name="categoryDao" ref="categoryMapper"></property>-->
+		<!--<property name="goodsDao" ref="goodsMapper"></property>-->
+	<!--</bean>-->
+	<!--<bean id="categoryAction" class="com.huaxin.xxshop.web.CategoryAction"-->
+		<!--scope="prototype">-->
+		<!--<property name="categoryService" ref="categoryService"></property>-->
+	<!--</bean>-->
 
-	<!-- OrderDetail 相关的bean -->
-	<bean id="orderDetailMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="com.huaxin.xxshop.dao.OrderDetailDao"></property>
-		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	</bean>
+	<!--&lt;!&ndash; Goods 相关的bean &ndash;&gt;-->
+	<!--<bean id="goodsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+		<!--<property name="mapperInterface" value="com.huaxin.xxshop.dao.GoodsDao"></property>-->
+		<!--<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>-->
+	<!--</bean>-->
+	<!--<bean id="goodsService" class="com.huaxin.xxshop.service.impl.GoodsServiceImpl">-->
+		<!--<property name="goodsDao" ref="goodsMapper"></property>-->
+		<!--<property name="categoryDao" ref="categoryMapper"></property>-->
+	<!--</bean>-->
+	<!--<bean id="goodsAction" class="com.huaxin.xxshop.web.GoodsAction">-->
+		<!--<property name="categoryService" ref="categoryService"></property>-->
+		<!--<property name="goodsService" ref="goodsService"></property>-->
+	<!--</bean>-->
+
+	<!--&lt;!&ndash; 配置indexAction &ndash;&gt;-->
+	<!--<bean name="indexAction" class="com.huaxin.xxshop.web.IndexAction"-->
+		<!--scope="prototype">-->
+		<!--<property name="categoryService" ref="categoryService"></property>-->
+		<!--<property name="goodsService" ref="goodsService"></property>-->
+	<!--</bean>-->
+
+	<!--&lt;!&ndash; Order 相关的bean &ndash;&gt;-->
+	<!--<bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+		<!--<property name="mapperInterface" value="com.huaxin.xxshop.dao.OrderDao"></property>-->
+		<!--<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>-->
+	<!--</bean>-->
+	<!--<bean id="orderService" class="com.huaxin.xxshop.service.impl.OrderServiceImpl">-->
+		<!--<property name="orderDao" ref="orderMapper"></property>-->
+		<!--<property name="orderDetailDao" ref="orderDetailMapper"></property>-->
+	<!--</bean>-->
+	<!--<bean id="orderAction" class="com.huaxin.xxshop.web.OrderAction">-->
+		<!--<property name="addressService" ref="addressService"></property>-->
+		<!--<property name="goodsService" ref="goodsService"></property>-->
+		<!--<property name="orderService" ref="orderService"></property>-->
+		<!--<property name="categoryService" ref="categoryService"></property>-->
+		<!--<property name="userService" ref="userService"></property>-->
+	<!--</bean>-->
+
+	<!--&lt;!&ndash; OrderDetail 相关的bean &ndash;&gt;-->
+	<!--<bean id="orderDetailMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+		<!--<property name="mapperInterface" value="com.huaxin.xxshop.dao.OrderDetailDao"></property>-->
+		<!--<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>-->
+	<!--</bean>-->
 
 
 

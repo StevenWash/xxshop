@@ -360,7 +360,7 @@ img.operator {
 	position: absolute;
 	left: 355px;
 	bottom: 0;
-	_bottom: -1px;
+	/*_bottom: -1px;*/
 	z-index: 22;
 	background: url(../images/admin/admin_bg.gif) no-repeat right -387px;
 	_background: none
@@ -1357,7 +1357,8 @@ table.list_table3 tbody td {
 	min-width: 23px;
 	height: 23px;
 	padding: 0 5px;
-	float: left line-height:23px;
+	float: left;
+	line-height: 23px;
 	white-space: nowrap
 }
 /* pop_win style end */

@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC 
 	"-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.huaxin.xxshop.dao.OrderDetailDao">
 
 	<resultMap type="OrderDetail" id="OrderDetailResultMap">
@@ -11,6 +12,8 @@
 		<result property="payStatus" column="payStatus" />
 		<result property="sendStatus" column="sendStatus" />
 		<result property="orderStatus" column="orderStatus" />
+		<result property="goodsId" column="goodsid" />
+		<result property="dealPrice" column="dealPrice" />
 
 		<association property="goods" javaType="Goods">
 			<id property="id" column="id" />
@@ -21,20 +24,23 @@
 	<insert id="addOrderDetail" parameterType="OrderDetail">
 		insert into
 		shop_orderdetail
-		values(#{id},#{orderId},#{goodsId},#{nums},#{payStatus},#{sendStatus},#{orderStatus})
+		values(#{id},#{orderId},#{goodsId},#{nums},#{payStatus},#{sendStatus},#{orderStatus},#{dealPrice})
 	</insert>
 
-	<update id="updataOrderDetail" parameterType="OrderDetail">
+	<update id="updateOrderDetail" parameterType="OrderDetail">
 		update
 		shop_orderdetail set
 		paystatus=#{payStatus},orderstatus=#{orderStatus}
 		where id=#{id}
 	</update>
 
-	<select id="getOrderDetailByOrderId" resultType="OrderDetail"
-		parameterType="String">
-		select o.*,g.name gname from
-		shop_orderdetail
-		o,shop_goods g where orderid=#{0}
+	<select id="getOrderDetailByOrderId" resultType="OrderDetail" parameterType="String">
+		select * from shop_orderdetail where orderid=#{orderId}
 	</select>
+	<!--o,shop_goods g where orderid=#{0}-->
+	<!--select o.*,g.name gname from-->
+	<!--shop_orderdetail o,shop_goods g-->
+	<!--where o.orderid=#{orderId}-->
+	<!--and g.id=o.goodsid-->
+
 </mapper>
