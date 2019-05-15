@@ -21,7 +21,6 @@
  - db.properties（存放的是数据库的配置文件）
  - log4j.properties（存放的是日志的配置文件）
  - mybatis-config.xml（存放的是mybatis关于数据库的配置文件）
- - struts.xml（用来配置struts的相关文件信息）
  
 ## Quick Start
 
@@ -29,7 +28,7 @@
 ```
 git clone https://github.com/StevenWash/xxshop.git
 ```
-然后将项目直接导入到IDEA中，在resource目录下找到xxshop.sql文件，将其导入到自己
+然后将项目直接用Maven项目导入到IDEA中，等待依赖包的下载，在resource目录下找到xxshop.sql文件，将其导入到自己
 本地的数据库中。
 
 在本地的数据库创建完成之后，在db.properties中将相关的信息修改为自己的数据库的相关
